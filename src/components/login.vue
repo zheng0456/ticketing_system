@@ -119,7 +119,14 @@
             placeholder="请确认密码" 
             :type="registerPasswordVisible ? 'text' : 'password'"
             prefix-icon="Check"
-          ></el-input>
+          >
+          <template #suffix>
+              <i @click="registerPasswordVisible = !registerPasswordVisible">
+                <el-icon v-if="registerPasswordVisible"><Hide /></el-icon>
+                <el-icon v-else><View /></el-icon>
+              </i>
+            </template>
+        </el-input>
         </el-form-item>
         
         <el-button 
@@ -309,7 +316,6 @@ export default {
   margin: 0 0 10px 0;
 }
 
-
 .tab-switch {
   display: flex;
   width: 100%;
@@ -374,13 +380,17 @@ export default {
   font-size: 16px;
 }
 
+/* 添加鼠标悬停样式 */
+.auth-form .el-input__suffix i {
+  cursor: pointer;
+}
 
-.auth-footer {
-  margin-top: 30px;
-  color: #86909c;
-  font-size: 14px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
+.auth-form .el-input__suffix i:hover {
+  cursor: pointer;
+}
+
+/* 修改密码可见性图标的鼠标样式 */
+.auth-form .el-input__suffix i:hover {
+  cursor: pointer;
 }
 </style>
