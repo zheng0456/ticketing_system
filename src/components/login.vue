@@ -38,9 +38,12 @@
         <el-form-item prop="username">
           <el-input 
             v-model="loginForm.username" 
-            placeholder="请输入用户名" 
-            prefix-icon="User"
-          ></el-input>
+            placeholder="请输入用户名"
+          >
+            <template #prefix>
+              <el-icon><User /></el-icon>
+            </template>
+          </el-input>
         </el-form-item>
         
         <el-form-item prop="password">
@@ -48,8 +51,11 @@
             v-model="loginForm.password" 
             placeholder="请输入密码" 
             :type="loginPasswordVisible ? 'text' : 'password'"
-            prefix-icon="Lock"
+            
           >
+            <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
             <template #suffix>
               <i @click="loginPasswordVisible = !loginPasswordVisible">
                 <el-icon v-if="loginPasswordVisible"><Hide /></el-icon>
@@ -85,16 +91,22 @@
           <el-input 
             v-model="registerForm.username" 
             placeholder="请设置用户名" 
-            prefix-icon="User"
-          ></el-input>
+          >
+            <template #prefix>
+              <el-icon><User /></el-icon>
+            </template>
+          </el-input>
         </el-form-item>
         
         <el-form-item prop="phone">
           <el-input 
             v-model="registerForm.phone" 
-            placeholder="请输入手机号" 
-            prefix-icon="Phone"
-          ></el-input>
+            placeholder="请输入手机号"
+          >
+            <template #prefix>
+              <el-icon><Phone /></el-icon>
+            </template>
+          </el-input>
         </el-form-item>
         
         <el-form-item prop="password">
@@ -102,8 +114,10 @@
             v-model="registerForm.password" 
             placeholder="请设置密码" 
             :type="registerPasswordVisible ? 'text' : 'password'"
-            prefix-icon="Lock"
           >
+            <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
             <template #suffix>
               <i @click="registerPasswordVisible = !registerPasswordVisible">
                 <el-icon v-if="registerPasswordVisible"><Hide /></el-icon>
@@ -118,8 +132,10 @@
             v-model="registerForm.confirmPassword" 
             placeholder="请确认密码" 
             :type="registerPasswordVisible ? 'text' : 'password'"
-            prefix-icon="Check"
           >
+          <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
           <template #suffix>
               <i @click="registerPasswordVisible = !registerPasswordVisible">
                 <el-icon v-if="registerPasswordVisible"><Hide /></el-icon>
