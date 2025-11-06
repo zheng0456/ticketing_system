@@ -38,7 +38,7 @@
         <el-form-item prop="username">
           <el-input 
             v-model="loginForm.username" 
-            placeholder="请输入用户名"
+            placeholder="请输入用户名/手机号"
           >
             <template #prefix>
               <el-icon><User /></el-icon>
