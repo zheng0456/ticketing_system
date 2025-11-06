@@ -167,6 +167,7 @@
 import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Hide, View, User, Phone, Lock, Check } from '@element-plus/icons-vue';
+import axios from 'axios';
 
 // 状态管理
 const isLogin = ref(true);
@@ -238,11 +239,21 @@ const handleLogin = async () => {
   try {
     await loginRef.value.validate();
     // 实际项目中调用登录API
-    ElMessage.success('登录成功');
-    // 登录成功后跳转到首页或之前的页面
-    // router.push('/home');
+    const response = await axios.post('/login', {
+      username: loginForm.username,
+      password: loginForm.password
+    });
+    
+    if (response.data.success) {
+      ElMessage.success('登录成功');
+      // 登录成功后跳转到首页或之前的页面
+      // router.push('/home');
+    } else {
+      ElMessage.error(response.data.message || '登录失败');
+    }
   } catch (error) {
-    console.log('登录表单验证失败', error);
+    console.error('登录请求失败:', error);
+    ElMessage.error('登录失败，请检查网络连接或稍后重试');
   }
 };
 
@@ -250,11 +261,22 @@ const handleLogin = async () => {
 const handleRegister = async () => {
   try {
     await registerRef.value.validate();
-    // 实际项目中调用注册API
-    ElMessage.success('注册成功，请登录');
-    isLogin.value = true;
+    // 调用注册API
+    const response = await axios.post('/register', {
+      username: registerForm.username,
+      phone: registerForm.phone,
+      password: registerForm.password
+    });
+    
+    if (response.data.success) {
+      ElMessage.success('注册成功，请登录');
+      isLogin.value = true;
+    } else {
+      ElMessage.error(response.data.message || '注册失败');
+    }
   } catch (error) {
-    console.log('注册表单验证失败', error);
+    console.error('注册请求失败:', error);
+    ElMessage.error('注册失败，请检查网络连接或稍后重试');
   }
 };
 
