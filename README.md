@@ -1,5 +1,7 @@
 # ticketing_system
 
+# 版本node js 24.9.0
+
 ## Project setup
 ```
 npm install
