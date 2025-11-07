@@ -5,10 +5,10 @@
     </div>
     <div class="search-bar">
       <input type="text" placeholder="搜索车票、餐饮、常旅客、相关规章" class="search-input" />
-      <button class="search-btn">🔍</button>
+      <button class="search-btn"><el-icon><Search /></el-icon></button>
     </div>
     <!-- 添加一个灰色盒子容器 -->
-    <div class="gray-box" style="width: 380px; height: 30px; background-color:#DDDDDD;">
+    <div class="gray-box" style="width: 400px; height: 30px; background-color:#DDDDDD;">
       <div class="nav-links">
         <a href="#" class="link">无障碍</a>
         <a href="#" class="link">敬老版</a>
@@ -45,8 +45,8 @@ export default {
   gap: 10px;
 }
 .logo {
-  width: 200px;
-  height: 90px;
+  width: 250px;
+  height: 100px;
 }
 
 .search-bar {
@@ -94,16 +94,19 @@ export default {
 .gray-box {
   display: flex;
   align-items: center;
+  padding-left: 15px;
 }
 .nav-links {
   display: flex;
   gap: 15px;
+  align-items: center;
 }
 .link {
   color: #333;
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s;
+  line-height: 1;
 }
 .link:hover {
   color: #007aff;
