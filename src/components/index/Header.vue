@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="logo-area">
-      <span class="logo">🚄</span>
+      <img src="@/assets/img/log.png" alt="Logo" class="logo" />
       <span class="logo-text">中国铁路12306</span>
       <span class="logo-en">12306 CHINA RAILWAY</span>
     </div>
@@ -32,12 +32,11 @@
 
 <script>
 export default {
-  name: 'PageHeader', // 修改组件名为多词形式
+  name: 'PageHeader',
 }
 </script>
 
 <style scoped>
-/* ... existing styles ... */
 .header {
   background: #0066cc;
   color: #fff;
@@ -49,7 +48,8 @@ export default {
   margin-bottom: 10px;
 }
 .logo {
-  font-size: 24px;
+  width: 200px;
+  height: 90px;
   margin-right: 5px;
 }
 .logo-text {
