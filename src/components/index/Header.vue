@@ -17,16 +17,6 @@
       <a href="#" class="link">登录</a>
       <a href="#" class="link">注册</a>
     </div>
-    <div class="main-nav">
-      <a href="#" class="nav-item active">首页</a>
-      <a href="#" class="nav-item">车票</a>
-      <a href="#" class="nav-item">团购服务</a>
-      <a href="#" class="nav-item">会员服务</a>
-      <a href="#" class="nav-item">站车服务</a>
-      <a href="#" class="nav-item">商旅服务</a>
-      <a href="#" class="nav-item">出行指南</a>
-      <a href="#" class="nav-item">信息查询</a>
-    </div>
   </div>
 </template>
 
@@ -88,18 +78,5 @@ export default {
   text-decoration: none;
   margin-left: 15px;
   font-size: 12px;
-}
-.main-nav {
-  display: flex;
-}
-.nav-item {
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 15px;
-  font-size: 14px;
-}
-.nav-item.active {
-  background: #0055aa;
-  border-radius: 4px;
 }
 </style>
