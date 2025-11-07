@@ -20,14 +20,18 @@ export default {
 <style scoped>
 .main-nav {
   display: flex;
+  align-items: center;
+  height: 50px;
   background: #0066cc;
   padding: 0 20px;
+  justify-content: flex-end;
 }
 .nav-item {
   color: #fff;
   text-decoration: none;
   padding: 8px 15px;
   font-size: 14px;
+  margin-left: 50px;
 }
 .nav-item.active {
   background: #0055aa;
