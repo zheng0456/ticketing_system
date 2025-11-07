@@ -391,6 +391,15 @@ export default {
   width: 100%;
 }
 
+/* 设置表单元素高度为50px */
+.auth-form :deep(.el-input__wrapper) {
+  height: 50px;
+}
+
+.auth-form :deep(.el-button) {
+  height: 50px;
+}
+
 .el-form-item {
   margin-bottom: 20px;
 }
