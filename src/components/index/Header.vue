@@ -30,7 +30,14 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'PageHeader', // 修改组件名为多词形式
+}
+</script>
+
 <style scoped>
+/* ... existing styles ... */
 .header {
   background: #0066cc;
   color: #fff;

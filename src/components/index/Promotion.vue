@@ -15,6 +15,12 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'PagePromotion', // 修改组件名为多词形式
+}
+</script>
+
 <style scoped>
 .promotion-container {
   display: flex;
