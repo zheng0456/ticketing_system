@@ -3,10 +3,6 @@
     <div class="header-container">
       <div class="logo-area">
         <img src="@/assets/img/log.png" alt="Logo" class="logo" />
-        <div class="logo-text-wrapper">
-          <span class="logo-text">中国铁路12306</span>
-          <span class="logo-en">12306 CHINA RAILWAY</span>
-        </div>
       </div>
       <div class="search-bar">
         <input type="text" placeholder="搜索车票、餐饮、常旅客、相关规章" class="search-input" />
@@ -32,7 +28,7 @@ export default {
 
 <style scoped>
 .header {
-  background: #f5f5f5;
+  background: white;
   color: #333;
   padding: 10px 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -49,22 +45,11 @@ export default {
   gap: 10px;
 }
 .logo {
-  width: 60px;
-  height: 60px;
+  width: 200px;
+  height: 90px;
 }
-.logo-text-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-.logo-text {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 2px;
-}
-.logo-en {
-  font-size: 12px;
-  color: #666;
-}
+
+
 .search-bar {
   display: flex;
   align-items: center;
