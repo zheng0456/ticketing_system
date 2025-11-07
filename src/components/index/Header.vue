@@ -56,8 +56,19 @@ export default {
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  width: 200px; /* 设置搜索栏宽度为200px */
+  width: 600px; /* 设置搜索栏宽度为600px，与图片一致 */
+  transition: all 0.2s ease;
+  border: 1px solid black;
 }
+.search-bar:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border: 1px solid #007aff;
+}
+.search-bar:focus-within {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border: 1px solid #007aff;
+}
+
 .search-input {
   flex: 1;
   padding: 8px 12px;
