@@ -14,8 +14,8 @@
         <a href="#" class="link">敬老版</a>
         <a href="#" class="link">English</a>
         <a href="#" class="link">我的12306</a>
-        <a href="#" class="link">登录</a>
-        <a href="#" class="link">注册</a>
+        <a href="#" class="link" @click.prevent="goToLogin">登录</a>
+        <a href="#" class="link" @click.prevent="goToLogin">注册</a>
       </div>
     </div>
   </div>
@@ -24,6 +24,11 @@
 <script>
 export default {
   name: 'PageHeader',
+  methods: {
+    goToLogin() {
+      this.$router.push('/login');
+    }
+  }
 }
 </script>
 
