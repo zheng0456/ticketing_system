@@ -2,9 +2,11 @@
   <div class="home">
     <PageHeader />
     <HeaderNav />
-    <TicketForm />
-    <FeatureIcons />
-    <PagePromotion />
+    <div class="content-wrapper">
+      <TicketForm />
+      <FeatureIcons />
+      <PagePromotion />
+    </div>
   </div>
 </template>
 
@@ -31,5 +33,9 @@ export default {
 .home {
   padding: 0;
   width: 100%;
+}
+.content-wrapper {
+  position: relative;
+  z-index: 1;
 }
 </style>
