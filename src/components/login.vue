@@ -167,7 +167,7 @@
 import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Hide, View, User, Phone, Lock, Check } from '@element-plus/icons-vue';
-import axios from 'axios';
+import api from '@/api/index.js';
 
 // 状态管理
 const isLogin = ref(true);
@@ -239,7 +239,7 @@ const handleLogin = async () => {
   try {
     await loginRef.value.validate();
     // 实际项目中调用登录API
-    const response = await axios.post('/login', {
+    const response = await api.post('/login', {
       username: loginForm.username,
       password: loginForm.password
     });
@@ -262,7 +262,7 @@ const handleRegister = async () => {
   try {
     await registerRef.value.validate();
     // 调用注册API
-    const response = await axios.post('/register', {
+    const response = await api.post('/register', {
       username: registerForm.username,
       phone: registerForm.phone,
       password: registerForm.password
