@@ -1,33 +1,29 @@
 <template>
-  <div class="ticket-nav-container">
-    <div class="nav-tabs">
-      <!-- 购票标签 -->
-      <div class="tab-item active" @click="selectTab('purchase')">
-        <span class="tab-title">购票</span>
-        <div class="sub-menu">
-          <div class="menu-item">单程</div>
-          <div class="menu-item">往返</div>
-          <div class="menu-item">中转换乘</div>
-        </div>
+  <div class="ticket-nav-dropdown">
+    <div class="ticket-nav-content">
+      <div class="ticket-nav-section">
+        <h4>购票服务</h4>
+        <ul>
+          <li><router-link to="/ticket/single">单程票</router-link></li>
+          <li><router-link to="/ticket/roundtrip">往返票</router-link></li>
+          <li><router-link to="/ticket/multi">多程票</router-link></li>
+        </ul>
       </div>
-
-      <!-- 变更标签 -->
-      <div class="tab-item" @click="selectTab('change')">
-        <span class="tab-title">变更</span>
-        <div class="sub-menu">
-          <div class="menu-item">退票</div>
-          <div class="menu-item">改签</div>
-          <div class="menu-item">变更到站</div>
-        </div>
+      <div class="ticket-nav-section">
+        <h4>票务查询</h4>
+        <ul>
+          <li><router-link to="/query/schedule">时刻表查询</router-link></li>
+          <li><router-link to="/query/price">票价查询</router-link></li>
+          <li><router-link to="/query/station">车站查询</router-link></li>
+        </ul>
       </div>
-
-      <!-- 更多标签 -->
-      <div class="tab-item" @click="selectTab('more')">
-        <span class="tab-title">更多</span>
-        <div class="sub-menu">
-          <div class="menu-item">中铁银通卡</div>
-          <div class="menu-item">国际列车</div>
-        </div>
+      <div class="ticket-nav-section">
+        <h4>退改签</h4>
+        <ul>
+          <li><router-link to="/service/refund">退票</router-link></li>
+          <li><router-link to="/service/change">改签</router-link></li>
+          <li><router-link to="/service/endrose">签票</router-link></li>
+        </ul>
       </div>
     </div>
   </div>
@@ -35,128 +31,69 @@
 
 <script>
 export default {
-  name: 'HeaderNaveTicket',
-  data() {
-    return {
-      activeTab: 'purchase' // 默认选中购票标签
-    }
-  },
-  methods: {
-    selectTab(tabName) {
-      this.activeTab = tabName
-    }
-  }
+  name: 'HeaderNaveTicket'
 }
 </script>
 
 <style scoped>
-.ticket-nav-container {
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
+.ticket-nav-dropdown {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  min-width: 580px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
 }
 
-.nav-tabs {
+.ticket-nav-content {
   display: flex;
-  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
 }
 
-.tab-item {
-  position: relative;
-  padding: 8px 15px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  transition: all 0.2s ease;
-  border-right: 1px solid #ddd;
+.ticket-nav-section {
+  flex: 1;
+  border-right: 1px solid #f0f0f0;
+  padding: 0 20px;
 }
 
-.tab-item:last-child {
+.ticket-nav-section:last-child {
   border-right: none;
 }
 
-.tab-item.active {
-  color: #0066cc;
-  font-weight: bold;
-}
-
-.tab-item:hover {
-  background-color: #f5f5f5;
-}
-
-.tab-title {
-  display: block;
-  padding: 8px 0;
-  text-align: center;
-}
-
-.sub-menu {
-  display: flex;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-top: none;
-  min-width: 200px;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  width: 100%;
-}
-
-.tab-item:hover .sub-menu {
-  display: flex;
-}
-
-.menu-item {
-  padding: 8px 15px;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  margin: 0 5px;
-  transition: all 0.2s ease;
-  text-align: center;
+.ticket-nav-section h4 {
+  color: #333;
   font-size: 14px;
-  background-color: #fff;
+  margin-bottom: 12px;
+  font-weight: bold;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.menu-item:hover {
-  background-color: #f5f5f5;
+.ticket-nav-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ticket-nav-section li {
+  margin-bottom: 6px;
+  line-height: 24px;
+}
+
+.ticket-nav-section a {
+  color: #666;
+  text-decoration: none;
+  font-size: 13px;
+  display: block;
+  transition: color 0.2s;
+  padding: 2px 0;
+}
+
+.ticket-nav-section a:hover {
   color: #0066cc;
-}
-
-.menu-item.active {
-  background-color: #0066cc;
-  color: white;
-}
-
-.menu-item:last-child {
-  margin-right: 0;
-}
-
-/* 确保在移动端显示时不会被遮挡 */
-@media (max-width: 768px) {
-  .nav-tabs {
-    flex-direction: column;
-  }
-  
-  .tab-item {
-    border-bottom: 1px solid #ddd;
-    border-right: none;
-  }
-  
-  .tab-item:last-child {
-    border-bottom: none;
-  }
-  
-  .sub-menu {
-    position: static;
-    display: block;
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    width: auto;
-  }
-  
-  .menu-item {
-    padding: 8px 15px;
-  }
+  text-decoration: underline;
 }
 </style>

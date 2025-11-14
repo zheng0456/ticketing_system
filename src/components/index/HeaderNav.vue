@@ -3,10 +3,10 @@
     <router-link to="/index" class="nav-item active">首页</router-link>
     <div 
       class="nav-item ticket-item" 
-      @mouseenter="showTicketMenu = true" 
+      @mouseenter="showTicketMenu = true"
       @mouseleave="showTicketMenu = false"
     >
-      <a href="#" class="nav-link">车票</a>
+      <a href="#" class="nav-link" @click.prevent>车票</a>
       <transition name="fade">
         <HeaderNaveTicket v-show="showTicketMenu" class="ticket-dropdown" />
       </transition>
@@ -32,7 +32,8 @@ export default {
     return {
       showTicketMenu: false
     }
-  }
+  },
+
 }
 </script>
 
@@ -68,10 +69,10 @@ export default {
 .ticket-dropdown {
   position: absolute;
   top: 100%;
-  left: 0;
-  width: 100%;
-  transform: translateX(-50%);
+  left: -45px;
+  right: -45px;
   z-index: 1000;
+  margin-top: 0;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;
