@@ -9,7 +9,7 @@
       </div>
       <div class="form-group inline-group">
         <label>出发地</label>
-        <input type="text" placeholder="请输入出发地" />
+        <TicketFromCity v-model="departureCity" />
       </div>
       <div class="form-group inline-group">
         <label>到达地</label>
@@ -32,6 +32,22 @@
     </div>
   </div>
 </template>
+
+<script>
+import TicketFromCity from './TicketFromCity.vue'
+
+export default {
+  name: 'TicketForm',
+  components: {
+    TicketFromCity
+  },
+  data() {
+    return {
+      departureCity: ''
+    }
+  }
+}
+</script>
 
 <style scoped>
 .ticket-form-container {
