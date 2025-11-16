@@ -2,30 +2,30 @@
   <div class="ticket-nav-dropdown">
     <div class="ticket-nav-content">
       <div class="ticket-nav-section">
-        <h4>旅游服务</h4>
+        <h4>景点门票</h4>
         <ul>
-          <li><router-link to="/travel/hotel">酒店预订</router-link></li>
-          <li><router-link to="/travel/attraction">景点门票</router-link></li>
-          <li><router-link to="/travel/package">旅游套餐</router-link></li>
-          <li><router-link to="/travel/carrental">租车服务</router-link></li>
+          <li><router-link to="/attraction/national">国家景点</router-link></li>
+          <li><router-link to="/attraction/provincial">省级景点</router-link></li>
+          <li><router-link to="/attraction/city">市级景点</router-link></li>
+          <li><router-link to="/attraction/theme">主题公园</router-link></li>
         </ul>
       </div>
       <div class="ticket-nav-section">
-        <h4>热门目的地</h4>
+        <h4>景点查询</h4>
         <ul>
-          <li><router-link to="/destination/beijing">北京</router-link></li>
-          <li><router-link to="/destination/shanghai">上海</router-link></li>
-          <li><router-link to="/destination/guangzhou">广州</router-link></li>
-          <li><router-link to="/destination/shenzhen">深圳</router-link></li>
+          <li><router-link to="/search/name">景点名称查询</router-link></li>
+          <li><router-link to="/search/location">地理位置查询</router-link></li>
+          <li><router-link to="/search/type">景点类型查询</router-link></li>
+          <li><router-link to="/search/hot">热门景点推荐</router-link></li>
         </ul>
       </div>
       <div class="ticket-nav-section">
-        <h4>旅游资讯</h4>
+        <h4>景点服务</h4>
         <ul>
-          <li><router-link to="/info/guide">旅游攻略</router-link></li>
-          <li><router-link to="/info/weather">天气查询</router-link></li>
-          <li><router-link to="/info/traffic">交通指南</router-link></li>
-          <li><router-link to="/info/food">美食推荐</router-link></li>
+          <li><router-link to="/service/guide">导游服务</router-link></li>
+          <li><router-link to="/service/transport">交通接送</router-link></li>
+          <li><router-link to="/service/ticket">门票预订</router-link></li>
+          <li><router-link to="/service/group">团体服务</router-link></li>
         </ul>
       </div>
     </div>
