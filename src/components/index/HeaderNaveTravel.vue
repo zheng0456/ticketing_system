@@ -40,18 +40,14 @@ export default {
 
 <style scoped>
 .travel-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  min-width: 600px;
+  min-width: 950px;
   padding: 20px;
-  margin-top: 5px;
 }
 
 .travel-content {

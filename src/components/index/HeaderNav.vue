@@ -88,6 +88,14 @@ export default {
   transform: translateX(-50%);
   z-index: 1000;
 }
+
+.travel-dropdown {
+  position: fixed;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;
 }
