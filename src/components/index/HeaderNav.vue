@@ -84,10 +84,8 @@ export default {
 .ticket-dropdown {
   position: absolute;
   top: 100%;
-  left: -45px;
-  right: -45px;
   z-index: 1000;
-  margin-top: 0;
+  margin-top: 8px;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;
