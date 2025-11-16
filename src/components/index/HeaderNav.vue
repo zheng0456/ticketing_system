@@ -31,7 +31,16 @@
         <HeaderNaveHotel v-show="showHotelMenu" class="hotel-dropdown" />
       </transition>
     </div>
-    <a href="#" class="nav-item">出行指南</a>
+    <div 
+      class="nav-item walk-item" 
+      @mouseenter="showWalkMenu = true"
+      @mouseleave="showWalkMenu = false"
+    >
+      <a href="#" class="nav-link" @click.prevent>出行指南</a>
+      <transition name="fade">
+        <HeaderNaveWalk v-show="showWalkMenu" class="walk-dropdown" />
+      </transition>
+    </div>
     <a href="#" class="nav-item">信息查询</a>
   </div>
 </template>
@@ -40,19 +49,22 @@
 import HeaderNaveTicket from '@/components/index/HeaderNaveTicket.vue'
 import HeaderNaveTravel from '@/components/index/HeaderNaveTravel.vue'
 import HeaderNaveHotel from '@/components/index/HeaderNaveHotel.vue'
+import HeaderNaveWalk from '@/components/index/HeaderNaveWalk.vue'
 
 export default {
   name: 'HeaderNav',
   components: {
     HeaderNaveTicket,
     HeaderNaveTravel,
-    HeaderNaveHotel
+    HeaderNaveHotel,
+    HeaderNaveWalk
   },
   data() {
     return {
       showTicketMenu: false,
       showTravelMenu: false,
-      showHotelMenu: false
+      showHotelMenu: false,
+      showWalkMenu: false
     }
   },
 
@@ -94,6 +106,9 @@ export default {
 .hotel-item {
   position: relative;
 }
+.walk-item {
+  position: relative;
+}
 .ticket-dropdown {
   position: fixed;
   top: 180px;
@@ -111,6 +126,14 @@ export default {
 }
 
 .hotel-dropdown {
+  position: fixed;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.walk-dropdown {
   position: fixed;
   top: 180px;
   left: 50%;
