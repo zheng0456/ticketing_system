@@ -7,15 +7,15 @@
         <button class="tab-btn">中转换乘</button>
         <button class="tab-btn">退改签</button>
       </div>
-      <div class="form-group">
+      <div class="form-group inline-group">
         <label>出发地</label>
         <input type="text" placeholder="请输入出发地" />
       </div>
-      <div class="form-group">
+      <div class="form-group inline-group">
         <label>到达地</label>
         <input type="text" placeholder="请输入到达地" />
       </div>
-      <div class="form-group">
+      <div class="form-group inline-group">
         <label>出发日期</label>
         <input type="date" :value="new Date().toISOString().split('T')[0]" />
       </div>
@@ -85,6 +85,16 @@
   font-size: 14px;
   color: #333;
   font-weight: 500;
+}
+.inline-group {
+  display: flex;
+  align-items: center;
+}
+.inline-group label {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 10px;
+  min-width: 60px;
 }
 .form-group input[type="text"],
 .form-group input[type="date"] {
