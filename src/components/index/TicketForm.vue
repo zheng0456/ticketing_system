@@ -36,17 +36,21 @@
 <style scoped>
 .ticket-form-container {
   display: flex;
-  padding: 15px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
   background: #f5f5f5;
   font-family: "Microsoft YaHei", Arial, sans-serif;
+  min-height: 400px;
 }
 .ticket-form {
   background: #fff;
   padding: 15px;
   border: 1px solid #e1e1e1;
-  margin-right: 15px;
+  margin-left: 235px;
   width: 320px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex-shrink: 0;
 }
 .tab-nav {
   display: flex;
@@ -150,38 +154,5 @@
   color: #0052a3;
   text-decoration: underline;
 }
-.app-promotion {
-  flex: 1;
-  background: #fff;
-  border: 1px solid #e1e1e1;
-  border-radius: 3px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.app-info {
-  margin-right: 20px;
-}
-.app-info h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: #333;
-  font-weight: bold;
-}
-.app-info p {
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #666;
-  line-height: 1.5;
-}
-.qrcode {
-  text-align: center;
-}
-.qrcode img {
-  width: 100px;
-  height: 100px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
+
 </style>
