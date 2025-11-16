@@ -8,7 +8,7 @@
         readonly 
         @click="toggleCityList"
       />
-      <button class="select-btn" @click="toggleCityList">选择</button>
+      <button class="select-btn" @click="toggleCityList"><el-icon><Location /></el-icon></button>
     </div>
     <div class="city-list" v-if="showCityList">
       <div class="city-list-header">
@@ -91,7 +91,7 @@ export default {
 .input-with-btn input[type="text"] {
   flex: 1;
   padding: 10px 8px;
-  padding-right: 50px;
+  padding-right: 40px;
   border: 1px solid #ccc;
   border-radius: 3px;
   font-size: 14px;
@@ -107,20 +107,21 @@ export default {
 }
 .select-btn {
   position: absolute;
-  right: 5px;
+  right: 3px;
   top: 50%;
   transform: translateY(-50%);
-  background: #ff6600;
-  color: white;
+  background: transparent;
+  color: #666;
   border: none;
-  padding: 6px 12px;
-  border-radius: 3px;
+  padding: 4px 8px;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 12px;
-  transition: background-color 0.3s ease;
+  font-size: 11px;
+  transition: all 0.2s ease;
 }
 .select-btn:hover {
-  background: #e55500;
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
 }
 .city-list {
   position: absolute;
