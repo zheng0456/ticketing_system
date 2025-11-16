@@ -5,8 +5,7 @@
         type="text" 
         :placeholder="placeholder" 
         v-model="selectedCity" 
-        readonly 
-        @click="toggleCityList"
+        @focus="handleInputFocus"
       />
       <button class="select-btn" @click="toggleCityList"><el-icon><Location /></el-icon></button>
     </div>
@@ -72,6 +71,10 @@ export default {
     selectCity(city) {
       this.selectedCity = city;
       this.showCityList = false;
+    },
+    handleInputFocus() {
+      // 输入框获得焦点时，不显示城市列表，允许键盘输入
+      this.showCityList = false;
     }
   }
 }
@@ -98,7 +101,6 @@ export default {
   height: 32px;
   box-sizing: border-box;
   transition: border-color 0.3s ease;
-  cursor: pointer;
 }
 .input-with-btn input[type="text"]:focus {
   outline: none;

@@ -13,7 +13,7 @@
       </div>
       <div class="form-group inline-group">
         <label>到达地</label>
-        <input type="text" placeholder="请输入到达地" />
+        <TicketFromCity v-model="arrivalCity" placeholder="请输入到达地" />
       </div>
       <div class="form-group inline-group">
         <label>出发日期</label>
@@ -43,7 +43,8 @@ export default {
   },
   data() {
     return {
-      departureCity: ''
+      departureCity: '',
+      arrivalCity: ''
     }
   }
 }
