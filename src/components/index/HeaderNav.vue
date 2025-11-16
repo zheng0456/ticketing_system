@@ -82,10 +82,11 @@ export default {
   position: relative;
 }
 .ticket-dropdown {
-  position: absolute;
-  top: 100%;
+  position: fixed;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
-  margin-top: 8px;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;
