@@ -11,7 +11,16 @@
         <HeaderNaveTicket v-show="showTicketMenu" class="ticket-dropdown" />
       </transition>
     </div>
-    <a href="#" class="nav-item">团购服务</a>
+    <div 
+      class="nav-item travel-item" 
+      @mouseenter="showTravelMenu = true"
+      @mouseleave="showTravelMenu = false"
+    >
+      <a href="#" class="nav-link" @click.prevent>旅游服务</a>
+      <transition name="fade">
+        <HeaderNaveTravel v-show="showTravelMenu" class="travel-dropdown" />
+      </transition>
+    </div>
     <a href="#" class="nav-item">会员服务</a>
     <a href="#" class="nav-item">站车服务</a>
     <a href="#" class="nav-item">商旅服务</a>
@@ -22,15 +31,18 @@
 
 <script>
 import HeaderNaveTicket from '@/components/index/HeaderNaveTicket.vue'
+import HeaderNaveTravel from '@/components/index/HeaderNaveTravel.vue'
 
 export default {
   name: 'HeaderNav',
   components: {
-    HeaderNaveTicket
+    HeaderNaveTicket,
+    HeaderNaveTravel
   },
   data() {
     return {
-      showTicketMenu: false
+      showTicketMenu: false,
+      showTravelMenu: false
     }
   },
 
@@ -64,6 +76,9 @@ export default {
   border-radius: 4px;
 }
 .ticket-item {
+  position: relative;
+}
+.travel-item {
   position: relative;
 }
 .ticket-dropdown {
