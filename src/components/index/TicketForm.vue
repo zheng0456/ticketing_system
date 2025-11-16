@@ -9,11 +9,11 @@
       </div>
       <div class="form-group">
         <label>出发地</label>
-        <input type="text" placeholder="南都" />
+        <input type="text" placeholder="请输入出发地" />
       </div>
       <div class="form-group">
         <label>到达地</label>
-        <input type="text" placeholder="集宁南" />
+        <input type="text" placeholder="请输入到达地" />
       </div>
       <div class="form-group">
         <label>出发日期</label>
@@ -27,18 +27,7 @@
       </div>
       <button class="query-btn">查询</button>
       <div class="history-links">
-        <a href="#">南都-集宁南</a>
         <a href="#">删除历史</a>
-      </div>
-    </div>
-    <div class="app-promotion">
-      <div class="app-info">
-        <h2>12306APP</h2>
-        <p>随时随地掌握列车新动态</p>
-        <p>扫描二维码安装铁路12306</p>
-      </div>
-      <div class="qrcode">
-        <img src="https://via.placeholder.com/100" alt="二维码" />
       </div>
     </div>
   </div>
@@ -47,99 +36,152 @@
 <style scoped>
 .ticket-form-container {
   display: flex;
-  padding: 20px;
+  padding: 15px;
   background: #f5f5f5;
+  font-family: "Microsoft YaHei", Arial, sans-serif;
 }
 .ticket-form {
   background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  margin-right: 20px;
-  width: 300px;
+  padding: 15px;
+  border: 1px solid #e1e1e1;
+  margin-right: 15px;
+  width: 320px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .tab-nav {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #ff6600;
 }
 .tab-btn {
-  padding: 8px 15px;
+  padding: 8px 20px;
   border: none;
-  background: #f0f0f0;
+  background: transparent;
   cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  margin-right: 2px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+.tab-btn:hover {
+  background: #f8f8f8;
 }
 .tab-btn.active {
-  background: #0066cc;
+  background: #ff6600;
   color: #fff;
+  font-weight: bold;
 }
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 .form-group label {
   display: block;
   margin-bottom: 5px;
   font-size: 14px;
-  color: #666;
+  color: #333;
+  font-weight: 500;
 }
-.form-group input {
+.form-group input[type="text"],
+.form-group input[type="date"] {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 14px;
+  height: 32px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus {
+  outline: none;
+  border-color: #ff6600;
+  box-shadow: 0 0 3px rgba(255, 102, 0, 0.3);
 }
 .checkbox-group {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
-.checkbox-group input {
+.checkbox-group input[type="checkbox"] {
   width: auto;
   margin-right: 5px;
+  vertical-align: middle;
 }
 .checkbox-group label {
   display: inline;
-  margin-right: 15px;
+  margin-right: 0;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
 }
 .query-btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: #ff6600;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+.query-btn:hover {
+  background: #e55500;
 }
 .history-links {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
   font-size: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
 }
 .history-links a {
   color: #0066cc;
   text-decoration: none;
+  transition: color 0.3s ease;
+}
+.history-links a:hover {
+  color: #0052a3;
+  text-decoration: underline;
 }
 .app-promotion {
   flex: 1;
   background: #fff;
-  border-radius: 8px;
+  border: 1px solid #e1e1e1;
+  border-radius: 3px;
   padding: 20px;
   display: flex;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .app-info {
   margin-right: 20px;
 }
 .app-info h2 {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
+  color: #333;
+  font-weight: bold;
 }
 .app-info p {
-  margin-bottom: 5px;
-  font-size: 16px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+.qrcode {
+  text-align: center;
 }
 .qrcode img {
   width: 100px;
   height: 100px;
   border: 1px solid #ddd;
+  border-radius: 4px;
 }
 </style>
