@@ -16,14 +16,12 @@
       @mouseenter="showTravelMenu = true"
       @mouseleave="showTravelMenu = false"
     >
-      <a href="#" class="nav-link" @click.prevent>旅游服务</a>
+      <a href="#" class="nav-link" @click.prevent>景点服务</a>
       <transition name="fade">
         <HeaderNaveTravel v-show="showTravelMenu" class="travel-dropdown" />
       </transition>
     </div>
-    <a href="#" class="nav-item">会员服务</a>
-    <a href="#" class="nav-item">站车服务</a>
-    <a href="#" class="nav-item">商旅服务</a>
+    <a href="#" class="nav-item">酒店服务</a>
     <a href="#" class="nav-item">出行指南</a>
     <a href="#" class="nav-item">信息查询</a>
   </div>
@@ -65,7 +63,7 @@ export default {
   text-decoration: none;
   padding: 8px 15px;
   font-size: 14px;
-  margin: 0 25px;
+  margin: 0 53px;
 }
 .nav-link {
   color: #fff;
