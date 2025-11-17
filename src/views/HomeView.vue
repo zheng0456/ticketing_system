@@ -7,6 +7,7 @@
       <FeatureIcons />
       <PagePromotion />
     </div>
+    <PageFooter />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import HeaderNav from '@/components/index/HeaderNav.vue'
 import TicketForm from '@/components/index/TicketForm.vue'
 import FeatureIcons from '@/components/index/FeatureIcons.vue'
 import PagePromotion from '@/components/index/Promotion.vue'
+import PageFooter from '@/components/index/Footer.vue'
 
 export default {
   name: 'HomeView',
@@ -24,7 +26,8 @@ export default {
     HeaderNav,
     TicketForm,
     FeatureIcons,
-    PagePromotion
+    PagePromotion,
+    PageFooter
   }
 }
 </script>
