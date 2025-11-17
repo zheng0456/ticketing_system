@@ -151,21 +151,25 @@ export default {
   background: #FFF8E6;
   border-radius: 4px;
   padding: 15px;
+  text-align: left;
 }
 
 .tips h4 {
   font-size: 16px;
   margin-top: 0;
   margin-bottom: 10px;
+  text-align: left;
 }
 
 .tips ol {
   padding-left: 20px;
   margin: 0;
+  text-align: left;
 }
 
 .tips li {
   margin-bottom: 5px;
   font-size: 14px;
+  text-align: left;
 }
 </style>
