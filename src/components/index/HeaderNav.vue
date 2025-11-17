@@ -126,7 +126,7 @@ export default {
 }
 .ticket-dropdown {
   position: fixed;
-  top: 180px;
+  top: 178px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -134,7 +134,7 @@ export default {
 
 .travel-dropdown {
   position: fixed;
-  top: 180px;
+  top: 178px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -142,7 +142,7 @@ export default {
 
 .hotel-dropdown {
   position: fixed;
-  top: 180px;
+  top: 178px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -150,7 +150,7 @@ export default {
 
 .walk-dropdown {
   position: fixed;
-  top: 180px;
+  top: 178px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -158,7 +158,7 @@ export default {
 
 .news-dropdown {
   position: fixed;
-  top: 180px;
+  top: 178px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;

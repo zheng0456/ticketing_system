@@ -169,7 +169,7 @@ export default {
   background: rgba(255, 255, 255, 0.95);
   padding: 20px;
   border: 1px solid #e1e1e1;
-  margin: 40px 0 40px 40px;
+  margin: 40px 0 40px 254px;
   width: 350px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   flex-shrink: 0;
