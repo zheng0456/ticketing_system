@@ -18,8 +18,7 @@
       <div class="tab-nav">
         <button class="tab-btn" :class="{ active: tripType === 'single' }" @click="tripType = 'single'">单程</button>
         <button class="tab-btn" :class="{ active: tripType === 'round' }" @click="tripType = 'round'">往返</button>
-        <button class="tab-btn">中转换乘</button>
-        <button class="tab-btn">退改签</button>
+      
       </div>
       <div class="form-group inline-group">
         <label>出发地</label>
@@ -186,6 +185,7 @@ export default {
 }
 .tab-nav {
   display: flex;
+  justify-content: center;
   margin-bottom: 15px;
   border-bottom: 2px solid #ff6600;
 }
