@@ -42,7 +42,8 @@ export default {
   background-repeat: no-repeat;
   border-radius: 8px;
   position: relative;
-  min-height: 200px;
+  width: 100%;
+  height: 250px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -61,7 +62,8 @@ export default {
   
   .promotion-item {
     padding: 0;
-    min-height: 150px;
+    width: 100%;
+    height: 200px;
   }
   
 }
