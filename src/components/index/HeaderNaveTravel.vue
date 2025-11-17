@@ -40,7 +40,7 @@ export default {
 
 <style scoped>
 .ticket-nav-dropdown {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0;
