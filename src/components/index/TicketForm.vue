@@ -16,8 +16,8 @@
     </div>
     <div class="ticket-form">
       <div class="tab-nav">
-        <button class="tab-btn active">单程</button>
-        <button class="tab-btn">往返</button>
+        <button class="tab-btn" :class="{ active: tripType === 'single' }" @click="tripType = 'single'">单程</button>
+        <button class="tab-btn" :class="{ active: tripType === 'round' }" @click="tripType = 'round'">往返</button>
         <button class="tab-btn">中转换乘</button>
         <button class="tab-btn">退改签</button>
       </div>
@@ -31,8 +31,14 @@
       </div>
       <div class="form-group inline-group">
         <label>出发日期</label>
-        <input type="date" :value="new Date().toISOString().split('T')[0]" />
+        <input type="date" v-model="departureDate" />
       </div>
+      <transition name="slide">
+        <div class="form-group inline-group" v-if="tripType === 'round'">
+          <label>返程日期</label>
+          <input type="date" v-model="returnDate" />
+        </div>
+      </transition>
       <div class="form-group checkbox-group">
         <input type="checkbox" id="student" />
         <label for="student">学生</label>
@@ -59,6 +65,9 @@ export default {
     return {
       departureCity: '',
       arrivalCity: '',
+      tripType: 'single', // 'single' 或 'round'
+      departureDate: new Date().toISOString().split('T')[0],
+      returnDate: new Date().toISOString().split('T')[0],
       currentIndex: 0,
       carouselInterval: null,
       carouselImages: [
@@ -235,6 +244,21 @@ export default {
   outline: none;
   border-color: #ff6600;
   box-shadow: 0 0 3px rgba(255, 102, 0, 0.3);
+}
+
+/* 返程日期字段过渡效果 */
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 .checkbox-group {
   display: flex;
