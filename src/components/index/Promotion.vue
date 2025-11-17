@@ -1,20 +1,16 @@
 <template>
   <div class="promotion-container">
     <div class="promotion-item">
-      <h3>景点服务</h3>
-      <p>景点畅行 尊享体验</p>
+      <img src="../../assets/img/景点服务index.png" alt="景点服务" />
     </div>
     <div class="promotion-item">
-      <h3>酒店服务</h3>
-      <p>酒店畅行 舒适体验</p>
+      <img src="../../assets/img/酒店服务index.png" alt="酒店服务" />
     </div>
     <div class="promotion-item">
-      <h3>出行指南</h3>
-      <p>旅行畅行 美好体验</p>
+      <img src="../../assets/img/出行指南index.png" alt="出行指南" />
     </div>
     <div class="promotion-item">
-      <h3>信息查询</h3>
-      <p>顺畅出行</p>
+      <img src="../../assets/img/信息查询index.png" alt="信息查询" />
     </div>
   </div>
 </template>
@@ -38,19 +34,16 @@ export default {
   flex: 1;
   text-align: center;
 }
-.promotion-item h3 {
-  margin-bottom: 10px;
-  color: #0066cc;
-}
-.promotion-item p {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
 .promotion-item img {
   width: 100px;
   height: 100px;
   border-radius: 8px;
-  margin-top: 10px;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+.promotion-item p {
+  margin-bottom: 5px;
+  font-size: 14px;
 }
 
 /* 响应式设计 */
@@ -78,8 +71,11 @@ export default {
     height: 28px;
   }
   
-  .promotion-item h3 {
-    font-size: 18px;
+  .promotion-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    margin-bottom: 15px;
   }
   
   .promotion-item p {
