@@ -54,7 +54,7 @@ export default {
       type: String,
       default: '请输入出发地'
     },
-    value: {
+    modelValue: {
       type: String,
       default: ''
     }
@@ -121,10 +121,10 @@ export default {
   computed: {
     selectedCity: {
       get() {
-        return this.value;
+        return this.modelValue;
       },
       set(newValue) {
-        this.$emit('input', newValue);
+        this.$emit('update:modelValue', newValue);
       }
     },
     filteredCities() {
