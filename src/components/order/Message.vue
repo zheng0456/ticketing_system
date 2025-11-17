@@ -2,6 +2,7 @@
   <div class="container">
     <!-- 左侧导航栏 -->
     <aside class="sidebar">
+      <div class="current-location">当前位置：个人中心 &gt; 火车票订单</div>
       <h3>个人中心</h3>
       <div class="menu-group">
         <h4>订单中心 ▼</h4>
@@ -45,7 +46,6 @@
 
     <!-- 右侧主内容区 -->
     <main class="main-content">
-      <div class="current-location">当前位置：个人中心 &gt; 火车票订单</div>
       <!-- 选项卡 -->
       <div class="tabs">
         <button class="tab active">未完成订单</button>
@@ -106,6 +106,14 @@ export default {
   background: #fff;
   border-right: 1px solid #eaeaea;
   padding: 20px;
+}
+
+.sidebar .current-location {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .sidebar h3 {
