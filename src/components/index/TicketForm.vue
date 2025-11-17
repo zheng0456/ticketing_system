@@ -1,5 +1,19 @@
 <template>
   <div class="ticket-form-container">
+    <div class="carousel-background">
+      <div class="carousel-slide" 
+           v-for="(image, index) in carouselImages" 
+           :key="index"
+           :class="{ active: currentIndex === index }"
+           :style="{ backgroundImage: `url(${image})` }">
+      </div>
+      <div class="carousel-indicators">
+        <span v-for="(image, index) in carouselImages" 
+              :key="index"
+              :class="{ active: currentIndex === index }"
+              @click="goToSlide(index)"></span>
+      </div>
+    </div>
     <div class="ticket-form">
       <div class="tab-nav">
         <button class="tab-btn active">单程</button>
@@ -44,7 +58,38 @@ export default {
   data() {
     return {
       departureCity: '',
-      arrivalCity: ''
+      arrivalCity: '',
+      currentIndex: 0,
+      carouselInterval: null,
+      carouselImages: [
+        require('@/assets/img/index1.jpg'),
+        require('@/assets/img/index2.jpg'),
+        require('@/assets/img/index3.jpg')
+      ]
+    }
+  },
+  mounted() {
+    this.startCarousel()
+  },
+  beforeUnmount() {
+    this.stopCarousel()
+  },
+  methods: {
+    startCarousel() {
+      this.carouselInterval = setInterval(() => {
+        this.currentIndex = (this.currentIndex + 1) % this.carouselImages.length
+      }, 4000)
+    },
+    stopCarousel() {
+      if (this.carouselInterval) {
+        clearInterval(this.carouselInterval)
+        this.carouselInterval = null
+      }
+    },
+    goToSlide(index) {
+      this.currentIndex = index
+      this.stopCarousel()
+      this.startCarousel()
     }
   }
 }
@@ -55,19 +100,80 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 20px;
+  padding: 0;
   background: #f5f5f5;
   font-family: "Microsoft YaHei", Arial, sans-serif;
-  min-height: 400px;
+  min-height: 500px;
+  position: relative;
+  overflow: hidden;
 }
-.ticket-form {
+
+.carousel-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-indicators span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicators span:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.carousel-indicators span.active {
   background: #fff;
-  padding: 15px;
+  width: 30px;
+  border-radius: 5px;
+}
+
+.ticket-form {
+  position: relative;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
   border: 1px solid #e1e1e1;
-  margin-left: 235px;
-  width: 320px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 40px 0 40px 40px;
+  width: 350px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   flex-shrink: 0;
+  backdrop-filter: blur(5px);
 }
 .tab-nav {
   display: flex;
