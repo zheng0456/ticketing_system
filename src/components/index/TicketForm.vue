@@ -196,7 +196,7 @@ export default {
   cursor: pointer;
   font-size: 14px;
   color: #666;
-  margin-right: 2px;
+  margin-right: 15px;
   border-radius: 4px 4px 0 0;
   transition: all 0.3s ease;
 }
