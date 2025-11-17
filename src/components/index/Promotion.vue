@@ -27,9 +27,12 @@ export default {
 
 <style scoped>
 .promotion-container {
-  display: flex;
-  padding: 20px;
-  background: #f9f9f9;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 30px;
+  padding: 40px 20px;
+  background: #ffffff;
 }
 .promotion-item {
   flex: 1;
@@ -48,5 +51,48 @@ export default {
   height: 100px;
   border-radius: 8px;
   margin-top: 10px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .promotion-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 20px;
+    padding: 30px 15px;
+    margin: 15px;
+  }
+  
+  .promotion-item {
+    padding: 25px 15px;
+  }
+  
+  .promotion-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+  
+  .promotion-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .promotion-item h3 {
+    font-size: 18px;
+  }
+  
+  .promotion-item p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .promotion-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 15px;
+    padding: 20px 10px;
+  }
 }
 </style>
