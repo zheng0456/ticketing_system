@@ -9,10 +9,6 @@
       <span>遗失物品查找</span>
     </div>
     <div class="icon-item">
-      <i class="icon">🚗</i>
-      <span>约车服务</span>
-    </div>
-    <div class="icon-item">
       <i class="icon">🛒</i>
       <span>便民托运</span>
     </div>
