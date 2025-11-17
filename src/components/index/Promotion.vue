@@ -1,23 +1,27 @@
 <template>
   <div class="promotion-container">
-    <div class="promotion-item">
-      <img src="../../assets/img/景点服务index.png" alt="景点服务" />
+    <div class="promotion-item" :style="{ backgroundImage: 'url(' + jingdianImage + ')' }">
     </div>
-    <div class="promotion-item">
-      <img src="../../assets/img/酒店服务index.png" alt="酒店服务" />
+    <div class="promotion-item" :style="{ backgroundImage: 'url(' + jiudianImage + ')' }">
     </div>
-    <div class="promotion-item">
-      <img src="../../assets/img/出行指南index.png" alt="出行指南" />
+    <div class="promotion-item" :style="{ backgroundImage: 'url(' + chuxingImage + ')' }">
     </div>
-    <div class="promotion-item">
-      <img src="../../assets/img/信息查询index.png" alt="信息查询" />
+    <div class="promotion-item" :style="{ backgroundImage: 'url(' + xinxinImage + ')' }">
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'PagePromotion', // 修改组件名为多词形式
+  name: 'PagePromotion',
+  data() {
+    return {
+      jingdianImage: require('@/assets/img/景点服务index.png'),
+      jiudianImage: require('@/assets/img/酒店服务index.png'),
+      chuxingImage: require('@/assets/img/出行指南index.png'),
+      xinxinImage: require('@/assets/img/信息查询index.png')
+    }
+  }
 }
 </script>
 
@@ -33,18 +37,17 @@ export default {
 .promotion-item {
   flex: 1;
   text-align: center;
-}
-.promotion-item img {
-  width: 100px;
-  height: 100px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 8px;
-  margin-bottom: 10px;
-  object-fit: cover;
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
-.promotion-item p {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
+
 
 /* 响应式设计 */
 @media (max-width: 768px) {
@@ -57,30 +60,10 @@ export default {
   }
   
   .promotion-item {
-    padding: 25px 15px;
+    padding: 0;
+    min-height: 150px;
   }
   
-  .promotion-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 15px;
-  }
-  
-  .promotion-icon svg {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .promotion-item img {
-    width: 80px;
-    height: 80px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-  }
-  
-  .promotion-item p {
-    font-size: 14px;
-  }
 }
 
 @media (max-width: 480px) {
