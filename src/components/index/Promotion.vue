@@ -1,16 +1,20 @@
 <template>
   <div class="promotion-container">
     <div class="promotion-item">
-      <h3>会员服务</h3>
-      <p>铁路畅行 尊享体验</p>
-      <p>12306铁路会员积分服务</p>
-      <img src="https://via.placeholder.com/150" alt="会员服务" />
+      <h3>景点服务</h3>
+      <p>景点畅行 尊享体验</p>
     </div>
     <div class="promotion-item">
-      <h3>餐饮·特产</h3>
-      <p>带有温度的旅途配餐</p>
-      <p>享受星级的体验和家乡的味道</p>
-      <img src="https://via.placeholder.com/150" alt="餐饮特产" />
+      <h3>酒店服务</h3>
+      <p>酒店畅行 舒适体验</p>
+    </div>
+    <div class="promotion-item">
+      <h3>出行指南</h3>
+      <p>旅行畅行 美好体验</p>
+    </div>
+    <div class="promotion-item">
+      <h3>信息查询</h3>
+      <p>顺畅出行</p>
     </div>
   </div>
 </template>
