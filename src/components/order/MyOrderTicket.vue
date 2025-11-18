@@ -17,34 +17,52 @@
     <!-- 订单卡片区域 -->
     <div class="order-card" v-if="orders.length > 0">
       <div class="order-date-tag">{{ orders[0].date }} 周四</div>
-      <div class="train-info">
-        <div class="train-num">{{ orders[0].trainNum }}</div>
-        <div class="departure">
-          <div class="station-name">{{ orders[0].departureStation }}</div>
-          <div class="departure-time">{{ orders[0].departureTime }}</div>
-        </div>
-        <div class="arrow">
-          <svg width="24" height="10" viewBox="0 0 24 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 5L20 5" stroke="#4285F4" stroke-width="2"/>
-          </svg>
-          <div class="ticket-valid">车票当日当次有效</div>
-        </div>
-        <div class="arrival">
-          <div class="station-name">{{ orders[0].arrivalStation }}</div>
-          <div class="arrival-time">{{ orders[0].arrivalTime }}</div>
-        </div>
-        <div class="seat-type">{{ orders[0].seatType }}</div>
-        <div class="ticket-info">
-          <div class="ticket-type">
-            {{ orders[0].ticketType }} ¥{{ orders[0].price }}
-            <span class="discount-tag">{{ orders[0].discount }}折</span>
+      <div class="order-no">订单号：{{ orders[0].orderNo }}</div>
+      
+      <div class="ticket-main">
+        <div class="train-section">
+          <div class="train-number">{{ orders[0].trainNum }}</div>
+          <div class="route-info">
+            <div class="station departure-station">
+              <div class="station-name">{{ orders[0].departureStation }}</div>
+              <div class="time">{{ orders[0].departureTime }}</div>
+            </div>
+            <div class="route-arrow">
+              <svg width="120" height="2" viewBox="0 0 120 2" fill="none">
+                <line x1="0" y1="1" x2="120" y2="1" stroke="#4285F4" stroke-width="2"/>
+              </svg>
+              <div class="ticket-valid">车票当日当次有效</div>
+            </div>
+            <div class="station arrival-station">
+              <div class="station-info">
+                <div class="station-name">{{ orders[0].arrivalStation }}</div>
+                <div class="time">{{ orders[0].arrivalTime }}</div>
+              </div>
+              <div class="station-with-status">
+                <div class="order-status">{{ orders[0].status }}</div>
+                <button class="refund-btn">退票</button>
+              </div>
+            </div>
           </div>
-          <div class="qualification-tag" v-if="orders[0].qualificationChecked">学生资质已核验</div>
-          <div class="order-status">{{ orders[0].status }}</div>
-          <button class="refund-btn">退票</button>
-          <div class="order-no">订单号：{{ orders[0].orderNo }}</div>
+        </div>
+        
+        <div class="ticket-details">
+          <div class="seat-info">
+            <span class="seat-type">{{ orders[0].seatType }}</span>
+          </div>
+          <div class="price-info">
+            <div class="ticket-type">
+              {{ orders[0].ticketType }} ¥{{ orders[0].price }}
+              <span class="discount-tag">{{ orders[0].discount }}折</span>
+            </div>
+            <div class="qualification-tag" v-if="orders[0].qualificationChecked">学生资质已核验</div>
+          </div>
+          <div class="action-section">
+              <!-- 退票按钮已移动到到达站区域 -->
+            </div>
         </div>
       </div>
+      
       <div class="order-meta">
         <div class="purchase-type">
           <span class="tag">线上购买</span>
@@ -169,78 +187,117 @@ const handleQuery = () => {
   margin-bottom: 15px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  position: relative;
+  width: 800px;
 }
 
 .order-date-tag {
   background-color: #00897b;
   color: #fff;
-  padding: 5px 10px;
+  padding: 8px 15px;
   display: inline-block;
-  border-radius: 0 4px 4px 0;
   font-size: 14px;
-  margin-right: 700px;
-  width: fit-content;
+  font-weight: 500;
+  margin-right: 658px;
 }
 
-.train-info {
+.order-no {
+  position: absolute;
+  top: 8px;
+  right: 15px;
+  font-size: 12px;
+  color: #666;
+  z-index: 2;
+}
+
+.ticket-main {
+  padding: 20px 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.train-section {
   display: flex;
-  flex-wrap: wrap;
-  padding: 15px;
   align-items: center;
+  margin-bottom: 15px;
 }
 
-.train-num {
-  font-size: 20px;
+.train-number {
+  font-size: 24px;
   font-weight: bold;
-  margin-right: 20px;
   color: #333;
-}
-
-.departure, .arrival {
-  text-align: left;
+  margin-right: 30px;
   min-width: 80px;
 }
 
-.station-name {
-  font-weight: 500;
-  font-size: 16px;
+.route-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
 }
 
-.departure-time, .arrival-time {
+.station {
+  text-align: center;
+  min-width: 100px;
+}
+
+.station-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.time {
   font-size: 14px;
   color: #666;
 }
 
-.arrow {
+.route-arrow {
+  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin: 0 10px;
+  margin: 0 20px;
 }
 
 .ticket-valid {
   font-size: 12px;
   color: #666;
   background-color: #f5f5f5;
-  padding: 2px 5px;
-  border: 1px solid #eee;
-  border-radius: 3px;
-  margin-left: 5px;
+  padding: 3px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.ticket-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.seat-info {
+  min-width: 120px;
 }
 
 .seat-type {
   font-size: 14px;
   color: #666;
-  margin: 0 20px;
+  background-color: #f8f9fa;
+  padding: 6px 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  display: inline-block;
 }
 
-.ticket-info {
-  text-align: right;
-  min-width: 220px;
+.price-info {
+  text-align: center;
+  min-width: 150px;
 }
 
 .ticket-type {
-  margin-bottom: 5px;
   font-size: 14px;
+  margin-bottom: 5px;
 }
 
 .discount-tag {
@@ -256,37 +313,79 @@ const handleQuery = () => {
   background-color: #81c784;
   color: #fff;
   font-size: 12px;
-  padding: 2px 4px;
+  padding: 2px 6px;
   border-radius: 3px;
   display: inline-block;
   margin-top: 5px;
 }
 
-.order-status {
-  margin-bottom: 8px;
-  font-weight: 500;
+.action-section {
+  text-align: right;
+  min-width: 120px;
+}
+
+.arrival-station {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.station-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.station-with-status {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.arrival-station .order-status {
   font-size: 14px;
+  font-weight: 500;
+  color: #2e7d32;
+  background-color: #e8f5e8;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.arrival-station .refund-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(238, 90, 36, 0.3);
+}
+
+.arrival-station .refund-btn:hover {
+  background: linear-gradient(135deg, #ee5a24, #d63031);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(238, 90, 36, 0.4);
 }
 
 .refund-btn {
   color: #2196f3;
   background-color: #fff;
   border: 1px solid #2196f3;
-  padding: 5px 10px;
+  padding: 6px 12px;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 14px;
-  margin-bottom: 5px;
+  transition: all 0.3s ease;
 }
 
-.order-no {
-  font-size: 14px;
-  color: #666;
-  position: absolute;
-  top: 100px;
-  right: 248px;
-  z-index: 2;
-  padding: 5px 10px;
+.refund-btn:hover {
+  background-color: #2196f3;
+  color: #fff;
 }
 
 .order-meta {
