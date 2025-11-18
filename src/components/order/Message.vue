@@ -69,7 +69,7 @@ export default {
 
 /* 左侧 sidebar 样式 */
 .sidebar {
-  width: 200px;
+  width: 215px;
   background: #fff;
   border-right: 1px solid #eaeaea;
   padding: 20px;
