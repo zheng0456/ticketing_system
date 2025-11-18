@@ -2,6 +2,7 @@
   <div class="home">
     <PageHeader />
     <HeaderNav />
+    <HeaderMessage />
     <div class="content-wrapper">
       <OrderMessage />
     </div>
@@ -11,6 +12,7 @@
 <script setup>
 import PageHeader from '@/components/index/Header.vue'
 import HeaderNav from '@/components/index/HeaderNav.vue'
+import HeaderMessage from '@/components/header/HeaderMessage.vue'
 import OrderMessage from '../components/order/Message.vue'
 </script>
 
