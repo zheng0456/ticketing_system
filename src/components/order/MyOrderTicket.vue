@@ -180,7 +180,7 @@ const handleQuery = () => {
   display: inline-block;
   border-radius: 0 4px 4px 0;
   font-size: 14px;
-  margin-left: auto;
+  margin-right: 700px;
   width: fit-content;
 }
 
