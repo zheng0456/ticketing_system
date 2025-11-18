@@ -4,7 +4,7 @@
     <aside class="sidebar">
       <h3>个人中心</h3>
       <div class="menu-group">
-        <h4 @click="toggleOrderMenu">订单中心 {{ orderMenuExpanded ? '▲' : '▼' }}</h4>
+        <h4 @click="toggleOrderMenu">订单中心 {{ orderMenuExpanded ? '▼' : '▲' }}</h4>
         <ul v-show="orderMenuExpanded">
           <li class="active">火车票订单</li>
           <li>候补订单</li>
@@ -23,7 +23,7 @@
         <h4>会员中心</h4>
       </div>
       <div class="menu-group">
-        <h4 @click="togglePersonalInfoMenu">个人信息 {{ personalInfoMenuExpanded ? '▲' : '▼' }}</h4>
+        <h4 @click="togglePersonalInfoMenu">个人信息 {{ personalInfoMenuExpanded ? '▼' : '▲' }}</h4>
         <ul v-show="personalInfoMenuExpanded">
           <li>查看个人信息</li>
           <li>账号安全</li>
@@ -32,14 +32,14 @@
         </ul>
       </div>
       <div class="menu-group">
-        <h4 @click="toggleCommonInfoMenu">常用信息管理 {{ commonInfoMenuExpanded ? '▲' : '▼' }}</h4>
+        <h4 @click="toggleCommonInfoMenu">常用信息管理 {{ commonInfoMenuExpanded ? '▼' : '▲' }}</h4>
         <ul v-show="commonInfoMenuExpanded">
           <li>乘车人</li>
           <li>地址管理</li>
         </ul>
       </div>
       <div class="menu-group">
-        <h4 @click="toggleWarmServiceMenu">温馨服务 {{ warmServiceMenuExpanded ? '▲' : '▼' }}</h4>
+        <h4 @click="toggleWarmServiceMenu">温馨服务 {{ warmServiceMenuExpanded ? '▼' : '▲' }}</h4>
       </div>
     </aside>
 
