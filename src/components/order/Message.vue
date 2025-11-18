@@ -11,7 +11,7 @@
         </ul>
       </div>
       <div class="menu-group">
-        <h4>本人车票</h4>
+        <h4 @click="showMyOrderTicket" :class="{ active: activeMenuItem === 'myOrderTicket' }">本人车票</h4>
       </div>
       <div class="menu-group">
         <h4>会员中心</h4>
@@ -46,6 +46,7 @@
 import { ref } from 'vue'
 import TicketOrder from './TicketOrder.vue'
 import AlternateTicket from './AlternateTicket.vue'
+import MyOrderTicket from './MyOrderTicket.vue'
 
 // 响应式数据控制菜单展开/收起状态
 const orderMenuExpanded = ref(true)
@@ -90,6 +91,12 @@ const showAlternateTicket = () => {
   currentComponent.value = AlternateTicket
   activeMenuItem.value = 'alternateTicket'
 }
+
+// 显示本人车票页面
+const showMyOrderTicket = () => {
+  currentComponent.value = MyOrderTicket
+  activeMenuItem.value = 'myOrderTicket'
+}
 </script>
 
 <script>
@@ -132,6 +139,11 @@ export default {
 
 .menu-group h4:hover {
   color: #409EFF;
+}
+
+.menu-group h4.active {
+  color: #409EFF;
+  font-weight: 500;
 }
 
 .menu-group ul {
