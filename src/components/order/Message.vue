@@ -8,12 +8,6 @@
         <ul v-show="orderMenuExpanded">
           <li @click="showTicketOrder" :class="{ active: activeMenuItem === 'ticketOrder' }" class="clickable-item">火车票订单</li>
           <li @click="showAlternateTicket" :class="{ active: activeMenuItem === 'alternateTicket' }" class="clickable-item">候补订单</li>
-          <li>计次·定期票...</li>
-          <li>约号订单</li>
-          <li>雪具快运订单</li>
-          <li>餐饮·特产</li>
-          <li>保险订单</li>
-          <li>电子发票</li>
         </ul>
       </div>
       <div class="menu-group">
