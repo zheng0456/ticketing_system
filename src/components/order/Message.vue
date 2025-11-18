@@ -6,8 +6,8 @@
       <div class="menu-group">
         <h4 @click="toggleOrderMenu">订单中心 {{ orderMenuExpanded ? '▼' : '▲' }}</h4>
         <ul v-show="orderMenuExpanded">
-          <li class="active">火车票订单</li>
-          <li @click="showAlternateTicket" class="clickable-item">候补订单</li>
+          <li @click="showTicketOrder" :class="{ active: activeMenuItem === 'ticketOrder' }" class="clickable-item">火车票订单</li>
+          <li @click="showAlternateTicket" :class="{ active: activeMenuItem === 'alternateTicket' }" class="clickable-item">候补订单</li>
           <li>计次·定期票...</li>
           <li>约号订单</li>
           <li>雪具快运订单</li>
@@ -59,6 +59,9 @@ const personalInfoMenuExpanded = ref(false)
 const commonInfoMenuExpanded = ref(false)
 const warmServiceMenuExpanded = ref(false)
 
+// 控制当前激活的菜单项
+const activeMenuItem = ref('ticketOrder')
+
 // 控制右侧显示的组件
 const currentComponent = ref(TicketOrder)
 
@@ -82,9 +85,16 @@ const toggleWarmServiceMenu = () => {
   warmServiceMenuExpanded.value = !warmServiceMenuExpanded.value
 }
 
+// 显示火车票订单页面
+const showTicketOrder = () => {
+  currentComponent.value = TicketOrder
+  activeMenuItem.value = 'ticketOrder'
+}
+
 // 显示候补订单页面
 const showAlternateTicket = () => {
   currentComponent.value = AlternateTicket
+  activeMenuItem.value = 'alternateTicket'
 }
 </script>
 
