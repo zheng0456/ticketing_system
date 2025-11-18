@@ -53,8 +53,6 @@
         <div class="operate-btns">
           <button class="operate-btn">改签</button>
           <button class="operate-btn">变更到站</button>
-          <button class="operate-btn">餐饮·特产</button>
-          <button class="operate-btn print-btn">打印信息单</button>
         </div>
       </div>
     </div>
