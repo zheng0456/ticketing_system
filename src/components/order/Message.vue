@@ -7,7 +7,7 @@
         <h4 @click="toggleOrderMenu">订单中心 {{ orderMenuExpanded ? '▼' : '▲' }}</h4>
         <ul v-show="orderMenuExpanded">
           <li class="active">火车票订单</li>
-          <li>候补订单</li>
+          <li @click="showAlternateTicket" class="clickable-item">候补订单</li>
           <li>计次·定期票...</li>
           <li>约号订单</li>
           <li>雪具快运订单</li>
@@ -44,19 +44,23 @@
     </aside>
 
     <!-- 右侧主内容区 -->
-    <TicketOrder />
+    <component :is="currentComponent" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import TicketOrder from './TicketOrder.vue'
+import AlternateTicket from './AlternateTicket.vue'
 
 // 响应式数据控制菜单展开/收起状态
 const orderMenuExpanded = ref(true)
 const personalInfoMenuExpanded = ref(false)
 const commonInfoMenuExpanded = ref(false)
 const warmServiceMenuExpanded = ref(false)
+
+// 控制右侧显示的组件
+const currentComponent = ref(TicketOrder)
 
 // 切换订单中心菜单
 const toggleOrderMenu = () => {
@@ -76,6 +80,11 @@ const toggleCommonInfoMenu = () => {
 // 切换温馨服务菜单
 const toggleWarmServiceMenu = () => {
   warmServiceMenuExpanded.value = !warmServiceMenuExpanded.value
+}
+
+// 显示候补订单页面
+const showAlternateTicket = () => {
+  currentComponent.value = AlternateTicket
 }
 </script>
 
@@ -141,5 +150,13 @@ export default {
 .menu-group li.active {
   color: #409EFF;
   font-weight: 500;
+}
+
+.menu-group li.clickable-item {
+  cursor: pointer;
+}
+
+.menu-group li.clickable-item:hover {
+  color: #409EFF;
 }
 </style>
