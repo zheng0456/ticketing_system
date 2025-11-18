@@ -284,6 +284,11 @@ const handleQuery = () => {
 .order-no {
   font-size: 14px;
   color: #666;
+  position: absolute;
+  top: 100px;
+  right: 248px;
+  z-index: 2;
+  padding: 5px 10px;
 }
 
 .order-meta {
