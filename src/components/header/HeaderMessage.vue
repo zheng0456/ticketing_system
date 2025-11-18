@@ -1,6 +1,6 @@
 <template>
   <div class="header-message">
-    <div class="current-location">当前位置：个人中心 &gt; 火车票订单</div>
+    <div class="current-location">当前位置： 首页 &gt;个人中心 &gt; 火车票订单</div>
   </div>
 </template>
 
