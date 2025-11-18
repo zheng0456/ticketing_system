@@ -1,6 +1,8 @@
 <template>
   <div class="header-message">
-    <div class="current-location">当前位置： 首页 &gt;个人中心 &gt; 火车票订单</div>
+    <div class="current-location">
+      当前位置： <router-link to="/" class="location-link">首页</router-link> &gt;个人中心 &gt; 火车票订单
+    </div>
   </div>
 </template>
 
@@ -24,5 +26,16 @@ export default {
   font-size: 12px;
   color: #666;
   padding-bottom: 5px;
+}
+
+.location-link {
+  color: #409EFF;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.location-link:hover {
+  text-decoration: underline;
+  color: #337ecc;
 }
 </style>
