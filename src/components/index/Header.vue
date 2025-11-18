@@ -13,7 +13,7 @@
         <a href="#" class="link">无障碍</a>
         <a href="#" class="link">敬老版</a>
         <a href="#" class="link">English</a>
-        <a href="#" class="link">我的</a>
+        <a href="#" class="link" @click.prevent="goToOrder">我的</a>
         <a href="#" class="link" @click.prevent="goToLogin">登录</a>
         <a href="#" class="link" @click.prevent="goToLogin">注册</a>
       </div>
@@ -27,6 +27,9 @@ export default {
   methods: {
     goToLogin() {
       this.$router.push('/login');
+    },
+    goToOrder() {
+      this.$router.push('/order');
     }
   }
 }
