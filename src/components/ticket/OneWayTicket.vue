@@ -126,8 +126,8 @@ import { Switch } from '@element-plus/icons-vue';
 // 行程类型：单程/往返
 const tripType = ref('single');
 // 出发地、目的地
-const departure = ref('商都');
-const destination = ref('集宁南');
+const departure = ref('');
+const destination = ref('');
 // 日期
 const departDate = ref('2025-11-19');
 const returnDate = ref('2025-11-20');
