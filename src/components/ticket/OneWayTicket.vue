@@ -8,11 +8,7 @@
       </div>
       <div class="location">
         <input type="text" v-model="departure" placeholder="出发地" class="input">
-        <button class="swap-btn" @click="swapLocation">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-            <path d="M12 2L2 7L12 12L22 7L12 2ZM2 17L12 22L22 17L12 12L2 17Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        <el-button class="swap-btn" @click="swapLocation" :icon="Switch" circle></el-button>
         <input type="text" v-model="destination" placeholder="目的地" class="input">
       </div>
       <div class="date">
@@ -21,11 +17,13 @@
         <label v-if="tripType === 'round'">返程日</label>
         <input type="date" v-model="returnDate" class="date-input" v-if="tripType === 'round'">
       </div>
-      <div class="passenger-type">
-        <label><input type="radio" v-model="passengerType" value="normal" checked> 普通</label>
-        <label><input type="radio" v-model="passengerType" value="student"> 学生</label>
+      <div class="right-section">
+        <div class="passenger-type">
+          <label><input type="radio" v-model="passengerType" value="normal" checked> 普通</label>
+          <label><input type="radio" v-model="passengerType" value="student"> 学生</label>
+        </div>
+        <button class="query-btn">查询</button>
       </div>
-      <button class="query-btn">查询</button>
     </div>
 
     <!-- 日期选择栏 -->
@@ -123,6 +121,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { Switch } from '@element-plus/icons-vue';
 
 // 行程类型：单程/往返
 const tripType = ref('single');
@@ -147,8 +146,8 @@ const swapLocation = () => {
 .train-search {
   font-family: "Microsoft YaHei", sans-serif;
   color: #333;
-  width: 990px;
-  margin-left: 240px;
+  width: 1105px;
+  margin-left: 180px;
 }
 
 /* 顶部查询栏 */
@@ -160,37 +159,57 @@ const swapLocation = () => {
   border: 1px solid #b3d9ff;
 }
 
-.trip-type, .passenger-type {
-  margin-right: 20px;
+.trip-type {
+  margin-right: 10px;
+  font-size: 15px;
 }
 
 .location {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .input {
   border: 1px solid #ccc;
-  padding: 6px;
-  margin: 0 5px;
+  padding: 4px;
+  margin: 0 3px;
 }
 
 .swap-btn {
-  border: 1px solid #ccc;
-  background: #fff;
-  padding: 6px;
+  border: none;
+  background: transparent;
+  padding: 4px;
   cursor: pointer;
+  color: #666;
+  font-size: 16px;
 }
 
 .date {
-  margin-right: 20px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 280px;
+  font-size: 15px;
 }
 
 .date-input {
   border: 1px solid #ccc;
-  padding: 6px;
-  margin: 0 5px;
+  padding: 4px;
+  margin: 0 3px;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 10px;
+}
+
+.passenger-type {
+  display: flex;
+  gap: 5px;
 }
 
 .query-btn {
