@@ -19,7 +19,7 @@
           <li @click="showPersonalInfo" :class="{ active: activeMenuItem === 'personalInfo' }" class="clickable-item">查看个人信息</li>
           <li @click="showAccountSecurity" :class="{ active: activeMenuItem === 'accountSecurity' }" class="clickable-item">账号安全</li>
           <li @click="showMobileVerification" :class="{ active: activeMenuItem === 'mobileVerification' }" class="clickable-item">手机核验</li>
-          <li>账号注销</li>
+          <li @click="showAccountDeletion" :class="{ active: activeMenuItem === 'accountDeletion' }" class="clickable-item">账号注销</li>
         </ul>
       </div>
       <div class="menu-group">
@@ -47,6 +47,7 @@ import MyOrderTicket from './MyOrderTicket.vue'
 import PersonOrder from './PersonOrder.vue'
 import AccountSecurity from './AccountSecurity.vue'
 import MobileVerification from './MobileVerification.vue'
+import AccountDeletion from './AccountDeletion.vue'
 
 // 响应式数据控制菜单展开/收起状态
 const orderMenuExpanded = ref(true)
@@ -114,6 +115,12 @@ const showAccountSecurity = () => {
 const showMobileVerification = () => {
   currentComponent.value = MobileVerification
   activeMenuItem.value = 'mobileVerification'
+}
+
+// 显示账号注销页面
+const showAccountDeletion = () => {
+  currentComponent.value = AccountDeletion
+  activeMenuItem.value = 'accountDeletion'
 }
 </script>
 
