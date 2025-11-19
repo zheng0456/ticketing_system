@@ -18,7 +18,7 @@
         <ul v-show="personalInfoMenuExpanded">
           <li @click="showPersonalInfo" :class="{ active: activeMenuItem === 'personalInfo' }" class="clickable-item">查看个人信息</li>
           <li @click="showAccountSecurity" :class="{ active: activeMenuItem === 'accountSecurity' }" class="clickable-item">账号安全</li>
-          <li>手机核验</li>
+          <li @click="showMobileVerification" :class="{ active: activeMenuItem === 'mobileVerification' }" class="clickable-item">手机核验</li>
           <li>账号注销</li>
         </ul>
       </div>
@@ -46,6 +46,7 @@ import AlternateTicket from './AlternateTicket.vue'
 import MyOrderTicket from './MyOrderTicket.vue'
 import PersonOrder from './PersonOrder.vue'
 import AccountSecurity from './AccountSecurity.vue'
+import MobileVerification from './MobileVerification.vue'
 
 // 响应式数据控制菜单展开/收起状态
 const orderMenuExpanded = ref(true)
@@ -107,6 +108,12 @@ const showPersonalInfo = () => {
 const showAccountSecurity = () => {
   currentComponent.value = AccountSecurity
   activeMenuItem.value = 'accountSecurity'
+}
+
+// 显示手机核验页面
+const showMobileVerification = () => {
+  currentComponent.value = MobileVerification
+  activeMenuItem.value = 'mobileVerification'
 }
 </script>
 
