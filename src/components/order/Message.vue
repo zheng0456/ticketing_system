@@ -25,7 +25,7 @@
       <div class="menu-group">
         <h4 @click="toggleCommonInfoMenu">常用信息管理 {{ commonInfoMenuExpanded ? '▼' : '▲' }}</h4>
         <ul v-show="commonInfoMenuExpanded">
-          <li>乘车人</li>
+          <li @click="showPassenger" :class="{ active: activeMenuItem === 'passenger' }" class="clickable-item">乘车人</li>
           <li>地址管理</li>
         </ul>
       </div>
@@ -45,6 +45,7 @@ import PersonOrder from './PersonOrder.vue'
 import AccountSecurity from './AccountSecurity.vue'
 import MobileVerification from './MobileVerification.vue'
 import AccountDeletion from './AccountDeletion.vue'
+import PassengerManager from './Passenger.vue'
 
 // 响应式数据控制菜单展开/收起状态
 const orderMenuExpanded = ref(true)
@@ -112,6 +113,12 @@ const showMobileVerification = () => {
 const showAccountDeletion = () => {
   currentComponent.value = AccountDeletion
   activeMenuItem.value = 'accountDeletion'
+}
+
+// 显示乘车人页面
+const showPassenger = () => {
+  currentComponent.value = PassengerManager
+  activeMenuItem.value = 'passenger'
 }
 </script>
 
