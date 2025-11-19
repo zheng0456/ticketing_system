@@ -4,8 +4,8 @@
       <div class="ticket-nav-section">
         <h4>购票服务</h4>
         <ul>
-          <li><router-link to="/ticket/single">单程票</router-link></li>
-          <li><router-link to="/ticket/roundtrip">往返票</router-link></li>
+          <li><router-link to="/ticket">单程票</router-link></li>
+          <li><router-link to="/ticket">往返票</router-link></li>
           <li><router-link to="/ticket/multi">多程票</router-link></li>
         </ul>
       </div>

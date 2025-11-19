@@ -3,8 +3,8 @@
     <!-- 顶部查询栏 -->
     <div class="top-bar">
       <div class="trip-type">
-        <label><input type="radio" v-model="tripType" value="single" checked> 单程</label>
-        <label><input type="radio" v-model="tripType" value="round"> 往返</label>
+        <label><input type="radio" v-model="tripType" value="single"> 单程</label>
+        <label><input type="radio" v-model="tripType" value="round" checked> 往返</label>
       </div>
       <div class="location">
         <input type="text" v-model="departure" placeholder="出发地" class="input">
@@ -121,7 +121,7 @@ import { ref, onMounted } from 'vue';
 import { Switch } from '@element-plus/icons-vue';
 
 // 行程类型：单程/往返
-const tripType = ref('single');
+const tripType = ref('round');
 // 出发地、目的地
 const departure = ref('');
 const destination = ref('');
