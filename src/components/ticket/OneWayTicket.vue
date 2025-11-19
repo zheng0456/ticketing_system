@@ -28,21 +28,15 @@
 
     <!-- 日期选择栏 -->
     <div class="date-nav">
-      <button class="date-item active">11-19 周三</button>
-      <button class="date-item">11-20</button>
-      <button class="date-item">11-21</button>
-      <button class="date-item">11-22</button>
-      <button class="date-item">11-23</button>
-      <button class="date-item">11-24</button>
-      <button class="date-item">11-25</button>
-      <button class="date-item">11-26</button>
-      <button class="date-item">11-27</button>
-      <button class="date-item">11-28</button>
-      <button class="date-item">11-29</button>
-      <button class="date-item">11-30</button>
-      <button class="date-item">12-01</button>
-      <button class="date-item">12-02</button>
-      <button class="date-item">12-03</button>
+      <button 
+        v-for="(date, index) in dateList" 
+        :key="index"
+        class="date-item" 
+        :class="{ active: date.isActive }"
+        @click="selectDate(index)"
+      >
+        {{ date.date }} {{ date.weekday }}
+      </button>
     </div>
 
     <!-- 筛选条件 -->
@@ -58,26 +52,33 @@
         <label><input type="checkbox" value="other"> 其他</label>
         <label><input type="checkbox" value="fx"> 复兴号</label>
         <label><input type="checkbox" value="zn"> 智能动车组</label>
+        <div class="departure-time">
+          <label>发车时间：</label>
+          <select>
+            <option>00:00--24:00</option>
+            <option>00:00--06:00</option>
+            <option>06:00--12:00</option>
+            <option>12:00--18:00</option>
+            <option>18:00--24:00</option>
+          </select>
+        </div>
       </div>
       <div class="station">
-        <label>出发车站：</label>
-        <span class="tag">全部</span>
-        <label>到达车站：</label>
-        <span class="tag">全部</span>
-        <label>车次席别：</label>
-        <span class="tag">全部</span>
-        <label>发车时间：</label>
-        <select>
-          <option>00:00--24:00</option>
-        </select>
-      </div>
-      <div class="filter-btn">
-        <button class="orange-btn">筛选 ▲</button>
-      </div>
-      <div class="extra-filter">
-        <label><input type="checkbox"> 显示折扣车次</label>
-        <label><input type="checkbox"> 显示积分兑换车次</label>
-        <label><input type="checkbox"> 显示全部可预订车次</label>
+        <div class="station-row">
+          <label>出发车站：</label>
+          <span class="tag">全部</span>
+        </div>
+        <div class="station-row">
+          <label>到达车站：</label>
+          <span class="tag">全部</span>
+        </div>
+        <div class="station-row">
+          <label>车次席别：</label>
+          <span class="tag">全部</span>
+          <label><input type="checkbox" value="rw">软卧</label>
+          <label><input type="checkbox" value="nw">硬卧</label>
+          <label><input type="checkbox" value="nz">硬座</label>
+        </div>
       </div>
     </div>
 
@@ -88,10 +89,6 @@
           <th>车次</th>
           <th>出发站<br>到达站</th>
           <th>出发时间<br>到达时间 
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="12" height="12" class="sort-icon">
-              <path d="M18 13L12 19L6 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18 11L12 5L6 11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
           </th>
           <th>历时 
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="12" height="12" class="sort-icon">
@@ -120,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Switch } from '@element-plus/icons-vue';
 
 // 行程类型：单程/往返
@@ -134,12 +131,53 @@ const returnDate = ref('2025-11-20');
 // 乘客类型：普通/学生
 const passengerType = ref('normal');
 
+// 生成日期列表
+const dateList = ref([]);
+
+// 获取当前日期并生成日期列表
+const generateDateList = () => {
+  const dates = [];
+  const today = new Date();
+  const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  
+  for (let i = 0; i < 15; i++) {
+    const currentDate = new Date(today);
+    currentDate.setDate(today.getDate() + i);
+    
+    const month = currentDate.getMonth() + 1;
+    const day = currentDate.getDate();
+    const weekday = weekdays[currentDate.getDay()];
+    
+    dates.push({
+      date: `${month}-${day}`,
+      weekday: weekday,
+      fullDate: currentDate.toISOString().split('T')[0],
+      isActive: i === 0
+    });
+  }
+  
+  dateList.value = dates;
+};
+
 // 交换出发地和目的地
 const swapLocation = () => {
   const temp = departure.value;
   departure.value = destination.value;
   destination.value = temp;
 };
+
+// 选择日期
+const selectDate = (index) => {
+  dateList.value.forEach((date, i) => {
+    date.isActive = i === index;
+  });
+  departDate.value = dateList.value[index].fullDate;
+};
+
+// 组件挂载时生成日期列表
+onMounted(() => {
+  generateDateList();
+});
 </script>
 
 <style scoped>
@@ -253,11 +291,48 @@ const swapLocation = () => {
   margin-bottom: 10px;
 }
 
+.train-type {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.train-type label {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.departure-time {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  font-size: 12px;
+}
+
+.station {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.station-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
 .tag {
   background-color: #b3d9ff;
   padding: 2px 6px;
   border-radius: 3px;
-  margin-right: 10px;
+  margin-right: 12px;
 }
 
 .orange-btn {
@@ -278,7 +353,7 @@ const swapLocation = () => {
 .train-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .train-table th {
