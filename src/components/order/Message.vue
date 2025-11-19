@@ -29,9 +29,6 @@
           <li>地址管理</li>
         </ul>
       </div>
-      <div class="menu-group">
-        <h4 @click="toggleWarmServiceMenu">温馨服务 {{ warmServiceMenuExpanded ? '▼' : '▲' }}</h4>
-      </div>
     </aside>
 
     <!-- 右侧主内容区 -->
@@ -51,9 +48,8 @@ import AccountDeletion from './AccountDeletion.vue'
 
 // 响应式数据控制菜单展开/收起状态
 const orderMenuExpanded = ref(true)
-const personalInfoMenuExpanded = ref(false)
-const commonInfoMenuExpanded = ref(false)
-const warmServiceMenuExpanded = ref(false)
+const personalInfoMenuExpanded = ref(true)
+const commonInfoMenuExpanded = ref(true)
 
 // 控制当前激活的菜单项
 const activeMenuItem = ref('ticketOrder')
@@ -74,11 +70,6 @@ const togglePersonalInfoMenu = () => {
 // 切换常用信息管理菜单
 const toggleCommonInfoMenu = () => {
   commonInfoMenuExpanded.value = !commonInfoMenuExpanded.value
-}
-
-// 切换温馨服务菜单
-const toggleWarmServiceMenu = () => {
-  warmServiceMenuExpanded.value = !warmServiceMenuExpanded.value
 }
 
 // 显示火车票订单页面
