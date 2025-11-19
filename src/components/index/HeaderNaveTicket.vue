@@ -6,15 +6,7 @@
         <ul>
           <li><router-link to="/ticket?type=single">单程票</router-link></li>
           <li><router-link to="/ticket?type=round">往返票</router-link></li>
-          <li><router-link to="/ticket/multi">多程票</router-link></li>
-        </ul>
-      </div>
-      <div class="ticket-nav-section">
-        <h4>票务查询</h4>
-        <ul>
-          <li><router-link to="/query/schedule">时刻表查询</router-link></li>
-          <li><router-link to="/query/price">票价查询</router-link></li>
-          <li><router-link to="/query/station">车站查询</router-link></li>
+          <li><router-link to="/ticket/multi">中转换乘</router-link></li>
         </ul>
       </div>
       <div class="ticket-nav-section">
