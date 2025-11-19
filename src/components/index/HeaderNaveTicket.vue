@@ -12,7 +12,7 @@
       <div class="ticket-nav-section">
         <h4>退改签</h4>
         <ul>
-          <li><router-link to="/service/refund">退票</router-link></li>
+          <li><router-link to="/order?tab=uncompleted">退票</router-link></li>
           <li><router-link to="/service/change">改签</router-link></li>
           <li><router-link to="/service/endrose">签票</router-link></li>
         </ul>

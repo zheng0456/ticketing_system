@@ -37,7 +37,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import TicketOrder from './TicketOrder.vue'
 import AlternateTicket from './AlternateTicket.vue'
 import MyOrderTicket from './MyOrderTicket.vue'
@@ -58,6 +59,9 @@ const activeMenuItem = ref('ticketOrder')
 
 // 控制右侧显示的组件
 const currentComponent = ref(TicketOrder)
+
+// 获取路由信息
+const route = useRoute()
 
 // 切换订单中心菜单
 const toggleOrderMenu = () => {
@@ -127,6 +131,15 @@ const showAddressManagement = () => {
   currentComponent.value = AddressManagement
   activeMenuItem.value = 'addressManagement'
 }
+
+// 组件挂载时检查URL参数
+onMounted(() => {
+  const tab = route.query.tab
+  if (tab === 'uncompleted') {
+    // 如果是从退票链接进入，自动选择火车票订单
+    showTicketOrder()
+  }
+})
 </script>
 
 <script>

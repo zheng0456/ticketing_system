@@ -40,10 +40,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 // 当前激活的选项卡索引
 const activeTab = ref(0)
+
+// 获取路由信息
+const route = useRoute()
 
 // 选项卡数据
 const tabs = ref([
@@ -80,6 +84,15 @@ const tabs = ref([
 const switchTab = (index) => {
   activeTab.value = index
 }
+
+// 组件挂载时检查URL参数
+onMounted(() => {
+  const tab = route.query.tab
+  if (tab === 'uncompleted') {
+    // 如果是从退票链接进入，自动选择未出行订单（索引1）
+    activeTab.value = 1
+  }
+})
 </script>
 
 <script>
