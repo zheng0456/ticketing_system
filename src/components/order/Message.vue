@@ -14,12 +14,9 @@
         <h4 @click="showMyOrderTicket" :class="{ active: activeMenuItem === 'myOrderTicket' }">本人车票</h4>
       </div>
       <div class="menu-group">
-        <h4>会员中心</h4>
-      </div>
-      <div class="menu-group">
         <h4 @click="togglePersonalInfoMenu">个人信息 {{ personalInfoMenuExpanded ? '▼' : '▲' }}</h4>
         <ul v-show="personalInfoMenuExpanded">
-          <li>查看个人信息</li>
+          <li @click="showPersonalInfo" :class="{ active: activeMenuItem === 'personalInfo' }" class="clickable-item">查看个人信息</li>
           <li>账号安全</li>
           <li>手机核验</li>
           <li>账号注销</li>
@@ -47,6 +44,7 @@ import { ref } from 'vue'
 import TicketOrder from './TicketOrder.vue'
 import AlternateTicket from './AlternateTicket.vue'
 import MyOrderTicket from './MyOrderTicket.vue'
+import PersonOrder from './PersonOrder.vue'
 
 // 响应式数据控制菜单展开/收起状态
 const orderMenuExpanded = ref(true)
@@ -96,6 +94,12 @@ const showAlternateTicket = () => {
 const showMyOrderTicket = () => {
   currentComponent.value = MyOrderTicket
   activeMenuItem.value = 'myOrderTicket'
+}
+
+// 显示个人信息页面
+const showPersonalInfo = () => {
+  currentComponent.value = PersonOrder
+  activeMenuItem.value = 'personalInfo'
 }
 </script>
 
