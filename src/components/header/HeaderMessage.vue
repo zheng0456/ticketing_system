@@ -1,7 +1,7 @@
 <template>
   <div class="header-message">
     <div class="current-location">
-      当前位置： <router-link to="/" class="location-link">首页</router-link> &gt;个人中心 &gt; 火车票订单
+      当前位置： <router-link to="/" class="location-link">首页</router-link> &gt;个人中心 
     </div>
   </div>
 </template>
