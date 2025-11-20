@@ -234,8 +234,7 @@ const handleLogin = async () => {
 
     if (response.data.code === 200) {
       ElMessage.success('登录成功');
-      // 登录成功后跳转到首页或之前的页面
-      // router.push('/home');
+      window.location.href = '/index';
     } else {
       ElMessage.error(response.data.msg || '登录失败');
     }
@@ -265,7 +264,8 @@ const handleRegister = async () => {
     
     if (response.data.code === 200) {
       ElMessage.success('注册成功，请登录');
-      router.push('/login');
+      // 跳转到登录页面并刷新页面，确保默认选择登录
+      window.location.href = '/login';
     } else {
       ElMessage.error(response.data.msg || '注册失败');
     }
