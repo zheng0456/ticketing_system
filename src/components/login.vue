@@ -35,9 +35,9 @@
         ref="loginRef"
         class="auth-form"
       >
-        <el-form-item prop="username">
+        <el-form-item prop="userName">
           <el-input 
-            v-model="loginForm.username" 
+            v-model="loginForm.userName" 
             placeholder="请输入用户名/手机号"
           >
             <template #prefix>
@@ -87,9 +87,9 @@
         ref="registerRef"
         class="auth-form"
       >
-        <el-form-item prop="username">
+        <el-form-item prop="userName">
           <el-input 
-            v-model="registerForm.username" 
+            v-model="registerForm.userName" 
             placeholder="请设置用户名" 
           >
             <template #prefix>
@@ -181,13 +181,13 @@ const registerRef = ref(null);
 
 // 登录表单数据
 const loginForm = reactive({
-  username: '',
+  userName: '',
   password: ''
 });
 
 // 注册表单数据
 const registerForm = reactive({
-  username: '',
+  userName: '',
   phone: '',
   password: '',
   confirmPassword: ''
@@ -195,7 +195,7 @@ const registerForm = reactive({
 
 // 登录表单验证规则
 const loginRules = {
-  username: [
+  userName: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' }
   ],
@@ -207,7 +207,7 @@ const loginRules = {
 
 // 注册表单验证规则
 const registerRules = {
-  username: [
+  userName: [
     { required: true, message: '请设置用户名', trigger: 'blur' },
     { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' }
   ],
@@ -239,8 +239,8 @@ const handleLogin = async () => {
   try {
     await loginRef.value.validate();
     // 实际项目中调用登录API
-    const response = await api.post('/login', {
-      username: loginForm.username,
+    const response = await api.post('/user/login', {
+      userName: loginForm.userName,
       password: loginForm.password
     });
     
@@ -263,7 +263,7 @@ const handleRegister = async () => {
     await registerRef.value.validate();
     // 调用注册API
     const response = await api.post('/register', {
-      username: registerForm.username,
+      userName: registerForm.userName,
       phone: registerForm.phone,
       password: registerForm.password
     });
