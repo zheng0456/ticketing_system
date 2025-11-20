@@ -165,6 +165,7 @@
 <script>
 /* eslint-disable */
 import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { Hide, View, User, Phone, Lock, Check } from '@element-plus/icons-vue';
 import api from '@/api/index.js';
@@ -174,6 +175,7 @@ const isLogin = ref(true);
 const rememberMe = ref(false);
 const loginPasswordVisible = ref(false);
 const registerPasswordVisible = ref(false);
+const router = useRouter();
 
 // 表单引用
 const loginRef = ref(null);
@@ -194,31 +196,10 @@ const registerForm = reactive({
 });
 
 // 登录表单验证规则
-const loginRules = {
-  userName: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' }
-  ],
-  password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' }
-  ]
-};
+const loginRules = {};
 
 // 注册表单验证规则
 const registerRules = {
-  userName: [
-    { required: true, message: '请设置用户名', trigger: 'blur' },
-    { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' }
-  ],
-  phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
-  ],
-  password: [
-    { required: true, message: '请设置密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' }
-  ],
   confirmPassword: [
     { required: true, message: '请确认密码', trigger: 'blur' },
     { 
@@ -237,23 +218,30 @@ const registerRules = {
 // 登录处理
 const handleLogin = async () => {
   try {
-    await loginRef.value.validate();
-    // 实际项目中调用登录API
+    // 移除表单验证，直接调用登录API
     const response = await api.post('/user/login', {
       userName: loginForm.userName,
       password: loginForm.password
     });
     
-    if (response.data.success) {
+     // 调试：打印响应数据
+    console.log('注册响应:', response);
+    console.log('响应状态:', response.status);
+    console.log('响应数据:', response.data);
+    console.log('响应数据code:', response.data.code);
+    console.log('响应数据message:', response.data.message);
+
+
+    if (response.data.code === 200) {
       ElMessage.success('登录成功');
       // 登录成功后跳转到首页或之前的页面
       // router.push('/home');
     } else {
-      ElMessage.error(response.data.message || '登录失败');
+      ElMessage.error(response.data.msg || '登录失败');
     }
   } catch (error) {
     console.error('登录请求失败:', error);
-    ElMessage.error('登录失败，请检查网络连接或稍后重试');
+    // ElMessage.error('登录失败，请检查网络连接或稍后重试');
   }
 };
 
@@ -262,21 +250,29 @@ const handleRegister = async () => {
   try {
     await registerRef.value.validate();
     // 调用注册API
-    const response = await api.post('/register', {
+    const response = await api.post('/user/register', {
       userName: registerForm.userName,
       phone: registerForm.phone,
       password: registerForm.password
     });
     
-    if (response.data.success) {
+    // 调试：打印响应数据
+    console.log('注册响应:', response);
+    console.log('响应状态:', response.status);
+    console.log('响应数据:', response.data);
+    console.log('响应数据code:', response.data.code);
+    console.log('响应数据message:', response.data.message);
+    
+    if (response.data.code === 200) {
       ElMessage.success('注册成功，请登录');
-      isLogin.value = true;
+      router.push('/login');
     } else {
-      ElMessage.error(response.data.message || '注册失败');
+      ElMessage.error(response.data.msg || '注册失败');
     }
   } catch (error) {
     console.error('注册请求失败:', error);
-    ElMessage.error('注册失败，请检查网络连接或稍后重试');
+    // 暂时注释掉错误提示，避免干扰正常成功流程
+    // ElMessage.error('注册失败，请检查网络连接或稍后重试');
   }
 };
 
