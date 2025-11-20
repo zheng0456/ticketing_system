@@ -233,6 +233,14 @@ const handleLogin = async () => {
 
 
     if (response.data.code === 200) {
+      // 保存用户信息到localStorage
+      const userInfo = {
+        userName: loginForm.userName,
+        token: response.data.token || 'mock_token', // 如果后端返回token则使用，否则使用模拟token
+        isLoggedIn: true
+      };
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      
       ElMessage.success('登录成功');
       window.location.href = '/index';
     } else {

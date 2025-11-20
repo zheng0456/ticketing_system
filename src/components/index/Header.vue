@@ -13,9 +13,15 @@
         <a href="#" class="link">无障碍</a>
         <a href="#" class="link">敬老版</a>
         <a href="#" class="link">English</a>
-        <a href="#" class="link" @click.prevent="goToOrder">我的</a>
-        <a href="#" class="link" @click.prevent="goToLogin">登录</a>
-        <a href="#" class="link" @click.prevent="goToLogin">注册</a>
+        <!-- 根据登录状态显示不同的内容 -->
+        <template v-if="isLoggedIn">
+          <a href="#" class="link user-name" @click.prevent="goToOrder">{{ userName }}</a>
+          <a href="#" class="link" @click.prevent="logout">退出</a>
+        </template>
+        <template v-else>
+          <a href="#" class="link" @click.prevent="goToLogin">登录</a>
+          <a href="#" class="link" @click.prevent="goToLogin">注册</a>
+        </template>
       </div>
     </div>
   </div>
@@ -24,12 +30,42 @@
 <script>
 export default {
   name: 'PageHeader',
+  data() {
+    return {
+      isLoggedIn: false,
+      userName: ''
+    }
+  },
+  mounted() {
+    this.checkLoginStatus();
+  },
   methods: {
+    checkLoginStatus() {
+      const userInfo = localStorage.getItem('userInfo');
+      if (userInfo) {
+        const parsedUserInfo = JSON.parse(userInfo);
+        if (parsedUserInfo.isLoggedIn) {
+          this.isLoggedIn = true;
+          this.userName = parsedUserInfo.userName;
+        }
+      }
+    },
     goToLogin() {
       this.$router.push('/login');
     },
     goToOrder() {
       this.$router.push('/order');
+    },
+    logout() {
+      // 清除localStorage中的用户信息
+      localStorage.removeItem('userInfo');
+      // 重置组件状态
+      this.isLoggedIn = false;
+      this.userName = '';
+      // 跳转到首页
+      this.$router.push('/index');
+      // 可以添加登出成功的提示
+      this.$message?.success('已成功退出登录');
     }
   }
 }
@@ -118,5 +154,9 @@ export default {
 }
 .link:hover {
   color: #007aff;
+}
+.user-name {
+  color: #007aff !important;
+  font-weight: 500;
 }
 </style>
