@@ -62,13 +62,13 @@
         <!-- 查询按钮 -->
         <button class="search-btn" @click="handleSearch">查询</button>
       </div>
-    </div>
 
-    <!-- 底部警告提示 -->
-    <div class="warning-box">
-      <p class="warning-text">
-        温馨提示：以下仅为您展示途中换乘一次的部分列车余票信息,购票时请您充分考虑各种影响换乘的因素,并自愿承担因自身或第三方等原因导致延误换乘的风险。
-      </p>
+      <!-- 温馨提示 -->
+      <div class="warning-box">
+        <p class="warning-text">
+          温馨提示：以下仅为您展示途中换乘一次的部分列车余票信息,购票时请您充分考虑各种影响换乘的因素,并自愿承担因自身或第三方等原因导致延误换乘的风险。
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -76,6 +76,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Location } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 import TicketFromCity from '@/components/index/TicketFromCity.vue';
 
 // 获取当前系统日期（格式：YYYY-MM-DD）
@@ -98,6 +99,20 @@ const passengerType = ref('normal');
 
 // 查询处理
 const handleSearch = () => {
+  // 验证必填项
+  if (!departure.value || !departure.value.trim()) {
+    ElMessage.warning('请输入出发地');
+    return;
+  }
+  if (!destination.value || !destination.value.trim()) {
+    ElMessage.warning('请输入目的地');
+    return;
+  }
+  if (!departDate.value) {
+    ElMessage.warning('请选择乘车日期');
+    return;
+  }
+  
   console.log('查询换乘票', {
     departure: departure.value,
     destination: destination.value,
@@ -127,6 +142,7 @@ const handleSearch = () => {
   border-radius: 4px;
   padding: 20px;
   margin-bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* 顶部输入区域 */
@@ -140,14 +156,14 @@ const handleSearch = () => {
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 
 .input-label {
   font-size: 14px;
   color: #333;
   font-weight: normal;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .input-wrapper {
@@ -165,22 +181,28 @@ const handleSearch = () => {
   outline: none;
   height: 32px;
   box-sizing: border-box;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
 /* 针对 date 类型输入框，确保日历图标在右侧 */
 input[type="date"].form-input {
   padding-right: 8px;
   position: relative;
+  background-color: #f9f9f9;
 }
 
 input[type="date"].form-input::-webkit-calendar-picker-indicator {
   position: absolute;
-  right: 0;
+  right: 5px;
   cursor: pointer;
+  opacity: 0.7;
+  filter: brightness(0) saturate(100%) invert(60%) sepia(100%) saturate(2000%) hue-rotate(200deg);
 }
 
 .form-input:focus {
   border-color: #b3d9ff;
+  background-color: #fff;
 }
 
 .icon {
@@ -210,6 +232,7 @@ input[type="date"].form-input::-webkit-calendar-picker-indicator {
   grid-template-columns: 1fr 1fr 1fr auto;
   gap: 20px;
   align-items: flex-start;
+  margin-top: 15px;
 }
 
 .option-group {
@@ -280,13 +303,14 @@ input[type="date"].form-input::-webkit-calendar-picker-indicator {
   background-color: #ff7700;
 }
 
-/* 底部警告框 */
+/* 温馨提示框 */
 .warning-box {
   background-color: #fffbe6;
   border: 1px solid #ffe58f;
   border-radius: 4px;
   padding: 15px;
-  margin-top: 10px;
+  margin-top: 20px;
+  grid-column: 1 / -1; /* 跨越所有列 */
 }
 
 .warning-text {
@@ -294,5 +318,49 @@ input[type="date"].form-input::-webkit-calendar-picker-indicator {
   font-size: 14px;
   color: #333;
   line-height: 1.6;
+}
+
+/* 覆盖 TicketFromCity 组件样式以匹配图片 */
+.input-group :deep(.city-selector) {
+  width: 100%;
+}
+
+.input-group :deep(.input-with-btn) {
+  position: relative;
+}
+
+.input-group :deep(.input-with-btn input[type="text"]) {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 8px 35px 8px 10px;
+  height: 32px;
+  font-size: 14px;
+  color: #333;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group :deep(.input-with-btn input[type="text"]:focus) {
+  border-color: #b3d9ff;
+  background-color: #fff;
+  box-shadow: none;
+}
+
+.input-group :deep(.select-btn) {
+  color: #4a9eff;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px;
+}
+
+.input-group :deep(.select-btn:hover) {
+  background: rgba(74, 158, 255, 0.1);
+  border-radius: 2px;
+}
+
+.input-group :deep(.select-btn .el-icon) {
+  font-size: 16px;
 }
 </style>
