@@ -25,6 +25,11 @@ const routes = [
     name: 'ticket',
     component: TicketView
   },
+  {
+    path: '/ticket/multi',
+    name: 'transferTicket',
+    component: TicketView
+  },
   // 添加重定向，使根路径跳转到 /index
   {
     path: '/',
