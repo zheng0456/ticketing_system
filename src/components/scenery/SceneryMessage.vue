@@ -25,16 +25,16 @@ defineProps({
 /* 展开内容样式 */
 .expanded-content {
   position: absolute;
-  left: 205px;
-  top: 0;
-  width: 1100px;
-  height: calc(100vh - 40px); /* 与左侧导航栏高度一致 */
+  left: 220px;
+  top: -35px; /* 调整顶部距离，确保在HeaderNav下方 */
+  width: 1180px;
+  height:750px;
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  z-index: 10;
+  z-index: 9; /* 设置合理的z-index */
   display: flex;
   flex-direction: column;
   gap: 15px;
