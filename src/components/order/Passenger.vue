@@ -75,57 +75,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 
-// 模拟表格数据
-const tableData = ref([
-  {
-    id: 1,
-    name: '郑锦春',
-    idType: '居民身份证',
-    idNumber: '1526**********712',
-    phone: '(+86)138****7017',
-    checked: false
-  },
-  {
-    id: 2,
-    name: '刘伯伟',
-    idType: '居民身份证',
-    idNumber: '1526**********512',
-    phone: '(+86)153****2480',
-    checked: false
-  },
-  {
-    id: 3,
-    name: '童方正',
-    idType: '居民身份证',
-    idNumber: '1502**********012',
-    phone: '(+86)151****8894',
-    checked: false
-  },
-  {
-    id: 4,
-    name: '赵嘉俊',
-    idType: '居民身份证',
-    idNumber: '1526**********01X',
-    phone: '(+86)138****6684',
-    checked: false
-  },
-  {
-    id: 5,
-    name: '邢建宇',
-    idType: '居民身份证',
-    idNumber: '4117**********436',
-    phone: '(+86)132****2244',
-    checked: false
-  },
-  {
-    id: 6,
-    name: '郑利平',
-    idType: '居民身份证',
-    idNumber: '1526**********717',
-    phone: '(+86)130****9838',
-    checked: false
-  }
-]);
+// 表格数据
+const tableData = ref([]);
 
 const searchName = ref('');
 const selectAll = ref(false);
@@ -187,39 +138,50 @@ const formatIdNumber = (idNumber) => {
 
 <style scoped>
 .passenger-manager {
-  max-width: 1200px;
-  margin: 0 auto;
+  flex: 1;
   padding: 20px;
   font-family: "Microsoft YaHei", sans-serif;
+  background-color: #fff;
 }
 
 .search-bar {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .search-input {
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #dcdfe6;
   border-radius: 4px;
   width: 200px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  border-color: #409EFF;
 }
 
 .search-btn {
-  padding: 8px 16px;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  padding: 8px 20px;
+  background-color: #409EFF;
+  color: #fff;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
 .search-btn:hover {
-  background-color: #f5f5f5;
+  background-color: #66b1ff;
 }
 
 .action-bar {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   display: flex;
   gap: 10px;
 }
@@ -229,69 +191,101 @@ const formatIdNumber = (idNumber) => {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 8px 10px;
+  padding: 8px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   color: #fff;
-  text-align: center;
+  font-size: 14px;
+  transition: all 0.3s;
 }
 
 .add-btn {
-  background-color: #28a745;
-  padding-right:30px;
+  background-color: #67c23a;
+}
+
+.add-btn:hover {
+  background-color: #85ce61;
 }
 
 .batch-delete-btn {
-  background-color: #dc3545;
-  padding-right:30px;
+  background-color: #f56c6c;
+}
+
+.batch-delete-btn:hover {
+  background-color: #f78989;
 }
 
 .icon {
   vertical-align: middle;
+  display: inline-block;
 }
 
 .passenger-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #bce8f1;
+  border: 1px solid #ebeef5;
+  background-color: #fff;
 }
 
 .passenger-table th, .passenger-table td {
-  border: 1px solid #bce8f1;
-  padding: 10px;
+  border: 1px solid #ebeef5;
+  padding: 12px;
   text-align: center;
+  font-size: 14px;
 }
 
 .passenger-table th {
-  background-color: #e9f7fa;
+  background-color: #f5f7fa;
   font-weight: 600;
+  color: #606266;
+}
+
+.passenger-table th input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.passenger-table td {
+  color: #606266;
+}
+
+.passenger-table td input[type="checkbox"] {
+  cursor: pointer;
 }
 
 .table-row:hover {
-  background-color: #f8f9fa;
+  background-color: #f5f7fa;
 }
 
 .verify-icon {
   vertical-align: middle;
+  display: inline-block;
 }
 
 .operation-col {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
 }
 
 .delete-btn, .edit-btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
 }
 
-.delete-btn:hover svg, .edit-btn:hover svg {
+.delete-btn:hover, .edit-btn:hover {
   transform: scale(1.1);
-  transition: transform 0.2s;
+}
+
+.delete-btn svg, .edit-btn svg {
+  display: block;
 }
 </style>
 
