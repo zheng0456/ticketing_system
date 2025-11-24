@@ -1,85 +1,99 @@
 <template>
   <div class="passenger-manager">
-    <!-- 搜索栏 -->
-    <div class="search-bar">
-      <input 
-        type="text" 
-        v-model="searchName" 
-        placeholder="请输入乘客姓名" 
-        class="search-input"
-      >
-      <button class="search-btn" @click="handleSearch">查询</button>
-    </div>
+    <!-- 添加/编辑表单页面 -->
+    <PassengerMessage 
+      v-if="showAddForm" 
+      @cancel="handleCancelAdd" 
+      @save="handleSavePassenger"
+      :editData="currentEditData"
+    />
+    
+    <!-- 列表页面 -->
+    <template v-else>
+      <!-- 搜索栏 -->
+      <div class="search-bar">
+        <input 
+          type="text" 
+          v-model="searchName" 
+          placeholder="请输入乘客姓名" 
+          class="search-input"
+        >
+        <button class="search-btn" @click="handleSearch">查询</button>
+      </div>
 
-    <!-- 操作栏 -->
-    <div class="action-bar">
-      <button class="add-btn" @click="handleAdd">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-          <path d="M12 5V19M5 12H19" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        添加
-      </button>
-      <button class="batch-delete-btn" @click="handleBatchDelete">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-          <path d="M3 6H5M19 6H21M1 6V8C1 10.21 2.79 12 5 12H19C21.21 12 23 10.21 23 8V6M1 10H23M10 14V20M14 14V20M5 14V20" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        批量删除
-      </button>
-    </div>
+      <!-- 操作栏 -->
+      <div class="action-bar">
+        <button class="add-btn" @click="handleAdd">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+            <path d="M12 5V19M5 12H19" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          添加
+        </button>
+        <button class="batch-delete-btn" @click="handleBatchDelete">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+            <path d="M3 6H5M19 6H21M1 6V8C1 10.21 2.79 12 5 12H19C21.21 12 23 10.21 23 8V6M1 10H23M10 14V20M14 14V20M5 14V20" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          批量删除
+        </button>
+      </div>
 
-    <!-- 表格 -->
-    <table class="passenger-table">
-      <thead>
-        <tr>
-          <th><input type="checkbox" v-model="selectAll" @change="handleSelectAll"></th>
-          <th>序号</th>
-          <th>姓名</th>
-          <th>证件类型</th>
-          <th>证件号码</th>
-          <th>手机/电话</th>
-          <th>核验状态</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in filteredData" :key="item.id" class="table-row">
-          <td><input type="checkbox" v-model="item.checked"></td>
-          <td>{{ index + 1 }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.idType }}</td>
-          <td>{{ formatIdNumber(item.idNumber) }}</td>
-          <td>{{ item.phone }}</td>
-          <td>
-            <svg class="verify-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.59 7.58L10 14.17L7.41 11.58L6 13L10 17L18 9L16.59 7.58Z" fill="#28a745"/>
-            </svg>
-          </td>
-          <td class="operation-col">
-            <button class="delete-btn" @click="handleDelete(item.id)">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-                <path d="M19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4ZM6 19A2 2 0 0 0 8 21H16A2 2 0 0 0 18 19V7H6V19Z" fill="#dc3545"/>
+      <!-- 表格 -->
+      <table class="passenger-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" v-model="selectAll" @change="handleSelectAll"></th>
+            <th>序号</th>
+            <th>姓名</th>
+            <th>证件类型</th>
+            <th>证件号码</th>
+            <th>手机/电话</th>
+            <th>核验状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in filteredData" :key="item.id" class="table-row">
+            <td><input type="checkbox" v-model="item.checked"></td>
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.idType }}</td>
+            <td>{{ formatIdNumber(item.idNumber) }}</td>
+            <td>{{ item.phone }}</td>
+            <td>
+              <svg class="verify-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.59 7.58L10 14.17L7.41 11.58L6 13L10 17L18 9L16.59 7.58Z" fill="#28a745"/>
               </svg>
-            </button>
-            <button class="edit-btn" @click="handleEdit(item.id)">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-                <path d="M12 20.25C6.82 20.25 2.75 16.18 2.75 11C2.75 5.82 6.82 1.75 12 1.75C17.18 1.75 21.25 5.82 21.25 11C21.25 16.18 17.18 20.25 12 20.25ZM12 2.75C7.39 2.75 3.75 6.39 3.75 11C3.75 15.61 7.39 19.25 12 19.25C16.61 19.25 20.25 15.61 20.25 11C20.25 6.39 16.61 2.75 12 2.75ZM17.25 7.5L15.75 9L16.25 9.5L17.75 8M7.75 15.75L6.25 14.25L10.25 10.25L11.75 11.75L7.75 15.75Z" fill="#007bff"/>
-              </svg>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td class="operation-col">
+              <button class="delete-btn" @click="handleDelete(item.id)">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                  <path d="M19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4ZM6 19A2 2 0 0 0 8 21H16A2 2 0 0 0 18 19V7H6V19Z" fill="#dc3545"/>
+                </svg>
+              </button>
+              <button class="edit-btn" @click="handleEdit(item.id)">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                  <path d="M12 20.25C6.82 20.25 2.75 16.18 2.75 11C2.75 5.82 6.82 1.75 12 1.75C17.18 1.75 21.25 5.82 21.25 11C21.25 16.18 17.18 20.25 12 20.25ZM12 2.75C7.39 2.75 3.75 6.39 3.75 11C3.75 15.61 7.39 19.25 12 19.25C16.61 19.25 20.25 15.61 20.25 11C20.25 6.39 16.61 2.75 12 2.75ZM17.25 7.5L15.75 9L16.25 9.5L17.75 8M7.75 15.75L6.25 14.25L10.25 10.25L11.75 11.75L7.75 15.75Z" fill="#007bff"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import PassengerMessage from './PassengerMessage.vue';
 
 // 表格数据
 const tableData = ref([]);
 
 const searchName = ref('');
 const selectAll = ref(false);
+const showAddForm = ref(false);
+const currentEditData = ref(null);
 
 // 过滤后的数据
 const filteredData = computed(() => {
@@ -105,7 +119,53 @@ const handleSearch = () => {
 
 // 添加
 const handleAdd = () => {
-  console.log('添加乘客');
+  currentEditData.value = null;
+  showAddForm.value = true;
+};
+
+// 取消添加/编辑
+const handleCancelAdd = () => {
+  showAddForm.value = false;
+  currentEditData.value = null;
+};
+
+// 保存乘客信息
+const handleSavePassenger = (formData) => {
+  console.log('保存乘客信息：', formData);
+  
+  // 组合完整的电话号码
+  const fullPhone = formData.countryCode + formData.phone;
+  
+  if (currentEditData.value && currentEditData.value.id) {
+    // 编辑模式：更新现有数据
+    const index = tableData.value.findIndex(item => item.id === currentEditData.value.id);
+    if (index !== -1) {
+      tableData.value[index] = {
+        ...tableData.value[index],
+        name: formData.name,
+        idType: formData.idType,
+        idNumber: formData.idNumber,
+        phone: fullPhone,
+        discountType: formData.discountType
+      };
+    }
+  } else {
+    // 添加模式：添加新数据
+    const newPassenger = {
+      id: Date.now(), // 临时ID，实际应该由后端生成
+      name: formData.name,
+      idType: formData.idType,
+      idNumber: formData.idNumber,
+      phone: fullPhone,
+      discountType: formData.discountType,
+      checked: false
+    };
+    tableData.value.push(newPassenger);
+  }
+  
+  // 关闭表单
+  showAddForm.value = false;
+  currentEditData.value = null;
 };
 
 // 批量删除
@@ -127,11 +187,37 @@ const handleDelete = (id) => {
 
 // 编辑
 const handleEdit = (id) => {
-  console.log('编辑乘客，ID：', id);
+  const passenger = tableData.value.find(item => item.id === id);
+  if (passenger) {
+    // 解析手机号码，分离国家代码和号码
+    let countryCode = '+86';
+    let phone = passenger.phone || '';
+    
+    if (phone) {
+      // 尝试匹配国家代码（+86, +852, +853, +886等）
+      const phoneMatch = phone.match(/^(\+\d{2,3})(.+)$/);
+      if (phoneMatch) {
+        countryCode = phoneMatch[1];
+        phone = phoneMatch[2];
+      }
+    }
+    
+    currentEditData.value = {
+      id: passenger.id,
+      idType: passenger.idType,
+      name: passenger.name,
+      idNumber: passenger.idNumber,
+      countryCode: countryCode,
+      phone: phone,
+      discountType: passenger.discountType
+    };
+    showAddForm.value = true;
+  }
 };
 
 // 格式化证件号码（脱敏）
 const formatIdNumber = (idNumber) => {
+  if (!idNumber) return '';
   return idNumber.replace(/(.{6})(.*)(.{3})/, '$1**********$3');
 };
 </script>
