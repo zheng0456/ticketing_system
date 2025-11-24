@@ -22,7 +22,7 @@
           <label><input type="radio" v-model="passengerType" value="normal" checked> 普通</label>
           <label><input type="radio" v-model="passengerType" value="student"> 学生</label>
         </div>
-        <button class="query-btn">查询</button>
+        <button class="query-btn" @click="handleQuery">查询</button>
       </div>
     </div>
 
@@ -43,23 +43,23 @@
     <div class="filter">
       <div class="train-type">
         <label>车次类型：</label>
-        <label><span class="tag">全部</span></label>
-        <label><input type="checkbox" value="gc"> GC-高铁/城际</label>
-        <label><input type="checkbox" value="d"> D-动车</label>
-        <label><input type="checkbox" value="z"> Z-直达</label>
-        <label><input type="checkbox" value="t"> T-特快</label>
-        <label><input type="checkbox" value="k"> K-快速</label>
-        <label><input type="checkbox" value="other"> 其他</label>
-        <label><input type="checkbox" value="fx"> 复兴号</label>
-        <label><input type="checkbox" value="zn"> 智能动车组</label>
+        <label><span class="tag" @click="clearTrainTypes">全部</span></label>
+        <label><input type="checkbox" value="gc" v-model="selectedTrainTypes" @change="onFilterChange"> GC-高铁/城际</label>
+        <label><input type="checkbox" value="d" v-model="selectedTrainTypes" @change="onFilterChange"> D-动车</label>
+        <label><input type="checkbox" value="z" v-model="selectedTrainTypes" @change="onFilterChange"> Z-直达</label>
+        <label><input type="checkbox" value="t" v-model="selectedTrainTypes" @change="onFilterChange"> T-特快</label>
+        <label><input type="checkbox" value="k" v-model="selectedTrainTypes" @change="onFilterChange"> K-快速</label>
+        <label><input type="checkbox" value="other" v-model="selectedTrainTypes" @change="onFilterChange"> 其他</label>
+        <label><input type="checkbox" value="fx" v-model="selectedTrainTypes" @change="onFilterChange"> 复兴号</label>
+        <label><input type="checkbox" value="zn" v-model="selectedTrainTypes" @change="onFilterChange"> 智能动车组</label>
         <div class="departure-time">
           <label>发车时间：</label>
-          <select>
-            <option>00:00--24:00</option>
-            <option>00:00--06:00</option>
-            <option>06:00--12:00</option>
-            <option>12:00--18:00</option>
-            <option>18:00--24:00</option>
+          <select v-model="departureTimeRange" @change="onFilterChange">
+            <option value="00:00--24:00">00:00--24:00</option>
+            <option value="00:00--06:00">00:00--06:00</option>
+            <option value="06:00--12:00">06:00--12:00</option>
+            <option value="12:00--18:00">12:00--18:00</option>
+            <option value="18:00--24:00">18:00--24:00</option>
           </select>
         </div>
       </div>
@@ -74,10 +74,10 @@
         </div>
         <div class="station-row">
           <label>车次席别：</label>
-          <span class="tag">全部</span>
-          <label><input type="checkbox" value="rw">软卧</label>
-          <label><input type="checkbox" value="nw">硬卧</label>
-          <label><input type="checkbox" value="nz">硬座</label>
+          <span class="tag" @click="clearSeatTypes">全部</span>
+          <label><input type="checkbox" value="rw" v-model="selectedSeatTypes" @change="onFilterChange">软卧</label>
+          <label><input type="checkbox" value="nw" v-model="selectedSeatTypes" @change="onFilterChange">硬卧</label>
+          <label><input type="checkbox" value="nz" v-model="selectedSeatTypes" @change="onFilterChange">硬座</label>
         </div>
       </div>
     </div>
@@ -110,7 +110,40 @@
         </tr>
       </thead>
       <tbody>
-        <!-- 实际车次数据可通过循环渲染，此处暂为空 -->
+        <tr v-if="loading">
+          <td colspan="16" style="text-align: center; padding: 20px;">
+            正在查询中...
+          </td>
+        </tr>
+        <tr v-else-if="trainList.length === 0">
+          <td colspan="16" style="text-align: center; padding: 20px;">
+            暂无车次信息
+          </td>
+        </tr>
+        <tr v-else v-for="(train, index) in trainList" :key="index">
+          <td>{{ train.trainNumber || '--' }}</td>
+          <td>
+            {{ train.departureStation || '--' }}<br>
+            {{ train.arrivalStation || '--' }}
+          </td>
+          <td>
+            {{ train.departureTime || '--' }}<br>
+            {{ train.arrivalTime || '--' }}
+          </td>
+          <td>{{ train.duration || '--' }}</td>
+          <td>{{ train.businessSeat || '--' }}</td>
+          <td>{{ train.preferredFirstClass || '--' }}</td>
+          <td>{{ train.firstClass || '--' }}</td>
+          <td>{{ train.secondClass || '--' }}</td>
+          <td>{{ train.advancedSoftSleeper || '--' }}</td>
+          <td>{{ train.softSleeper || '--' }}</td>
+          <td>{{ train.hardSleeper || '--' }}</td>
+          <td>{{ train.softSeat || '--' }}</td>
+          <td>{{ train.hardSeat || '--' }}</td>
+          <td>{{ train.noSeat || '--' }}</td>
+          <td>{{ train.other || '--' }}</td>
+          <td>{{ train.remark || '--' }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -120,6 +153,8 @@
 import { ref, onMounted } from 'vue';
 import { Switch } from '@element-plus/icons-vue';
 import { useRoute } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import api from '@/api/index.js';
 
 // 行程类型：单程/往返
 const tripType = ref('single');
@@ -132,6 +167,15 @@ const departDate = ref('2025-11-19');
 const returnDate = ref('2025-11-20');
 // 乘客类型：普通/学生
 const passengerType = ref('normal');
+
+// 查询结果
+const trainList = ref([]);
+const loading = ref(false);
+
+// 筛选条件
+const selectedTrainTypes = ref([]);
+const selectedSeatTypes = ref([]);
+const departureTimeRange = ref('00:00--24:00');
 
 // 生成日期列表
 const dateList = ref([]);
@@ -174,6 +218,78 @@ const selectDate = (index) => {
     date.isActive = i === index;
   });
   departDate.value = dateList.value[index].fullDate;
+};
+
+// 查询车票
+const handleQuery = async () => {
+  // 验证输入
+  if (!departure.value.trim()) {
+    ElMessage.warning('请输入出发地');
+    return;
+  }
+  if (!destination.value.trim()) {
+    ElMessage.warning('请输入目的地');
+    return;
+  }
+  if (!departDate.value) {
+    ElMessage.warning('请选择出发日期');
+    return;
+  }
+  
+  try {
+    loading.value = true;
+    
+    // 构建查询参数，包含所有筛选条件
+    const queryParams = {
+      departure: departure.value,
+      destination: destination.value,
+      departDate: departDate.value,
+      tripType: tripType.value,
+      passengerType: passengerType.value,
+      trainTypes: selectedTrainTypes.value,
+      seatTypes: selectedSeatTypes.value,
+      departureTimeRange: departureTimeRange.value
+    };
+    
+    // 发送请求到后端
+    const response = await api.post('/user/ticket', queryParams);
+    
+    console.log('查询响应:', response);
+    
+    if (response.data.code === 200) {
+      trainList.value = response.data.data || [];
+      ElMessage.success('查询成功');
+    } else {
+      ElMessage.error(response.data.msg || '查询失败');
+      trainList.value = [];
+    }
+  } catch (error) {
+    console.error('查询请求失败:', error);
+    ElMessage.error('查询失败，请检查网络连接或稍后重试');
+    trainList.value = [];
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 筛选条件变化时的处理函数
+const onFilterChange = async () => {
+  // 如果已经有出发地、目的地和日期，则自动重新查询
+  if (departure.value.trim() && destination.value.trim() && departDate.value) {
+    await handleQuery();
+  }
+};
+
+// 清除车次类型选择
+const clearTrainTypes = () => {
+  selectedTrainTypes.value = [];
+  onFilterChange();
+};
+
+// 清除席别类型选择
+const clearSeatTypes = () => {
+  selectedSeatTypes.value = [];
+  onFilterChange();
 };
 
 // 组件挂载时生成日期列表和设置行程类型
