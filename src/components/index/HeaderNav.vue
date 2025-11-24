@@ -1,8 +1,14 @@
 <template>
   <div class="main-nav">
-    <router-link to="/index" class="nav-item active">首页</router-link>
+    <router-link 
+      to="/index" 
+      class="nav-item" 
+      :class="{ active: isHomeActive }"
+      active-class="active"
+    >首页</router-link>
     <div 
       class="nav-item ticket-item" 
+      :class="{ active: isTicketActive }"
       @mouseenter="showTicketMenu = true"
       @mouseleave="showTicketMenu = false"
     >
@@ -13,6 +19,7 @@
     </div>
     <div 
       class="nav-item travel-item" 
+      :class="{ active: isTravelActive }"
       @mouseenter="showTravelMenu = true"
       @mouseleave="showTravelMenu = false"
     >
@@ -23,6 +30,7 @@
     </div>
     <div 
       class="nav-item hotel-item" 
+      :class="{ active: isHotelActive }"
       @mouseenter="showHotelMenu = true"
       @mouseleave="showHotelMenu = false"
     >
@@ -33,6 +41,7 @@
     </div>
     <div 
       class="nav-item walk-item" 
+      :class="{ active: isWalkActive }"
       @mouseenter="showWalkMenu = true"
       @mouseleave="showWalkMenu = false"
     >
@@ -43,6 +52,7 @@
     </div>
     <div 
       class="nav-item news-item" 
+      :class="{ active: isNewsActive }"
       @mouseenter="showNewsMenu = true"
       @mouseleave="showNewsMenu = false"
     >
@@ -79,6 +89,52 @@ export default {
       showNewsMenu: false
     }
   },
+  computed: {
+    currentPath() {
+      return this.$route.path
+    },
+    isHomeActive() {
+      return this.currentPath === '/index' || this.currentPath === '/'
+    },
+    isTicketActive() {
+      const path = this.currentPath
+      return path.startsWith('/ticket') || 
+             path.startsWith('/order') || 
+             path === '/service/change' || 
+             path === '/service/endrose'
+    },
+    isTravelActive() {
+      const path = this.currentPath
+      return path.startsWith('/attraction') || 
+             path.startsWith('/search') || 
+             path === '/service/guide' || 
+             path === '/service/transport' || 
+             path === '/service/ticket' || 
+             path === '/service/group'
+    },
+    isHotelActive() {
+      const path = this.currentPath
+      return path.startsWith('/hotel') || 
+             path.startsWith('/query') || 
+             path === '/service/cancel' || 
+             path === '/service/modify' || 
+             path === '/service/refund'
+    },
+    isWalkActive() {
+      const path = this.currentPath
+      return path.startsWith('/guide') || 
+             path.startsWith('/strategy') || 
+             path === '/service/weather' || 
+             path === '/service/map' || 
+             path === '/service/emergency'
+    },
+    isNewsActive() {
+      const path = this.currentPath
+      return path.startsWith('/news') || 
+             path.startsWith('/notice') || 
+             path.startsWith('/help')
+    }
+  }
 
 }
 </script>
