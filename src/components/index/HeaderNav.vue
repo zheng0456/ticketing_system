@@ -210,7 +210,7 @@ export default {
 .walk-dropdown {
   position: absolute;
   top: 100%;
-  left: -210px;
+  left: -216px;
   transform: translateX(-50%);
   z-index: 1000;
   margin-top: 8px;
@@ -219,7 +219,7 @@ export default {
 .news-dropdown {
   position: absolute;
   top: 100%;
-  left: -400px;
+  left: -407px;
   transform: translateX(-50%);
   z-index: 1000;
   margin-top: 8px;
