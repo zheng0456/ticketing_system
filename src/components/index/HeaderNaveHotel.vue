@@ -6,7 +6,6 @@
         <ul>
           <li><router-link to="/hotel/search">酒店搜索</router-link></li>
           <li><router-link to="/hotel/booking">在线预订</router-link></li>
-          <li><router-link to="/hotel/group">团体预订</router-link></li>
         </ul>
       </div>
       <div class="ticket-nav-section">
@@ -14,7 +13,6 @@
         <ul>
           <li><router-link to="/query/location">位置查询</router-link></li>
           <li><router-link to="/query/price">价格查询</router-link></li>
-          <li><router-link to="/query/rating">星级查询</router-link></li>
         </ul>
       </div>
       <div class="ticket-nav-section">

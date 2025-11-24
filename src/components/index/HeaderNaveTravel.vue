@@ -2,20 +2,10 @@
   <div class="ticket-nav-dropdown">
     <div class="ticket-nav-content">
       <div class="ticket-nav-section">
-        <h4>景点门票</h4>
-        <ul>
-          <li><router-link to="/attraction/national">国家景点</router-link></li>
-          <li><router-link to="/attraction/provincial">省级景点</router-link></li>
-          <li><router-link to="/attraction/city">市级景点</router-link></li>
-          <li><router-link to="/attraction/theme">主题公园</router-link></li>
-        </ul>
-      </div>
-      <div class="ticket-nav-section">
         <h4>景点查询</h4>
         <ul>
           <li><router-link to="/search/name">景点名称查询</router-link></li>
           <li><router-link to="/search/location">地理位置查询</router-link></li>
-          <li><router-link to="/search/type">景点类型查询</router-link></li>
           <li><router-link to="/search/hot">热门景点推荐</router-link></li>
         </ul>
       </div>
@@ -23,9 +13,7 @@
         <h4>景点服务</h4>
         <ul>
           <li><router-link to="/service/guide">导游服务</router-link></li>
-          <li><router-link to="/service/transport">交通接送</router-link></li>
           <li><router-link to="/service/ticket">门票预订</router-link></li>
-          <li><router-link to="/service/group">团体服务</router-link></li>
         </ul>
       </div>
     </div>

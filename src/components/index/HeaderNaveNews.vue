@@ -4,8 +4,6 @@
       <div class="ticket-nav-section">
         <h4>新闻资讯</h4>
         <ul>
-          <li><router-link to="/news/latest">最新动态</router-link></li>
-          <li><router-link to="/news/industry">行业新闻</router-link></li>
           <li><router-link to="/news/policy">政策法规</router-link></li>
         </ul>
       </div>

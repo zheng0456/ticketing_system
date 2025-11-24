@@ -10,19 +10,10 @@
         </ul>
       </div>
       <div class="ticket-nav-section">
-        <h4>出行攻略</h4>
-        <ul>
-          <li><router-link to="/strategy/weekend">周末出游</router-link></li>
-          <li><router-link to="/strategy/holiday">节假日出行</router-link></li>
-          <li><router-link to="/strategy/season">季节性推荐</router-link></li>
-        </ul>
-      </div>
-      <div class="ticket-nav-section">
         <h4>便民服务</h4>
         <ul>
           <li><router-link to="/service/weather">天气预报</router-link></li>
           <li><router-link to="/service/map">地图导航</router-link></li>
-          <li><router-link to="/service/emergency">紧急联系</router-link></li>
         </ul>
       </div>
     </div>
