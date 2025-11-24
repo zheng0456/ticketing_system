@@ -39,8 +39,8 @@ export default {
   border: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0;
-  min-width: 990px;
-  position: fixed;
+  min-width: 1000px;
+  position: relative;
   z-index: 1000;
 }
 

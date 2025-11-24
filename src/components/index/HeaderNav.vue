@@ -181,43 +181,48 @@ export default {
   position: relative;
 }
 .ticket-dropdown {
-  position: fixed;
-  top: 178px;
-  left: 50%;
+  position: absolute;
+  top: 100%;
+  left: 335px;
   transform: translateX(-50%);
   z-index: 1000;
+  margin-top: 8px;
 }
 
 .travel-dropdown {
-  position: fixed;
-  top: 178px;
-  left: 50%;
+  position: absolute;
+  top: 100%;
+  left: 170px;
   transform: translateX(-50%);
   z-index: 1000;
+  margin-top: 8px;
 }
 
 .hotel-dropdown {
-  position: fixed;
-  top: 178px;
-  left: 50%;
+  position: absolute;
+  top: 100%;
+  left: -15px;
   transform: translateX(-50%);
   z-index: 1000;
+  margin-top: 8px;
 }
 
 .walk-dropdown {
-  position: fixed;
-  top: 178px;
-  left: 50%;
+  position: absolute;
+  top: 100%;
+  left: -210px;
   transform: translateX(-50%);
   z-index: 1000;
+  margin-top: 8px;
 }
 
 .news-dropdown {
-  position: fixed;
-  top: 178px;
-  left: 50%;
+  position: absolute;
+  top: 100%;
+  left: -400px;
   transform: translateX(-50%);
   z-index: 1000;
+  margin-top: 8px;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;

@@ -14,7 +14,6 @@
         <ul>
           <li><router-link to="/order?tab=uncompleted">退票</router-link></li>
           <li><router-link to="/service/change">改签</router-link></li>
-          <li><router-link to="/service/endrose">签票</router-link></li>
         </ul>
       </div>
     </div>
@@ -34,7 +33,7 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0;
   min-width: 990px;
-  position: fixed;
+  position: relative;
   z-index: 1000;
 }
 
