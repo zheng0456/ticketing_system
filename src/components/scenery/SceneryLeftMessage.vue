@@ -2,24 +2,39 @@
   <div class="app-container">
     <!-- 左侧导航栏 -->
     <aside class="sidebar">
-      <nav>
-        <div v-for="item in navItems" :key="item.region" class="nav-group">
-          <h3 class="region-title">{{ item.region }}</h3>
-          <ul class="city-list">
-            <li v-for="city in item.cities" :key="city">{{ city }}</li>
-          </ul>
-        </div>
-      </nav>
+      <div class="sidebar-box">
+        <nav>
+          <div v-for="item in navItems" :key="item.region" class="nav-group">
+            <h3 class="region-title">{{ item.region }}</h3>
+            <ul class="city-list">
+              <li v-for="city in item.cities" :key="city">{{ city }}</li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </aside>
 
     <!-- 右侧内容区 - 使用 SceneryMessage 组件 -->
-    <SceneryMessage />
+    <main class="main-content">
+    <div class="hero-image">
+      <img src="https://picsum.photos/id/1043/1200/600" alt="山水景观" />
+    </div>
+    <div class="card-slider">
+      <div class="card" v-for="(card, index) in cards" :key="index">
+        <div class="card-img-wrapper">
+          <img :src="card.image" :alt="card.title" />
+          <span class="card-label" v-if="card.label">{{ card.label }}</span>
+        </div>
+        <p class="card-title">{{ card.title }}</p>
+        <p class="card-author">{{ card.author }}</p>
+      </div>
+    </div>
+  </main>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import SceneryMessage from './SceneryMessage.vue';
 
 // 导航栏数据
 const navItems = ref([
@@ -31,6 +46,27 @@ const navItems = ref([
   { region: '南美洲', cities: ['伊瓜苏国家公园(阿根廷)', '火地岛国家公园', '复活节岛'] },
   { region: '大洋洲', cities: ['墨尔本', '悉尼', '奥克兰', '皇后镇'] },
 ]);
+// 卡片数据
+const cards = ref([
+  {
+    image: 'https://picsum.photos/id/1036/400/300',
+    label: '头条游记',
+    title: '巴厘岛 | 总有一个假日，要...',
+    author: '筱莲',
+  },
+  {
+    image: 'https://picsum.photos/id/1039/400/300',
+    label: '',
+    title: '手绘琅勃拉邦 | 来日方长，...',
+    author: 'Rinko咩咩',
+  },
+  {
+    image: 'https://picsum.photos/id/1041/400/300',
+    label: '',
+    title: '成都在做，幸福在右，人间...',
+    author: '林深Live',
+  },
+]);
 </script>
 
 <style scoped>
@@ -39,14 +75,27 @@ const navItems = ref([
   display: flex;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  height: 100vh;
 }
 
 /* 左侧导航样式 */
 .sidebar {
   width: 280px;
-  border-right: 1px solid #eee;
   padding: 20px;
   background: #fff;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar-box {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 945px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .nav-group {
@@ -81,5 +130,76 @@ const navItems = ref([
 
 .city-list li:hover {
   color: #000;
+}
+
+/* 右侧内容区样式 */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background: #ffffff;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.card-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  margin-top: 20px;
+  padding-bottom: 10px;
+}
+
+.card {
+  min-width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card-img-wrapper {
+  position: relative;
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  background: #ff672b;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 0 4px 4px 0;
+}
+
+.card-title {
+  padding: 12px 10px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-author {
+  padding: 0 10px 12px;
+  font-size: 14px;
+  color: #999;
 }
 </style>
