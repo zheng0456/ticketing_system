@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import OrderView from '../views/OrderView.vue'
 import TicketView from '../views/TicketView.vue'
+import SceneryView from '../views/SceneryView.vue'
 
 const routes = [
   {
@@ -29,6 +30,11 @@ const routes = [
     path: '/ticket/multi',
     name: 'transferTicket',
     component: TicketView
+  },
+  {
+    path: '/scenery',
+    name: 'scenery',
+    component: SceneryView
   },
   // 添加重定向，使根路径跳转到 /index
   {

@@ -4,9 +4,9 @@
       <div class="ticket-nav-section">
         <h4>景点查询</h4>
         <ul>
-          <li><router-link to="/search/name">景点名称查询</router-link></li>
-          <li><router-link to="/search/location">地理位置查询</router-link></li>
-          <li><router-link to="/search/hot">热门景点推荐</router-link></li>
+          <li><router-link to="/scenery">景点名称查询</router-link></li>
+          <li><router-link to="/scenery">地理位置查询</router-link></li>
+          <li><router-link to="/scenery">热门景点推荐</router-link></li>
         </ul>
       </div>
       <div class="ticket-nav-section">
