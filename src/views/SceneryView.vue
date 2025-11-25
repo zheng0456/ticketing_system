@@ -3,6 +3,11 @@
     <PageHeader />
     <HeaderNav />
     <SceneryLeftMessage />
+    
+    <!-- 单独放置SceneryTicketMessage组件，占据一整行 -->
+    <div class="ticket-message-container">
+      <SceneryTicketMessage />
+    </div>
   </div>
 </template>
 
@@ -10,6 +15,7 @@
 import PageHeader from '@/components/index/Header.vue'
 import HeaderNav from '@/components/index/HeaderNav.vue'
 import SceneryLeftMessage from '@/components/scenery/SceneryLeftMessage.vue'
+import SceneryTicketMessage from '@/components/scenery/SceneryTicketMessage.vue'
 </script>
 
 <style scoped>
@@ -17,5 +23,16 @@ import SceneryLeftMessage from '@/components/scenery/SceneryLeftMessage.vue'
 .home {
   padding: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 为SceneryTicketMessage容器添加样式，确保占据一整行 */
+.ticket-message-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  margin-top: 20px;
 }
 </style>
