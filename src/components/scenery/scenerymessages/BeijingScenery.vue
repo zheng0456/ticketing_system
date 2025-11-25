@@ -28,6 +28,126 @@
           @error="handleImageError"
         >
     </div>
+    
+    <!-- 故宫博物院信息展示容器 -->
+    <div class="scenery-cards-container">
+      <!-- 故宫博物院信息展示 1 -->
+      <div class="forbidden-city-info" style="width: 400px; height: 300px;">
+        <div class="forbidden-city-image">
+          <img 
+            :src="require('@/assets/img/故宫博物馆.png')" 
+            alt="故宫博物院" 
+            class="forbidden-city-img"
+            @error="handleImageError"
+          >
+        </div>
+        <div class="forbidden-city-details">
+          <h3 class="forbidden-city-title">故宫博物院</h3>
+          <div class="forbidden-city-rating">
+            <span class="rating-score">4.8分</span>
+          </div>
+          <p class="forbidden-city-description">穿越明清两朝的皇家宫殿群</p>
+        </div>
+      </div>
+      
+      <!-- 故宫博物院信息展示 2 -->
+      <div class="forbidden-city-info" style="width: 400px; height: 300px;">
+        <div class="forbidden-city-image">
+          <img 
+            :src="require('@/assets/img/八达岭长城.png')" 
+            alt="八达岭长城" 
+            class="forbidden-city-img"
+            @error="handleImageError"
+          >
+        </div>
+        <div class="forbidden-city-details">
+          <h3 class="forbidden-city-title">八达岭长城</h3>
+          <div class="forbidden-city-rating">
+            <span class="rating-score">4.7分</span>
+          </div>
+          <p class="forbidden-city-description">不到长城非好汉</p>
+        </div>
+      </div>
+
+      <!-- 故宫博物院信息展示 3 -->
+      <div class="forbidden-city-info" style="width: 400px; height: 300px;">
+        <div class="forbidden-city-image">
+          <img 
+            :src="require('@/assets/img/北京环球度假区.png')" 
+            alt="北京环球影城" 
+            class="forbidden-city-img"
+            @error="handleImageError"
+          >
+        </div>
+        <div class="forbidden-city-details">
+          <h3 class="forbidden-city-title">北京环球影城</h3>
+          <div class="forbidden-city-rating">
+            <span class="rating-score">4.6分</span>
+          </div>
+          <p class="forbidden-city-description">大片世界，在此成真</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 故宫博物院信息展示容器 -->
+    <div class="scenery-cards-container-1">
+      <!-- 故宫博物院信息展示 1 -->
+      <div class="forbidden-city-info" style="width: 400px; height: 300px;">
+        <div class="forbidden-city-image">
+          <img 
+            :src="require('@/assets/img/恭王府.png')" 
+            alt="恭王府" 
+            class="forbidden-city-img"
+            @error="handleImageError"
+          >
+        </div>
+        <div class="forbidden-city-details">
+          <h3 class="forbidden-city-title">恭王府</h3>
+          <div class="forbidden-city-rating">
+            <span class="rating-score">4.7分</span>
+          </div>
+          <p class="forbidden-city-description">旧时清朝大臣和珅的府邸</p>
+        </div>
+      </div>
+      
+      <!-- 故宫博物院信息展示 2 -->
+      <div class="forbidden-city-info" style="width: 400px; height: 300px;">
+        <div class="forbidden-city-image">
+          <img 
+            :src="require('@/assets/img/天坛.png')" 
+            alt="天坛公园" 
+            class="forbidden-city-img"
+            @error="handleImageError"
+          >
+        </div>
+        <div class="forbidden-city-details">
+          <h3 class="forbidden-city-title">天坛公园</h3>
+          <div class="forbidden-city-rating">
+            <span class="rating-score">4.7分</span>
+          </div>
+          <p class="forbidden-city-description">明清时期皇帝祭天的地方</p>
+        </div>
+      </div>
+
+      <!-- 故宫博物院信息展示 3 -->
+      <div class="forbidden-city-info" style="width: 400px; height: 300px;">
+        <div class="forbidden-city-image">
+          <img 
+            :src="require('@/assets/img/颐和园.png')" 
+            alt="颐和园" 
+            class="forbidden-city-img"
+            @error="handleImageError"
+          >
+        </div>
+        <div class="forbidden-city-details">
+          <h3 class="forbidden-city-title">颐和园</h3>
+          <div class="forbidden-city-rating">
+            <span class="rating-score">4.6分</span>
+          </div>
+          <p class="forbidden-city-description">走入清朝皇帝的皇家园林</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -156,6 +276,89 @@ export default {
   display: block;
 }
 
+/* 景点卡片容器样式 */
+.scenery-cards-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 60px;
+}
+
+/* 故宫博物院信息展示样式 */
+.forbidden-city-info {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.forbidden-city-image {
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+}
+
+.forbidden-city-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.forbidden-city-details {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.forbidden-city-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 10px 0;
+  text-align: left;
+}
+
+.forbidden-city-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.rating-score {
+  font-size: 18px;
+  color: #ff6700;
+  font-weight: bold;
+  margin-right: 10px;
+  text-align: left;
+}
+
+.rating-count {
+  font-size: 14px;
+  color: #999;
+  text-align: left;
+}
+
+.forbidden-city-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.scenery-cards-container-1{
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .beijing-scenery-container {
@@ -177,5 +380,20 @@ export default {
   .nav-text {
     font-size: 14px;
   }
+  
+  .scenery-cards-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .forbidden-city-info {
+    width: 100% !important;
+    height: auto !important;
+  }
+  
+  .forbidden-city-image {
+    height: 200px;
+  }
 }
+
 </style>
