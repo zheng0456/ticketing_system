@@ -25,9 +25,10 @@ defineProps({
 /* 展开内容样式 */
 .expanded-content {
   position: absolute;
-  left: 220px;
-  top: -35px; /* 调整顶部距离，确保在HeaderNav下方 */
-  width: 1180px;
+  left: 236px; /* 调整左边距 */
+  top: -1px; /* 调整上边距，不再向上偏移 */
+  right: 20px; /* 添加右边距 */
+  width: 1178px; /* 根据左右边距自动调整宽度 */
   height:750px;
   background: white;
   border: 1px solid #e0e0e0;
@@ -44,6 +45,7 @@ defineProps({
 /* 子区域样式 */
 .sub-region {
   margin-bottom: 15px;
+  text-align: left;
 }
 
 .sub-region-name {
@@ -51,6 +53,8 @@ defineProps({
   color: #333;
   margin-right: 10px;
   font-size: 14px;
+  display: inline-block;
+  min-width: 80px;
 }
 
 .sub-region-cities {
@@ -58,6 +62,8 @@ defineProps({
   flex-wrap: wrap;
   gap: 15px;
   margin-top: 5px;
+  justify-content: flex-start;
+  text-align: left;
 }
 
 .sub-region-city {
