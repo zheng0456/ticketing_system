@@ -107,6 +107,7 @@ export default {
       const path = this.currentPath
       return path.startsWith('/attraction') || 
              path.startsWith('/search') || 
+             path.startsWith('/scenery') || 
              path === '/service/guide' || 
              path === '/service/transport' || 
              path === '/service/ticket' || 
@@ -114,15 +115,15 @@ export default {
     },
     isHotelActive() {
       const path = this.currentPath
-      return path.startsWith('/hotel') || 
-             path.startsWith('/query') || 
+      return path.startsWith('/hotel/') || 
+             path.startsWith('/query/') || 
              path === '/service/cancel' || 
              path === '/service/modify' || 
              path === '/service/refund'
     },
     isWalkActive() {
       const path = this.currentPath
-      return path.startsWith('/guide') || 
+      return path.startsWith('/guide/') || 
              path.startsWith('/strategy') || 
              path === '/service/weather' || 
              path === '/service/map' || 
@@ -130,9 +131,9 @@ export default {
     },
     isNewsActive() {
       const path = this.currentPath
-      return path.startsWith('/news') || 
-             path.startsWith('/notice') || 
-             path.startsWith('/help')
+      return path.startsWith('/news/') || 
+             path.startsWith('/notice/') || 
+             path.startsWith('/help/')
     }
   }
 

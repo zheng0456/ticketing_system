@@ -4,7 +4,6 @@
       <div class="ticket-nav-section">
         <h4>酒店预订</h4>
         <ul>
-          <li><router-link to="/hotel/search">酒店搜索</router-link></li>
           <li><router-link to="/hotel/booking">在线预订</router-link></li>
         </ul>
       </div>
