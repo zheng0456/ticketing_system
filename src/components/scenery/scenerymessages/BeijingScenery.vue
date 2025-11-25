@@ -340,6 +340,11 @@ export default {
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
+}
+
+.forbidden-city-info:hover .forbidden-city-img {
+  transform: scale(1.1);
 }
 
 .forbidden-city-details {
@@ -438,6 +443,12 @@ export default {
     overflow: hidden;
     background: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+  }
+  
+  .universal-card:hover {
+    border-color: #1890ff;
+    box-shadow: 0 2px 12px rgba(24, 144, 255, 0.3);
   }
   
   .universal-content {
