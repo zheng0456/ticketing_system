@@ -8,6 +8,7 @@
     <div class="ticket-message-container">
       <SceneryTicketMessage />
     </div>
+    <PageFooter />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import PageHeader from '@/components/index/Header.vue'
 import HeaderNav from '@/components/index/HeaderNav.vue'
 import SceneryLeftMessage from '@/components/scenery/SceneryLeftMessage.vue'
 import SceneryTicketMessage from '@/components/scenery/SceneryTicketMessage.vue'
+import PageFooter from '@/components/index/Footer.vue'
 </script>
 
 <style scoped>
