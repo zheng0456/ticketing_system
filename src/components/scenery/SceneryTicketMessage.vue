@@ -1,8 +1,28 @@
 <template>
-  <div class="scenery-card">
-    <img src="@/assets/img/北京故宫.png" alt="北京故宫" class="scenery-image" style="user-select: none; -webkit-user-drag: none;">
-    <div class="scenery-info">
-      <h3 class="scenery-title">北京故宫</h3>
+  <div class="scenery-cards-container">
+    <div class="scenery-card">
+      <img src="@/assets/img/北京故宫.png" alt="北京" class="scenery-image" style="user-select: none; -webkit-user-drag: none;">
+      <div class="scenery-info">
+        <h3 class="scenery-title">故宫</h3>
+      </div>
+    </div>
+    <div class="scenery-card">
+      <img src="@/assets/img/上海东方明珠.png" alt="上海" class="scenery-image" style="user-select: none; -webkit-user-drag: none;">
+      <div class="scenery-info">
+        <h3 class="scenery-title">东方明珠</h3>
+      </div>
+    </div>
+    <div class="scenery-card">
+      <img src="@/assets/img/西湖.png" alt="西湖" class="scenery-image" style="user-select: none; -webkit-user-drag: none;">
+      <div class="scenery-info">
+        <h3 class="scenery-title">西湖</h3>
+      </div>
+    </div>
+    <div class="scenery-card">
+      <img src="@/assets/img/熊猫.png" alt="熊猫" class="scenery-image" style="user-select: none; -webkit-user-drag: none;">
+      <div class="scenery-info">
+        <h3 class="scenery-title">熊猫</h3>
+      </div>
     </div>
   </div>
 </template>
@@ -15,7 +35,7 @@ export default {
 
 <style scoped>
 .scenery-card {
-  width: 295px;
+  width: 330px;
   height: 220px;
   border-radius: 8px;
   overflow: hidden;
@@ -64,6 +84,13 @@ export default {
   font-weight: bold;
   color: #333;
   text-align: center;
+}
+
+.scenery-cards-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  margin-left:30px ;
 }
 
 .scenery-desc {
