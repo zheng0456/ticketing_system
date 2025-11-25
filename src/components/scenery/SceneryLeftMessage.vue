@@ -31,7 +31,7 @@
     <!-- 右侧内容区 -->
     <main class="main-content">
       <div class="hero-image">
-        <img src="https://picsum.photos/id/1043/1200/600" alt="山水景观" />
+        <img src="../../assets/img/景点服务1.png" alt="景点服务" />
       </div>
       <div class="card-slider">
         <div class="card" v-for="(card, index) in cards" :key="index">
@@ -211,22 +211,19 @@ const handleMessageLeave = () => {
 // 卡片数据
 const cards = ref([
   {
-    image: 'https://picsum.photos/id/1036/400/300',
+    image: require('../../assets/img/景点服务2.png'),
     label: '',
     title: '巴厘岛 | 总有一个假日，要...',
-    author: '筱莲',
   },
   {
-    image: 'https://picsum.photos/id/1039/400/300',
+    image: require('../../assets/img/景点服务3.png'),
     label: '',
     title: '手绘琅勃拉邦 | 来日方长，...',
-    author: 'Rinko咩咩',
   },
   {
-    image: 'https://picsum.photos/id/1041/400/300',
+    image: require('../../assets/img/景点服务4.png'),
     label: '',
     title: '成都在做，幸福在右，人间...',
-    author: '林深Live',
   },
 ]);
 </script>

@@ -148,6 +148,41 @@
         </div>
       </div>
     </div>
+    
+    <!-- 北京环球度假区特色展示 -->
+    <div class="universal-card" style="width: 100%; margin-top: 40px;">
+      <div class="universal-content">
+        <div class="universal-image">
+          <img 
+            :src="require('@/assets/img/北京环球度假区.png')" 
+            alt="北京环球度假区"
+            class="universal-img"
+            @error="handleImageError"
+          >
+        </div>
+        <div class="universal-details">
+          <h2 class="universal-title">北京环球度假区</h2>
+          <div class="universal-tags">
+            <span class="tag hot-tag">热搜榜</span>
+            <span class="tag highlight-tag">2026全球100必打卡景点</span>
+            <span class="tag normal-tag">大片世界，在此成真</span>
+            <span class="tag normal-tag">嗨玩乐园</span>
+          </div>
+          <div class="universal-rating">
+            <span class="rating-score">评分 4.6</span>
+          </div>
+          <div class="universal-info">
+            <span class="info-item">随时随用</span>
+            <span class="info-item">可订今日</span>
+          </div>
+          <div class="universal-price">
+            <span class="price-label">门票</span>
+            <span class="price-value">¥393</span>
+            <span class="price-unit">起</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -396,4 +431,173 @@ export default {
   }
 }
 
+  /* 北京环球度假区卡片样式 */
+  .universal-card {
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .universal-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .universal-image {
+    width: 300px;
+    height: 180px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  
+  .universal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    padding-left: 20px;
+    border-radius: 5px;
+  }
+  
+  .universal-details {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .universal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    text-align: left;
+  }
+  
+  .universal-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .hot-tag {
+    background-color: #fff2e8;
+    color: #fa541c;
+    border: 1px solid #ffbb96;
+  }
+  
+  .highlight-tag {
+    background-color: #fff7e6;
+    color: #fa8c16;
+    border: 1px solid #ffd591;
+  }
+  
+  .normal-tag {
+    background-color: #f6ffed;
+    color: #52c41a;
+    border: 1px solid #b7eb8f;
+  }
+  
+  .universal-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .fire-icon {
+    font-size: 18px;
+  }
+  
+  .rating-number {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .review-count {
+    font-size: 14px;
+    color: #999;
+  }
+  
+  .universal-info {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .info-item {
+    padding: 4px 12px;
+    background-color: #e6f7ff;
+    color: #1890ff;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .universal-location {
+    font-size: 14px;
+    color: #666;
+    text-align: left;
+  }
+  
+  .universal-price {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  
+  .price-label {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .price-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff4d4f;
+  }
+  
+  .price-unit {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  /* 响应式设计 - 环球度假区卡片 */
+  @media (max-width: 768px) {
+    .universal-content {
+      flex-direction: column;
+    }
+    
+    .universal-image {
+      width: 100%;
+      height: 200px;
+    }
+    
+    .universal-details {
+      padding: 15px;
+    }
+    
+    .universal-title {
+      font-size: 20px;
+    }
+    
+    .universal-tags {
+      justify-content: flex-start;
+    }
+    
+    .price-value {
+      font-size: 24px;
+    }
+  }
 </style>
