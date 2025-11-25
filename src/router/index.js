@@ -45,7 +45,17 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  // 控制路由切换时的滚动行为
+  scrollBehavior(to, from, savedPosition) {
+    // 如果有保存的位置，则恢复到该位置
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      // 否则滚动到顶部
+      return { top: 0 }
+    }
+  }
 })
 
 export default router

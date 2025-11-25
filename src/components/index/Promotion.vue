@@ -1,7 +1,9 @@
 <template>
   <div class="promotion-container">
-    <div class="promotion-item" :style="{ backgroundImage: 'url(' + jingdianImage + ')' }">
-    </div>
+    <router-link to="/scenery" class="router-link">
+      <div class="promotion-item" :style="{ backgroundImage: 'url(' + jingdianImage + ')' }">
+      </div>
+    </router-link>
     <div class="promotion-item" :style="{ backgroundImage: 'url(' + jiudianImage + ')' }">
     </div>
     <div class="promotion-item" :style="{ backgroundImage: 'url(' + chuxingImage + ')' }">
@@ -34,6 +36,14 @@ export default {
   padding: 40px 20px;
   background: #ffffff;
 }
+.router-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .promotion-item {
   flex: 1;
   text-align: center;
