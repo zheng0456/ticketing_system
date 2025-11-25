@@ -4,7 +4,7 @@
       <img src="@/assets/img/log.png" alt="Logo" class="logo" />
     </div>
     <div class="search-bar">
-      <input type="text" placeholder="搜索车票、餐饮、常旅客、相关规章" class="search-input" />
+      <input type="text" placeholder="搜索车票、景点门票、酒店" class="search-input" />
       <button class="search-btn"><el-icon><Search /></el-icon></button>
     </div>
     <!-- 添加一个灰色盒子容器 -->

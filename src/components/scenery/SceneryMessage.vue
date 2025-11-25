@@ -3,7 +3,12 @@
     <div v-for="subRegion in subRegions" :key="subRegion.name" class="sub-region">
       <span class="sub-region-name">{{ subRegion.name }}</span>
       <div class="sub-region-cities">
-        <span v-for="city in subRegion.cities" :key="city" class="sub-region-city">{{ city }}</span>
+        <span 
+          v-for="city in subRegion.cities" 
+          :key="city" 
+          class="sub-region-city"
+          @click="handleCityClick(city)"
+        >{{ city }}</span>
       </div>
     </div>
   </div>
@@ -19,6 +24,15 @@ defineProps({
     default: () => []
   }
 });
+
+// 处理城市点击事件
+const handleCityClick = (city) => {
+  // 当点击北京时，在新页面打开scenerymessage路由
+  if (city === '北京') {
+    window.open('/scenerymessage', '_blank');
+  }
+  // 其他城市保持原有行为，这里可以根据需要添加其他逻辑
+};
 </script>
 
 <style scoped>
