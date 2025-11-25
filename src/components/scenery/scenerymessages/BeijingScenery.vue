@@ -19,11 +19,11 @@
       </router-link>
     </div>
     
-    <!-- 长城图片展示 -->
+    <!-- 北京长城图片展示 -->
     <div class="image-container">
       <img 
-          :src="require('@/assets/img/北京故宫.png')" 
-          alt="北京故宫风景" 
+          :src="require('@/assets/img/长城.png')" 
+          alt="长城风景" 
           class="scenery-image"
           @error="handleImageError"
         >
@@ -39,12 +39,7 @@ export default {
       // 导航项数据
       navItems: [
         { path: '/scenerymessage', icon: '▲', text: '景点', active: true },
-        { path: '/accommodation', icon: '🏠', text: '住宿', active: false },
-        { path: '/food', icon: '🍜', text: '美食', active: false },
-        { path: '/shopping', icon: '🛍️', text: '购物', active: false },
-        { path: '/travel-notes', icon: '📝', text: '游记', active: false },
-        { path: '/local-guide', icon: '🧑', text: '当地向导', active: false },
-        { path: '/vacation', icon: '🌴', text: '旅游度假', active: false }
+        { path: '/accommodation', icon: '🏠', text: '住宿', active: false }
       ]
     }
   },
@@ -89,7 +84,7 @@ export default {
 }
 
 .header-title {
-  text-align: center;
+  text-align: left;
   margin-bottom: 20px;
 }
 
