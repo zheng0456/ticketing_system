@@ -21,7 +21,7 @@
         <tbody>
           <tr v-for="(ticket, index) in ticketList" :key="ticket.id || index">
             <td>{{ index + 1 }}</td>
-            <td>{{ formatSeatType(ticket.seatType) }}</td>
+            <td>{{ticket.seatType }}</td>
             <td>{{ ticket.ticketType }}</td>
             <td>{{ ticket.name }}</td>
             <td>{{ ticket.idType }}</td>
@@ -210,20 +210,6 @@ export default {
       // 这里可以添加返回修改的逻辑
       console.log('返回修改')
       this.$emit('cancel')
-    },
-    // 格式化席别显示，确保消除括号包围的部分
-    formatSeatType(seatType) {
-      if (!seatType) return '';
-      
-      // 使用正则表达式提取括号外的文字，更健壮地处理各种情况
-      // 匹配第一个左括号之前的所有内容
-      const match = seatType.match(/^([^()]+)/);
-      if (match && match[1]) {
-        return match[1].trim();
-      }
-      
-      // 如果正则匹配失败，直接返回原字符串并去除所有括号
-      return seatType.replace(/[()]/g, '').trim();
     },
     
     // 对证件号码进行脱敏处理
