@@ -165,7 +165,7 @@
     <!-- 订单确认弹窗 -->
         <div v-if="showConfirmation" class="modal-overlay" @click.self="closeConfirmation">
           <div class="modal-content">
-            <TicketSteateMessage :trainInfo="trainInfoText" @cancel="closeConfirmation" />
+            <TicketSteateMessage :trainInfo="trainInfoText" :ticketList="ticketList" @cancel="closeConfirmation" />
           </div>
         </div>
   </div>

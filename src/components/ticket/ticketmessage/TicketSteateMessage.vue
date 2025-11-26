@@ -19,13 +19,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>硬卧</td>
-            <td>学生票</td>
-            <td>郑锦春</td>
-            <td>居民身份证</td>
-            <td>1526***********712</td>
+          <tr v-for="(ticket, index) in ticketList" :key="ticket.id || index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ formatSeatType(ticket.seatType) }}</td>
+            <td>{{ ticket.ticketType }}</td>
+            <td>{{ ticket.name }}</td>
+            <td>{{ ticket.idType }}</td>
+            <td>{{ maskIdNumber(ticket.idNumber) }}</td>
           </tr>
         </tbody>
       </table>
@@ -37,7 +37,7 @@
     </div>
 
     <!-- 铺位选择 -->
-    <div class="berth-selection">
+    <div class="berth-selection" v-if="showBerthSelection">
       <div class="berth-title">
         <i class="icon-select"></i> 选铺啦
       </div>
@@ -91,6 +91,16 @@ export default {
     trainInfo: {
       type: String,
       default: '2025-11-26（周三） K545次 北京站（12:50开）→成都西站（22:21到）'
+    },
+    ticketList: {
+      type: Array,
+      default: () => [{
+        seatType: '硬卧',
+        ticketType: '学生票',
+        name: '郑锦春',
+        idType: '居民身份证',
+        idNumber: '1526***********712'
+      }]
     }
   },
   data() {
@@ -103,6 +113,19 @@ export default {
   computed: {
     totalSelectedBerths() {
       return this.lowerBerth + this.middleBerth + this.upperBerth
+    },
+    showBerthSelection() {
+      // 判断是否显示选铺信息：当选座类型包含硬座或无座时不显示选铺
+      if (!this.ticketList || this.ticketList.length === 0) {
+        return true; // 当没有数据时默认显示
+      }
+      // 检查是否包含硬座或无座：使用includes进行字符串包含判断
+      const hasHardSeatOrNoSeat = this.ticketList.some(ticket => {
+        const seatType = ticket.seatType || ''; // 直接使用原始座位类型字符串
+        return seatType.includes('硬座') || seatType.includes('无座');
+      });
+      // 如果包含硬座或无座则返回false（不显示选铺），否则返回true（显示选铺）
+      return !hasHardSeatOrNoSeat;
     }
   },
   methods: {
@@ -134,6 +157,30 @@ export default {
       console.log('返回修改')
       this.$emit('cancel')
     },
+    // 格式化席别显示
+    formatSeatType(seatType) {
+      // 从seatType字符串中提取席别信息
+      if (seatType.includes('硬卧')) {
+        return '硬卧';
+      } else if (seatType.includes('软卧')) {
+        return '软卧';
+      } else if (seatType.includes('硬座')) {
+        return '硬座';
+      } else if (seatType.includes('无座')) {
+        return '无座';
+      }
+      return seatType;
+    },
+    
+    // 对证件号码进行脱敏处理
+    maskIdNumber(idNumber) {
+      if (!idNumber) return '';
+      // 保留前4位和后4位，中间用*代替
+      const len = idNumber.length;
+      if (len <= 8) return idNumber;
+      return idNumber.substring(0, 4) + '*'.repeat(len - 8) + idNumber.substring(len - 4);
+    },
+    
     // 处理确认
     handleConfirm() {
       // 这里可以添加确认的逻辑
@@ -141,7 +188,8 @@ export default {
       this.$emit('confirm', {
         lowerBerth: this.lowerBerth,
         middleBerth: this.middleBerth,
-        upperBerth: this.upperBerth
+        upperBerth: this.upperBerth,
+        ticketList: this.ticketList
       })
       // 确认后关闭弹窗
       this.$emit('cancel')
