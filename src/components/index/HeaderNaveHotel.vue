@@ -10,9 +10,9 @@
       <div class="ticket-nav-section">
         <h4>酒店服务</h4>
         <ul>
-          <li><router-link to="/service/cancel">取消预订</router-link></li>
-          <li><router-link to="/service/modify">修改预订</router-link></li>
-          <li><router-link to="/service/refund">退款服务</router-link></li>
+          <li><router-link to="/order?tab=uncompleted&orderType=hotel">取消预订</router-link></li>
+          <li><router-link to="/order?tab=uncompleted&orderType=hotel">修改预订</router-link></li>
+          <li><router-link to="/order?tab=uncompleted&orderType=hotel">退款服务</router-link></li>
         </ul>
       </div>
     </div>
