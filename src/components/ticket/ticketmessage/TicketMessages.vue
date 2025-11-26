@@ -191,7 +191,9 @@ export default {
       // 乘车人数据
       passengers: [
         { id: 1, name: '郑锦春', isStudent: false, isAssignee: true, idNumber: '110101199001011234' },
-        { id: 2, name: '郑锦春', isStudent: true, isAssignee: false, idNumber: '110101200001012345' }
+        { id: 2, name: '郑锦春', isStudent: true, isAssignee: false, idNumber: '110101200001012345' },
+        { id: 3, name: '郑锦春', isStudent: false, isAssignee: true, idNumber: '110101199001011236' },
+        { id: 4, name: '郑锦春', isStudent: true, isAssignee: false, idNumber: '110101200001012347' }
       ],
       
       // 已选乘车人

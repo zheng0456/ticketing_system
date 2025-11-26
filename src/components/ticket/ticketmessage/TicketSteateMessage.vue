@@ -62,7 +62,7 @@
         </div>
       </div>
       <div class="selected-count">
-        已选铺{{ totalSelectedBerths }}/1
+        已选铺{{ totalSelectedBerths }}/{{ ticketList.length }}
       </div>
     </div>
     <!-- 座位选择界面 -->
@@ -72,16 +72,16 @@
       </div>
       <div class="seat-container">
         <div class="seat-row">
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'A' }" @click="selectSeat('A')">A</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'B' }" @click="selectSeat('B')">B</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'C' }" @click="selectSeat('C')">C</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('A') }" @click="selectSeat('A')">A</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('B') }" @click="selectSeat('B')">B</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('C') }" @click="selectSeat('C')">C</div>
           <div class="aisle">过道</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'D' }" @click="selectSeat('D')">D</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'F' }" @click="selectSeat('F')">F</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('D') }" @click="selectSeat('D')">D</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('F') }" @click="selectSeat('F')">F</div>
         </div>
       </div>
       <div class="selected-seat-info">
-        已选座{{ selectedSeat ? '1' : '0' }}/1
+        已选座{{ selectedSeats.length }}/{{ ticketList.length }}
       </div>
     </div>
 
@@ -92,14 +92,14 @@
       </div>
       <div class="seat-container">
         <div class="seat-row">
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'A' }" @click="selectSeat('A')">A</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'C' }" @click="selectSeat('C')">C</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('A') }" @click="selectSeat('A')">A</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('C') }" @click="selectSeat('C')">C</div>
           <div class="aisle">过道</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeat === 'F' }" @click="selectSeat('F')">F</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('F') }" @click="selectSeat('F')">F</div>
         </div>
       </div>
       <div class="selected-seat-info">
-        已选座{{ selectedSeat ? '1' : '0' }}/1
+        已选座{{ selectedSeats.length }}/{{ ticketList.length }}
       </div>
     </div>
 
@@ -146,12 +146,15 @@ export default {
       lowerBerth: 0,
       middleBerth: 0,
       upperBerth: 0,
-      selectedSeat: null
+      selectedSeats: []
     }
   },
   computed: {
     totalSelectedBerths() {
       return this.lowerBerth + this.middleBerth + this.upperBerth
+    },
+    selectedSeat() {
+      return this.selectedSeats.length > 0 ? this.selectedSeats[0] : null
     },
     showBerthSelection() {
       // 当ticketList中包含软卧或硬卧时显示铺位选择界面
@@ -182,7 +185,7 @@ export default {
   methods: {
     // 增加铺位数量
     incrementBerth(type) {
-      if (this.totalSelectedBerths < 1) {
+      if (this.totalSelectedBerths < this.ticketList.length) {
         if (type === 'lower') {
           this.lowerBerth++
         } else if (type === 'middle') {
@@ -208,19 +211,19 @@ export default {
       console.log('返回修改')
       this.$emit('cancel')
     },
-    // 格式化席别显示，只返回括号外的文字
+    // 格式化席别显示，确保消除括号包围的部分
     formatSeatType(seatType) {
       if (!seatType) return '';
       
-      // 使用正则表达式提取括号外的文字
-      // 匹配第一个左括号之前的内容
+      // 使用正则表达式提取括号外的文字，更健壮地处理各种情况
+      // 匹配第一个左括号之前的所有内容
       const match = seatType.match(/^([^()]+)/);
       if (match && match[1]) {
         return match[1].trim();
       }
       
-      // 如果没有括号，直接返回原字符串
-      return seatType.trim();
+      // 如果正则匹配失败，直接返回原字符串并去除所有括号
+      return seatType.replace(/[()]/g, '').trim();
     },
     
     // 对证件号码进行脱敏处理
@@ -246,17 +249,21 @@ export default {
       this.$emit('confirm', {
         ticketList: this.ticketList,
         berthInfo,
-        selectedSeat: this.selectedSeat || '未选座'
+        selectedSeats: this.selectedSeats.length > 0 ? this.selectedSeats.join('、') : '未选座'
       });
     },
     
     // 处理座位选择的方法
     selectSeat(seat) {
       // 如果点击已选中的座位，则取消选择
-      if (this.selectedSeat === seat) {
-        this.selectedSeat = null;
+      const index = this.selectedSeats.indexOf(seat);
+      if (index > -1) {
+        this.selectedSeats.splice(index, 1);
       } else {
-        this.selectedSeat = seat;
+        // 如果未达到最大选择数量，则添加新座位
+        if (this.selectedSeats.length < this.ticketList.length) {
+          this.selectedSeats.push(seat);
+        }
       }
     }
   }
