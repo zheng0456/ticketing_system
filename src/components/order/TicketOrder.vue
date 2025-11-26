@@ -12,8 +12,53 @@
         {{ tab.name }}
       </button>
     </div>
+    
+    <!-- 订单列表 -->
+    <div v-if="activeTab === 0 && orders.length > 0" class="order-list">
+      <div v-for="(order, index) in orders" :key="index" class="order-item">
+        <div class="order-header">
+          <span class="order-date">订票日期: {{ order.orderDate }}</span>
+        </div>
+        <div class="order-content">
+          <table class="order-table">
+            <thead>
+              <tr>
+                <th>车次信息</th>
+                <th>旅客信息</th>
+                <th>席位信息</th>
+                <th>票价</th>
+                <th>车票状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="train-info">
+                  <div class="train-name">{{ order.trainInfo.trainName }}</div>
+                  <div class="train-time">{{ order.trainInfo.date }} {{ order.trainInfo.departureTime }}开</div>
+                </td>
+                <td class="passenger-info">
+                  <div class="passenger-name">{{ order.passenger.name }}</div>
+                  <div class="passenger-id">居民身份证</div>
+                </td>
+                <td class="seat-info">{{ order.seatInfo }}</td>
+                <td class="price-info">
+                  <div>成人票</div>
+                  <div class="price">{{ order.price }}</div>
+                </td>
+                <td class="status-info">{{ order.status }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="order-actions">
+          <button class="cancel-btn" @click="cancelOrder(index)">取消订单</button>
+          <button class="pay-btn" @click="goToPay(index)">去支付</button>
+        </div>
+      </div>
+    </div>
+    
     <!-- 空订单提示 -->
-    <div class="empty-order">
+    <div v-else class="empty-order">
       <div class="empty-icon">
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="24" y="24" width="24" height="32" rx="2" stroke="#409EFF" stroke-width="2" fill="white"/>
@@ -29,6 +74,7 @@
         <p>您可以通过<a href="#" class="link">车票预订</a>功能，来制定出行计划。</p>
       </div>
     </div>
+    
     <!-- 温馨提示 -->
     <div class="tips">
       <h4>温馨提示</h4>
@@ -80,9 +126,39 @@ const tabs = ref([
   }
 ])
 
+// 默认订单数据
+const orders = ref([
+  {
+    orderDate: '2025-11-26',
+    trainInfo: {
+      trainName: '北京→成都西 K545',
+      date: '2025-11-26',
+      departureTime: '12:50'
+    },
+    passenger: {
+      name: '郑利平'
+    },
+    seatInfo: '硬卧 02车05号中铺',
+    price: '441.0元',
+    status: '待支付'
+  }
+])
+
 // 切换选项卡
 const switchTab = (index) => {
   activeTab.value = index
+}
+
+// 取消订单
+const cancelOrder = (index) => {
+  // 这里可以添加取消订单的逻辑
+  console.log('取消订单:', index)
+}
+
+// 去支付
+const goToPay = (index) => {
+  // 这里可以添加去支付的逻辑
+  console.log('去支付:', index)
 }
 
 // 组件挂载时检查URL参数
@@ -139,6 +215,122 @@ export default {
   font-weight: 500;
 }
 
+/* 订单列表样式 */
+.order-list {
+  margin-bottom: 20px;
+}
+
+.order-item {
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.order-header {
+  background-color: #f5f7fa;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.order-date {
+  color: #666;
+}
+
+.order-content {
+  padding: 15px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-table th {
+  text-align: left;
+  font-weight: normal;
+  color: #999;
+  font-size: 14px;
+  padding-bottom: 10px;
+}
+
+.order-table td {
+  padding: 10px 0;
+  border-top: 1px solid #eaeaea;
+  font-size: 14px;
+}
+
+.train-info .train-name {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.train-info .train-time {
+  color: #666;
+  font-size: 13px;
+}
+
+.passenger-info .passenger-name {
+  margin-bottom: 5px;
+}
+
+.passenger-info .passenger-id {
+  color: #666;
+  font-size: 13px;
+}
+
+.price-info .price {
+  color: #ff6700;
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+.status-info {
+  color: #ff6700;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px;
+  border-top: 1px solid #eaeaea;
+  gap: 10px;
+}
+
+.cancel-btn {
+  padding: 6px 15px;
+  border: 1px solid #dcdfe6;
+  background-color: #fff;
+  color: #606266;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.cancel-btn:hover {
+  color: #409EFF;
+  border-color: #c6e2ff;
+}
+
+.pay-btn {
+  padding: 6px 15px;
+  border: 1px solid #ff6700;
+  background-color: #ff6700;
+  color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.pay-btn:hover {
+  background-color: #ff7a23;
+  border-color: #ff7a23;
+}
+
+/* 空订单样式 */
 .empty-order {
   border: 1px solid #409EFF;
   border-radius: 4px;
@@ -160,6 +352,7 @@ export default {
   text-decoration: none;
 }
 
+/* 温馨提示样式 */
 .tips {
   background: #FFF8E6;
   border-radius: 4px;
