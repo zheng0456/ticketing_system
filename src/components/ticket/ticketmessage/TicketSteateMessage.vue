@@ -1,6 +1,6 @@
 <template>
+ <div class="check-info">请核对以下信息</div>
   <div class="ticket-message-container">
-    <div class="check-info">请核对以下信息</div>
     <!-- 顶部车次信息 -->
     <h3 class="train-info">{{ trainInfo }}</h3>
     
@@ -85,6 +85,24 @@
       </div>
     </div>
 
+    <!-- 座位选择界面 -->
+    <div class="seat-selection" v-if="showSeatSelections">
+      <div class="seat-selection-header">
+        <span class="seat-title">选座啦</span>
+      </div>
+      <div class="seat-container">
+        <div class="seat-row">
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'A' }" @click="selectSeat('A')">A</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'C' }" @click="selectSeat('C')">C</div>
+          <div class="aisle">过道</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'F' }" @click="selectSeat('F')">F</div>
+        </div>
+      </div>
+      <div class="selected-seat-info">
+        已选座{{ selectedSeat ? '1' : '0' }}/1
+      </div>
+    </div>
+
     <!-- 学生票提示 -->
     <div class="student-notice">
       *按现行规定，学生票购票区间必须与学生证上的乘车区间一致，否则车站将不予换票。
@@ -152,6 +170,13 @@ export default {
         const seatType = ticket.seatType || '';
         return seatType.includes('二等座') || seatType.includes('一等座');
       });
+    },
+    showSeatSelections() {
+      // 当ticketList中包含二等座或一等座时显示座位选择界面
+      return this.ticketList.some(ticket => {
+        const seatType = ticket.seatType || '';
+        return seatType.includes('商务');
+      });
     }
   },
   methods: {
@@ -183,19 +208,19 @@ export default {
       console.log('返回修改')
       this.$emit('cancel')
     },
-    // 格式化席别显示
+    // 格式化席别显示，只返回括号外的文字
     formatSeatType(seatType) {
-      // 从seatType字符串中提取席别信息
-      if (seatType.includes('硬卧')) {
-        return '硬卧';
-      } else if (seatType.includes('软卧')) {
-        return '软卧';
-      } else if (seatType.includes('硬座')) {
-        return '硬座';
-      } else if (seatType.includes('无座')) {
-        return '无座';
+      if (!seatType) return '';
+      
+      // 使用正则表达式提取括号外的文字
+      // 匹配第一个左括号之前的内容
+      const match = seatType.match(/^([^()]+)/);
+      if (match && match[1]) {
+        return match[1].trim();
       }
-      return seatType;
+      
+      // 如果没有括号，直接返回原字符串
+      return seatType.trim();
     },
     
     // 对证件号码进行脱敏处理
@@ -240,8 +265,8 @@ export default {
 
 <style scoped>
 .ticket-message-container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 758px;
+  margin-top: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   border-radius: 8px;
@@ -259,9 +284,6 @@ export default {
   text-align: left;
   font-size: 16px;
   font-weight: bold;
-  margin-top: -20px;
-  margin-left: -20px;
-  margin-right: -20px;
 }
 
 .train-info {
