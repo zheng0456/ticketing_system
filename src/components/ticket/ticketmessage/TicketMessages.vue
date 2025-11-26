@@ -337,7 +337,8 @@ export default {
     // 上一步
     goBack() {
       console.log('返回上一步');
-      // 这里可以实现返回上一步的逻辑
+      // 回退到/ticket页面
+      this.$router.push('/ticket');
     },
     
     // 提交订单
@@ -419,7 +420,7 @@ export default {
 
 /* 乘客信息区域样式 */
 .passenger-info {
-  margin-top: 15px; /* 确保距离上一个div有15px间距 */
+  margin-top: 25px; /* 确保距离上一个div有15px间距 */
   width: 100%;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
