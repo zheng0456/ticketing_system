@@ -28,7 +28,7 @@
         <HeaderNaveTravel v-show="showTravelMenu" class="travel-dropdown" />
       </transition>
     </div>
-    <div 
+    <!-- <div 
       class="nav-item hotel-item" 
       :class="{ active: isHotelActive }"
       @mouseenter="showHotelMenu = true"
@@ -38,7 +38,7 @@
       <transition name="fade">
         <HeaderNaveHotel v-show="showHotelMenu" class="hotel-dropdown" />
       </transition>
-    </div>
+    </div> -->
     <div 
       class="nav-item walk-item" 
       :class="{ active: isWalkActive }"
@@ -67,7 +67,7 @@
 <script>
 import HeaderNaveTicket from '@/components/index/HeaderNaveTicket.vue'
 import HeaderNaveTravel from '@/components/index/HeaderNaveTravel.vue'
-import HeaderNaveHotel from '@/components/index/HeaderNaveHotel.vue'
+// import HeaderNaveHotel from '@/components/index/HeaderNaveHotel.vue'
 import HeaderNaveWalk from '@/components/index/HeaderNaveWalk.vue'
 import HeaderNaveNews from '@/components/index/HeaderNaveNews.vue'
 
@@ -76,7 +76,7 @@ export default {
   components: {
     HeaderNaveTicket,
     HeaderNaveTravel,
-    HeaderNaveHotel,
+    // HeaderNaveHotel,
     HeaderNaveWalk,
     HeaderNaveNews
   },
@@ -156,7 +156,7 @@ export default {
   text-decoration: none;
   padding: 8px 15px;
   font-size: 14px;
-  margin: 0 53px;
+  margin: 0 77px;
 }
 .nav-link {
   color: #fff;
@@ -184,7 +184,7 @@ export default {
 .ticket-dropdown {
   position: absolute;
   top: 100%;
-  left: 335px;
+  left: 285px;
   transform: translateX(-50%);
   z-index: 1000;
   margin-top: 8px;
@@ -193,7 +193,7 @@ export default {
 .travel-dropdown {
   position: absolute;
   top: 100%;
-  left: 170px;
+  left: 71px;
   transform: translateX(-50%);
   z-index: 1000;
   margin-top: 8px;
@@ -211,7 +211,7 @@ export default {
 .walk-dropdown {
   position: absolute;
   top: 100%;
-  left: -216px;
+  left: -168px;
   transform: translateX(-50%);
   z-index: 1000;
   margin-top: 8px;

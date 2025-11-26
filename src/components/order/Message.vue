@@ -8,7 +8,7 @@
         <ul v-show="orderMenuExpanded">
           <li @click="showTicketOrder" :class="{ active: activeMenuItem === 'ticketOrder' }" class="clickable-item">火车票订单</li>
           <li @click="showAlternateTicket" :class="{ active: activeMenuItem === 'alternateTicket' }" class="clickable-item">候补订单</li>
-          <li @click="showHotelOrder" :class="{ active: activeMenuItem === 'hotelOrder' }" class="clickable-item">酒店订单</li>
+          <!-- <li @click="showHotelOrder" :class="{ active: activeMenuItem === 'hotelOrder' }" class="clickable-item">酒店订单</li> -->
           <li @click="showSceneryOrder" :class="{ active: activeMenuItem === 'sceneryOrder' }" class="clickable-item">景点订单</li>
         </ul>
       </div>
@@ -43,7 +43,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import TicketOrder from './TicketOrder.vue'
 import AlternateTicket from './AlternateTicket.vue'
-import HotelOrder from './HotelOrder.vue'
+// import HotelOrder from './HotelOrder.vue'
 import SceneryOrder from './SceneryOrder.vue'
 import MyOrderTicket from './MyOrderTicket.vue'
 import PersonOrder from './PersonOrder.vue'
@@ -95,10 +95,10 @@ const showAlternateTicket = () => {
 }
 
 // 显示酒店订单页面
-const showHotelOrder = () => {
-  currentComponent.value = HotelOrder
-  activeMenuItem.value = 'hotelOrder'
-}
+// const showHotelOrder = () => {
+//   currentComponent.value = HotelOrder
+//   activeMenuItem.value = 'hotelOrder'
+// }
 
 // 显示景点订单页面
 const showSceneryOrder = () => {
