@@ -28,7 +28,15 @@ import PageFooter from '@/components/index/Footer.vue'
   display: flex;
   flex-direction: column;
 }
-
+/* 调整PageHeader和HeaderNav组件之间的间距 */
+.home > .header {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+.home > .main-nav {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
 /* 为SceneryTicketMessage容器添加样式，确保占据一整行 */
 .ticket-message-container {
   width: 100%;

@@ -30,6 +30,15 @@ const isTransferTicket = computed(() => {
   padding: 0;
   width: 100%;
 }
+/* 调整PageHeader和HeaderNav组件之间的间距 */
+.home > .header {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+.home > .main-nav {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
 .ticket-view {
   width: 100%;
   padding: 20px;

@@ -145,7 +145,7 @@ export default {
   display: flex;
   align-items: center;
   height: 50px;
-  background: #0066cc;
+  background: #1890ff;
   padding: 0 20px;
   justify-content: center;
   position: relative;
@@ -163,7 +163,7 @@ export default {
   text-decoration: none;
 }
 .nav-item.active {
-  background: #0055aa;
+  background: #0477eb;
   border-radius: 4px;
 }
 .ticket-item {

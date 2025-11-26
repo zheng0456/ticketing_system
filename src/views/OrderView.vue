@@ -22,6 +22,15 @@ import OrderMessage from '../components/order/Message.vue'
   padding: 0;
   width: 100%;
 }
+/* 调整PageHeader和HeaderNav组件之间的间距 */
+.home > .header {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+.home > .main-nav {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
 .content-wrapper {
   position: relative;
   z-index: 1;
