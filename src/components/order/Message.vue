@@ -151,8 +151,13 @@ const showAddressManagement = () => {
 // 组件挂载时检查URL参数
 onMounted(() => {
   const tab = route.query.tab
-  if (tab === 'uncompleted') {
-    // 如果是从退票链接进入，自动选择火车票订单
+  const orderType = route.query.orderType
+  
+  // 根据参数决定显示哪个订单类型
+  if (orderType === 'scenery') {
+    showSceneryOrder()
+  } else if (tab === 'uncompleted') {
+    // 如果只有uncompleted参数，自动选择火车票订单
     showTicketOrder()
   }
 })

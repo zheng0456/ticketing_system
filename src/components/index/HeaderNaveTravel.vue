@@ -10,8 +10,8 @@
       <div class="ticket-nav-section">
         <h4>景点服务</h4>
         <ul>
-          <li><router-link to="/service/guide">修改预订</router-link></li>
-          <li><router-link to="/service/guide">退款服务</router-link></li>
+          <li><router-link to="/order?tab=uncompleted&orderType=scenery">修改预订</router-link></li>
+          <li><router-link to="/order?tab=uncompleted&orderType=scenery">退款服务</router-link></li>
         </ul>
       </div>
     </div>
