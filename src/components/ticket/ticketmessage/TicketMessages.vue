@@ -36,31 +36,6 @@
         乘客信息（填写说明）
       </div>
       
-      <!-- 受让人列表 -->
-      <div class="passenger-section">
-        <div class="section-title">
-          <span class="assignee-icon">👤</span> 受让人
-        </div>
-        <div v-if="assignees.length > 0">
-          <div 
-            v-for="passenger in assignees" 
-            :key="passenger.id"
-            class="passenger-checkbox"
-          >
-            <input 
-              type="checkbox" 
-              :id="`assignee-${passenger.id}`"
-              :checked="selectedPassengers.includes(passenger.id)"
-              @change="selectPassenger(passenger.id)"
-            >
-            <label :for="`assignee-${passenger.id}`">
-              {{ passenger.name }}
-              <span v-if="passenger.isStudent">(学生)</span>
-            </label>
-          </div>
-        </div>
-        <div v-else class="no-data">暂无受让人</div>
-      </div>
       
       <!-- 乘车人列表 -->
       <div class="passenger-section">
@@ -98,7 +73,6 @@
               <th>姓名</th>
               <th>证件类型</th>
               <th>证件号</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -157,12 +131,8 @@
                 class="id-number-input"
                 v-model="ticket.idNumber"
                 placeholder="请输入证件号"
+                style="padding-right: 0px;"
               ></td>
-              <td><button 
-                class="remove-btn"
-                @click="removeTicket(ticket.id)"
-                :disabled="ticketList.length <= 1"
-              >×</button></td>
             </tr>
           </tbody>
         </table>
@@ -223,8 +193,8 @@ export default {
     return {
       // 乘车人数据
       passengers: [
-        { id: 1, name: '郑锦春', isStudent: false, isAssignee: true },
-        { id: 2, name: '郑锦春', isStudent: true, isAssignee: false }
+        { id: 1, name: '郑锦春', isStudent: false, isAssignee: true, idNumber: '110101199001011234' },
+        { id: 2, name: '郑锦春', isStudent: true, isAssignee: false, idNumber: '110101200001012345' }
       ],
       
       // 已选乘车人
@@ -261,12 +231,101 @@ export default {
     // 选择乘车人
     selectPassenger(passengerId) {
       const index = this.selectedPassengers.indexOf(passengerId);
+      const passenger = this.passengers.find(p => p.id === passengerId);
+      
       if (index > -1) {
+        // 取消选中，移除对应的票务信息
         this.selectedPassengers.splice(index, 1);
+        
+        // 移除对应的票务信息
+        const ticketIndex = this.ticketList.findIndex(t => t.name === passenger.name && t.idNumber === passenger.idNumber);
+        if (ticketIndex > -1) {
+          this.ticketList.splice(ticketIndex, 1);
+        }
+        
+        // 重新整理票务信息，确保剩余乘客信息与选择顺序一致
+        this.reorganizeTicketList();
       } else {
+        // 选中乘客，添加到已选列表
         this.selectedPassengers.push(passengerId);
+        
+        // 创建新的票务信息并填充乘客信息
+        const newTicket = {
+          id: Date.now(),
+          ticketType: passenger.isStudent ? '学生票' : '成人票',
+          seatType: this.seatTypes[0], // 默认选择第一个座位类型
+          name: passenger.name,
+          idType: '居民身份证',
+          idNumber: passenger.idNumber
+        };
+        
+        // 如果是第一个选中的乘客，填充到序号1的行（即ticketList的第一个元素）
+        if (this.selectedPassengers.length === 1) {
+          // 如果ticketList已有第一个元素，则更新它；否则添加新元素
+          if (this.ticketList.length > 0) {
+            this.ticketList[0] = newTicket;
+          } else {
+            this.ticketList.push(newTicket);
+          }
+        } else {
+          // 对于后续选中的乘客，添加到ticketList末尾
+          this.ticketList.push(newTicket);
+        }
       }
+      
       console.log('已选乘车人:', this.selectedPassengers);
+      console.log('票务信息:', this.ticketList);
+    },
+    
+    // 重新整理票务信息，确保与选择顺序一致
+    reorganizeTicketList() {
+      // 保存当前ticketList中用户修改过的票种和座位类型设置
+      const userModifiedSettings = {};
+      this.ticketList.forEach(ticket => {
+        if (ticket.name && ticket.idNumber) {
+          userModifiedSettings[`${ticket.name}-${ticket.idNumber}`] = {
+            ticketType: ticket.ticketType,
+            seatType: ticket.seatType,
+            idType: ticket.idType
+          };
+        }
+      });
+      
+      // 创建新的ticketList，根据selectedPassengers顺序重新排列乘客信息
+      const newTicketList = [];
+      
+      // 首先添加已选乘客的信息，保留用户之前的设置
+      this.selectedPassengers.forEach(passengerId => {
+        const passenger = this.passengers.find(p => p.id === passengerId);
+        if (passenger) {
+          const key = `${passenger.name}-${passenger.idNumber}`;
+          const savedSettings = userModifiedSettings[key] || {};
+          
+          newTicketList.push({
+            id: Date.now(),
+            ticketType: savedSettings.ticketType || (passenger.isStudent ? '学生票' : '成人票'),
+            seatType: savedSettings.seatType || this.seatTypes[0],
+            name: passenger.name,
+            idType: savedSettings.idType || '居民身份证',
+            idNumber: passenger.idNumber
+          });
+        }
+      });
+      
+      // 添加空行，确保表格至少有一行
+      if (newTicketList.length === 0) {
+        newTicketList.push({
+          id: Date.now(),
+          ticketType: '成人票',
+          seatType: this.seatTypes[0],
+          name: '',
+          idType: '居民身份证',
+          idNumber: ''
+        });
+      }
+      
+      // 更新ticketList
+      this.ticketList = newTicketList;
     },
     
     // 添加票务信息
@@ -456,6 +515,12 @@ export default {
   padding: 5px;
   border: 1px solid #e0e0e0;
   border-radius: 3px;
+}
+
+.ticket-table select:focus,
+.ticket-table input:focus {
+  border-color: #1890ff;
+  outline: none;
 }
 
 .remove-btn {
