@@ -259,6 +259,11 @@ export default {
   padding: 10px 0;
   border-top: 1px solid #eaeaea;
   font-size: 14px;
+  text-align: left; /* 确保内容靠左对齐 */
+}
+
+.train-info {
+  text-align: left; /* 确保车次信息靠左 */
 }
 
 .train-info .train-name {
@@ -271,6 +276,10 @@ export default {
   font-size: 13px;
 }
 
+.passenger-info {
+  text-align: left; /* 确保旅客信息靠左 */
+}
+
 .passenger-info .passenger-name {
   margin-bottom: 5px;
 }
@@ -278,6 +287,10 @@ export default {
 .passenger-info .passenger-id {
   color: #666;
   font-size: 13px;
+}
+
+.price-info {
+  text-align: left; /* 确保票价信息靠左 */
 }
 
 .price-info .price {
@@ -288,6 +301,7 @@ export default {
 
 .status-info {
   color: #ff6700;
+  text-align: left; /* 确保状态信息靠左 */
 }
 
 .order-actions {
