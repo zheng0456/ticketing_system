@@ -121,28 +121,44 @@
           </td>
         </tr>
         <tr v-else v-for="(train, index) in trainList" :key="index">
-          <td>{{ train.trainNumber || '--' }}</td>
-          <td>
-            {{ train.departureStation || '--' }}<br>
-            {{ train.arrivalStation || '--' }}
-          </td>
-          <td>
-            {{ train.departureTime || '--' }}<br>
-            {{ train.arrivalTime || '--' }}
-          </td>
-          <td>{{ train.duration || '--' }}</td>
-          <td>{{ train.businessSeat || '--' }}</td>
-          <td>{{ train.preferredFirstClass || '--' }}</td>
-          <td>{{ train.firstClass || '--' }}</td>
-          <td>{{ train.secondClass || '--' }}</td>
-          <td>{{ train.advancedSoftSleeper || '--' }}</td>
-          <td>{{ train.softSleeper || '--' }}</td>
-          <td>{{ train.hardSleeper || '--' }}</td>
-          <td>{{ train.softSeat || '--' }}</td>
-          <td>{{ train.hardSeat || '--' }}</td>
-          <td>{{ train.noSeat || '--' }}</td>
-          <td>{{ train.other || '--' }}</td>
-          <td>{{ train.remark || '--' }}</td>
+            <td>
+              <!-- 显示车次号，确保总是带下划线 -->
+              <div style="border-bottom: 1px solid #333; padding-bottom: 2px; display: inline-block; text-align: center;">
+                <img 
+                  v-if="train.trainNumberImage" 
+                  :src="train.trainNumberImage" 
+                  :alt="train.trainNumber" 
+                  style="width: 80px; height: 30px; display: block;"
+                  @error="(event) => handleImageError(event, train)"
+                >
+                <span v-if="!train.trainNumberImage || train.imageError">{{ train.trainNumber || '--' }}</span>
+              </div>
+            </td>
+            <td>
+              {{ train.departureStation || '--' }}<br>
+              {{ train.arrivalStation || '--' }}
+            </td>
+            <td>
+              {{ train.departureTime || '--' }}<br>
+              {{ train.arrivalTime || '--' }}
+            </td>
+            <td>{{ train.duration || '--' }}</td>
+            <td>{{ train.businessSeat || '--' }}</td>
+            <td>{{ train.preferredFirstClass || '--' }}</td>
+            <td>{{ train.firstClass || '--' }}</td>
+            <td>{{ train.secondClass || '--' }}</td>
+            <td>{{ train.advancedSoftSleeper || '--' }}</td>
+            <td>{{ train.softSleeper || '--' }}</td>
+            <td>{{ train.hardSleeper || '--' }}</td>
+            <td>{{ train.softSeat || '--' }}</td>
+            <td>{{ train.hardSeat || '--' }}</td>
+            <td>{{ train.noSeat || '--' }}</td>
+            <td>{{ train.other || '--' }}</td>
+            <td>
+              <button style="background-color: #1890ff; color: white; border: none; padding: 4px 12px; cursor: pointer; border-radius: 4px;">
+                预定
+              </button>
+            </td>
         </tr>
       </tbody>
     </table>
@@ -171,6 +187,38 @@ const passengerType = ref('normal');
 // 查询结果
 const trainList = ref([]);
 const loading = ref(false);
+
+// 默认车次图片数据
+const defaultTrainList = ref([
+  {
+    trainNumber: 'D11045',
+    trainNumberImage: '/src/assets/img/D11045.png',
+    imageError: false,
+    departureStation: '清河',
+    arrivalStation: '成都东',
+    departureTime: '11:41',
+    arrivalTime: '23:00',
+    duration: '11:19',
+    businessSeat: '--',
+    preferredFirstClass: '--',
+    firstClass: '有',
+    secondClass: '有',
+    advancedSoftSleeper: '--',
+    softSleeper: '--',
+    hardSleeper: '--',
+    softSeat: '--',
+    hardSeat: '有',
+    noSeat: '--',
+    other: '--',
+    remark: '--'
+  }
+]);
+
+// 处理图片加载失败的函数
+const handleImageError = (event, train) => {
+  // 设置图片错误状态，让Vue显示文本
+  train.imageError = true;
+};
 
 // 筛选条件
 const selectedTrainTypes = ref([]);
@@ -261,12 +309,14 @@ const handleQuery = async () => {
       ElMessage.success('查询成功');
     } else {
       ElMessage.error(response.data.msg || '查询失败');
-      trainList.value = [];
+      // 如果查询失败，使用默认数据
+      trainList.value = defaultTrainList.value;
     }
   } catch (error) {
     console.error('查询请求失败:', error);
     ElMessage.error('查询失败，请检查网络连接或稍后重试');
-    trainList.value = [];
+    // 如果请求失败，使用默认数据
+    trainList.value = defaultTrainList.value;
   } finally {
     loading.value = false;
   }
@@ -303,6 +353,9 @@ onMounted(() => {
   } else {
     tripType.value = 'single';
   }
+  
+  // 组件加载时显示默认数据
+  trainList.value = defaultTrainList.value;
 });
 </script>
 
