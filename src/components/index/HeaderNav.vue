@@ -23,7 +23,7 @@
       @mouseenter="showTravelMenu = true"
       @mouseleave="showTravelMenu = false"
     >
-      <a href="#" class="nav-link" @click.prevent>景点服务</a>
+      <a href="#" class="nav-link" @click.prevent>景点预约</a>
       <transition name="fade">
         <HeaderNaveTravel v-show="showTravelMenu" class="travel-dropdown" />
       </transition>
@@ -34,7 +34,7 @@
       @mouseenter="showHotelMenu = true"
       @mouseleave="showHotelMenu = false"
     >
-      <a href="#" class="nav-link" @click.prevent>酒店服务</a>
+      <a href="#" class="nav-link" @click.prevent>酒店预约</a>
       <transition name="fade">
         <HeaderNaveHotel v-show="showHotelMenu" class="hotel-dropdown" />
       </transition>

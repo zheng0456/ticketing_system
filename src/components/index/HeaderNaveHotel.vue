@@ -8,13 +8,6 @@
         </ul>
       </div>
       <div class="ticket-nav-section">
-        <h4>酒店查询</h4>
-        <ul>
-          <li><router-link to="/query/location">位置查询</router-link></li>
-          <li><router-link to="/query/price">价格查询</router-link></li>
-        </ul>
-      </div>
-      <div class="ticket-nav-section">
         <h4>酒店服务</h4>
         <ul>
           <li><router-link to="/service/cancel">取消预订</router-link></li>

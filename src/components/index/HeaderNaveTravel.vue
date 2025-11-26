@@ -2,18 +2,16 @@
   <div class="ticket-nav-dropdown">
     <div class="ticket-nav-content">
       <div class="ticket-nav-section">
-        <h4>景点查询</h4>
+        <h4>景点预约</h4>
         <ul>
-          <li><router-link to="/scenery">景点名称查询</router-link></li>
-          <li><router-link to="/scenery">地理位置查询</router-link></li>
-          <li><router-link to="/scenery">热门景点推荐</router-link></li>
+          <li><router-link to="/scenery">门票预订</router-link></li>
         </ul>
       </div>
       <div class="ticket-nav-section">
         <h4>景点服务</h4>
         <ul>
-          <li><router-link to="/service/guide">导游服务</router-link></li>
-          <li><router-link to="/service/ticket">门票预订</router-link></li>
+          <li><router-link to="/service/guide">修改预订</router-link></li>
+          <li><router-link to="/service/guide">退款服务</router-link></li>
         </ul>
       </div>
     </div>
