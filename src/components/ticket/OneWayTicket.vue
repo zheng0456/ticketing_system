@@ -124,14 +124,7 @@
             <td>
               <!-- 显示车次号，确保总是带下划线 -->
               <div style="border-bottom: 1px solid #333; padding-bottom: 2px; display: inline-block; text-align: center;">
-                <img 
-                  v-if="train.trainNumberImage" 
-                  :src="train.trainNumberImage" 
-                  :alt="train.trainNumber" 
-                  style="width: 80px; height: 30px; display: block;"
-                  @error="(event) => handleImageError(event, train)"
-                >
-                <span v-if="!train.trainNumberImage || train.imageError">{{ train.trainNumber || '--' }}</span>
+                <span>{{ train.trainNumber || '--' }}</span>
               </div>
             </td>
             <td>
@@ -140,7 +133,6 @@
             </td>
             <td>
               {{ train.departureTime || '--' }}<br>
-              {{ train.arrivalTime || '--' }}
             </td>
             <td>{{ train.duration || '--' }}</td>
             <td>{{ train.businessSeat || '--' }}</td>
@@ -198,7 +190,8 @@ const defaultTrainList = ref([
     arrivalStation: '成都东',
     departureTime: '11:41',
     arrivalTime: '23:00',
-    duration: '11:19',
+    duration: '当日到达',
+    // 确保不重复添加duration字段，保持原样显示
     businessSeat: '--',
     preferredFirstClass: '--',
     firstClass: '有',
@@ -214,11 +207,7 @@ const defaultTrainList = ref([
   }
 ]);
 
-// 处理图片加载失败的函数
-const handleImageError = (event, train) => {
-  // 设置图片错误状态，让Vue显示文本
-  train.imageError = true;
-};
+
 
 // 筛选条件
 const selectedTrainTypes = ref([]);
