@@ -136,33 +136,18 @@
             </tr>
           </tbody>
         </table>
-        <button 
-          class="add-ticket-btn"
-          @click="addTicket"
-          style="margin-top: 10px; padding: 5px 15px; background-color: #52c41a; color: white; border: none; border-radius: 3px; cursor: pointer;"
-        >
-          + 添加车票
-        </button>
+
       </div>
       
-      <!-- 保险信息 -->
-      <div class="insurance-info">
-        <div class="insurance-banner">
-          <img src="/insurance-banner.png" alt="铁路保险" class="insurance-logo">
-          <div class="insurance-text">
-            <h3>乘意相伴 安心出行</h3>
-            <p>乘客保险升级，保障范围更全面</p>
-          </div>
-          <div class="insurance-decoration">
-            <!-- 装饰性元素 -->
-          </div>
-        </div>
+      <!-- 车票图片 -->
+      <div class="ticket-image-container">
+        <img src="@/assets/img/车票1.png" alt="车票" class="ticket-image">
       </div>
       
       <!-- 提交按钮 -->
       <div class="submit-section">
         <p class="agreement-text">提交订单表示已阅读并同意《国铁集团铁路旅客运输规程》《服务条款》</p>
-chuuchuu        <div class="button-group">
+        <div class="button-group">
           <button class="prev-btn" @click="goBack">上一步</button>
           <button class="submit-btn" @click="submitOrder">提交订单</button>
         </div>
@@ -535,36 +520,16 @@ export default {
   line-height: 1;
 }
 
-/* 保险信息 */
-.insurance-info {
-  background-color: #1890ff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  position: relative;
+/* 车票图片样式 */
+.ticket-image-container {
+  border-bottom: 1px dashed #e0e0e0;
   overflow: hidden;
 }
 
-.insurance-banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-
-.insurance-logo {
-  height: 40px;
-  width: auto;
-}
-
-.insurance-text h3 {
-  margin: 0 0 5px 0;
-  font-size: 18px;
-}
-
-.insurance-text p {
-  margin: 0;
-  font-size: 12px;
+.ticket-image {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* 提交按钮区域 */
