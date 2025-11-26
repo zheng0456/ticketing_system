@@ -161,12 +161,24 @@
         <p>3. 购买残疾军人（伤残警察）优待票时，须在购票后、开车前办理换票手续方可进站乘车。换票时，不符合规定的减价优待条件，没有有效"中华人民共和国残疾军人证"或"中华人民共和国伤残人民警察证"的，不予换票，所购车票按规定办理退票手续。</p>
       </div>
     </div>
+
+    <!-- 订单确认弹窗 -->
+        <div v-if="showConfirmation" class="modal-overlay" @click.self="closeConfirmation">
+          <div class="modal-content">
+            <TicketSteateMessage :trainInfo="trainInfoText" @cancel="closeConfirmation" />
+          </div>
+        </div>
   </div>
 </template>
 
 <script>
+import TicketSteateMessage from './TicketSteateMessage.vue'
+
 export default {
   name: 'TicketMessages',
+  components: {
+    TicketSteateMessage
+  },
   props: {
     // 如果需要动态传递列车信息，可以在这里定义props
     trainData: {
@@ -208,7 +220,11 @@ export default {
       ],
       
       // 证件类型选项
-      idTypes: ['居民身份证', '护照', '军官证']
+      idTypes: ['居民身份证', '护照', '军官证'],
+      // 弹窗显示状态
+      showConfirmation: false,
+      // 火车信息文本
+      trainInfoText: ''
     }
   },
   methods: {
@@ -344,9 +360,19 @@ export default {
     // 提交订单
     submitOrder() {
       console.log('提交订单:', this.ticketList);
-      // 这里可以实现提交订单的逻辑
+      // 显示确认弹窗
+      this.showConfirmation = true;
+    },
+    // 关闭弹窗
+    closeConfirmation() {
+      this.showConfirmation = false;
     }
   },
+  mounted() {
+    // 获取火车信息文本
+    this.trainInfoText = this.$el.querySelector('.train-info').textContent.trim();
+  },
+  
   computed: {
     
     // 受让人列表
@@ -607,6 +633,42 @@ export default {
   
   .insurance-banner {
     flex-direction: column;
+  }
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>
