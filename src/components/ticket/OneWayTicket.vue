@@ -147,7 +147,10 @@
             <td>{{ train.noSeat || '--' }}</td>
             <td>{{ train.other || '--' }}</td>
             <td>
-              <button style="background-color: #1890ff; color: white; border: none; padding: 4px 12px; cursor: pointer; border-radius: 4px;">
+              <button 
+                style="background-color: #1890ff; color: white; border: none; padding: 4px 12px; cursor: pointer; border-radius: 4px;"
+                @click="navigateToTicketMessages"
+              >
                 预定
               </button>
             </td>
@@ -160,13 +163,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Switch } from '@element-plus/icons-vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import api from '@/api/index.js';
 
 // 行程类型：单程/往返
 const tripType = ref('single');
 const route = useRoute();
+const router = useRouter();
 // 出发地、目的地
 const departure = ref('');
 const destination = ref('');
@@ -329,6 +333,11 @@ const clearTrainTypes = () => {
 const clearSeatTypes = () => {
   selectedSeatTypes.value = [];
   onFilterChange();
+};
+
+// 跳转到列车信息详情页面
+const navigateToTicketMessages = () => {
+  router.push('/ticketmessages');
 };
 
 // 组件挂载时生成日期列表和设置行程类型

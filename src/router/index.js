@@ -5,6 +5,7 @@ import OrderView from '../views/OrderView.vue'
 import TicketView from '../views/TicketView.vue'
 import SceneryView from '../views/SceneryView.vue'
 import SceneryMessageView from '../views/SceneryMessageView.vue'
+import TicketMessagesView from '../views/TicketMessagesView.vue'
 
 const routes = [
   {
@@ -37,10 +38,15 @@ const routes = [
     name: 'scenery',
     component: SceneryView
   },
-  {
+  {    
     path: '/scenerymessage',
     name: 'sceneryMessage',
     component: SceneryMessageView
+  },
+  {    
+    path: '/ticketmessages',
+    name: 'ticketMessages',
+    component: TicketMessagesView
   },
   // 添加重定向，使根路径跳转到 /index
   {
