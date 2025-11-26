@@ -65,6 +65,25 @@
         已选铺{{ totalSelectedBerths }}/1
       </div>
     </div>
+    <!-- 座位选择界面 -->
+    <div class="seat-selection" v-if="showSeatSelection">
+      <div class="seat-selection-header">
+        <span class="seat-title">选座啦</span>
+      </div>
+      <div class="seat-container">
+        <div class="seat-row">
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'A' }" @click="selectSeat('A')">A</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'B' }" @click="selectSeat('B')">B</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'C' }" @click="selectSeat('C')">C</div>
+          <div class="aisle">过道</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'D' }" @click="selectSeat('D')">D</div>
+          <div class="seat seat-available" :class="{ selected: selectedSeat === 'F' }" @click="selectSeat('F')">F</div>
+        </div>
+      </div>
+      <div class="selected-seat-info">
+        已选座{{ selectedSeat ? '1' : '0' }}/1
+      </div>
+    </div>
 
     <!-- 学生票提示 -->
     <div class="student-notice">
@@ -81,6 +100,7 @@
       <button class="btn-cancel" @click="handleCancel">返回修改</button>
       <button class="btn-confirm" @click="handleConfirm">确认</button>
     </div>
+    
   </div>
 </template>
 
@@ -107,7 +127,8 @@ export default {
     return {
       lowerBerth: 0,
       middleBerth: 0,
-      upperBerth: 0
+      upperBerth: 0,
+      selectedSeat: null
     }
   },
   computed: {
@@ -115,17 +136,22 @@ export default {
       return this.lowerBerth + this.middleBerth + this.upperBerth
     },
     showBerthSelection() {
-      // 判断是否显示选铺信息：当选座类型包含硬座或无座时不显示选铺
+      // 当ticketList中包含软卧或硬卧时显示铺位选择界面
       if (!this.ticketList || this.ticketList.length === 0) {
-        return true; // 当没有数据时默认显示
+        return false; // 当没有数据时默认不显示
       }
-      // 检查是否包含硬座或无座：使用includes进行字符串包含判断
-      const hasHardSeatOrNoSeat = this.ticketList.some(ticket => {
+      // 检查是否包含软卧或硬卧：使用includes进行字符串包含判断
+      return this.ticketList.some(ticket => {
         const seatType = ticket.seatType || ''; // 直接使用原始座位类型字符串
-        return seatType.includes('硬座') || seatType.includes('无座');
+        return seatType.includes('软卧') || seatType.includes('硬卧');
       });
-      // 如果包含硬座或无座则返回false（不显示选铺），否则返回true（显示选铺）
-      return !hasHardSeatOrNoSeat;
+    },
+    showSeatSelection() {
+      // 当ticketList中包含二等座或一等座时显示座位选择界面
+      return this.ticketList.some(ticket => {
+        const seatType = ticket.seatType || '';
+        return seatType.includes('二等座') || seatType.includes('一等座');
+      });
     }
   },
   methods: {
@@ -183,16 +209,30 @@ export default {
     
     // 处理确认
     handleConfirm() {
-      // 这里可以添加确认的逻辑
-      console.log('确认订单')
+      // 构建选择的铺位信息
+      const selectedBerths = [];
+      if (this.lowerBerth > 0) selectedBerths.push(`下铺${this.lowerBerth}个`);
+      if (this.middleBerth > 0) selectedBerths.push(`中铺${this.middleBerth}个`);
+      if (this.upperBerth > 0) selectedBerths.push(`上铺${this.upperBerth}个`);
+      
+      const berthInfo = selectedBerths.join('、') || '无';
+      
+      // 调用父组件传递的方法
       this.$emit('confirm', {
-        lowerBerth: this.lowerBerth,
-        middleBerth: this.middleBerth,
-        upperBerth: this.upperBerth,
-        ticketList: this.ticketList
-      })
-      // 确认后关闭弹窗
-      this.$emit('cancel')
+        ticketList: this.ticketList,
+        berthInfo,
+        selectedSeat: this.selectedSeat || '未选座'
+      });
+    },
+    
+    // 处理座位选择的方法
+    selectSeat(seat) {
+      // 如果点击已选中的座位，则取消选择
+      if (this.selectedSeat === seat) {
+        this.selectedSeat = null;
+      } else {
+        this.selectedSeat = seat;
+      }
     }
   }
 }
@@ -347,9 +387,90 @@ export default {
 }
 
 .selected-count {
-  font-size: 14px;
-  color: #595959;
-}
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  /* 座位选择样式 */
+  .seat-selection {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .seat-selection-header {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .seat-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .seat-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  .seat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .seat {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e8e8e8;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+  }
+  
+  .seat:hover {
+    background-color: #d9d9d9;
+  }
+  
+  .seat-available {
+    background-color: #1890ff;
+    color: white;
+    border-color: #1890ff;
+  }
+  
+  .seat-available:hover {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+  }
+  
+  .seat.selected {
+    background-color: #52c41a;
+    border-color: #52c41a;
+  }
+  
+  .aisle {
+    margin: 0 20px;
+    color: #666;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  .selected-seat-info {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+  }
 
 .remaining-tickets {
   font-size: 14px;
