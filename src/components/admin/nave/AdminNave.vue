@@ -14,27 +14,27 @@
     <!-- 导航菜单 -->
     <div class="menu-section">
       <!-- 我的主页 -->
-      <router-link to="/home" class="menu-item">
+      <router-link to="/admin" class="menu-item" active-class="active">
         <el-icon><Platform /></el-icon><span>我的主页</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
       <!-- 订单中心 -->
-      <router-link to="/order" class="menu-item">
+      <router-link to="/order" class="menu-item" active-class="active">
         <el-icon><SetUp /></el-icon>
         <span>订单中心</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
       <!--列车管理中心 -->
-      <router-link to="/train" class="menu-item">
+      <router-link to="/train" class="menu-item" active-class="active">
         <el-icon><Guide /></el-icon>
         <span>列车管理</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
       <!-- 票务管理 -->
-      <router-link to="/tickets" class="menu-item">
+      <router-link to="/tickets" class="menu-item" active-class="active">
         <el-icon><MapLocation /></el-icon>
         <span>票务管理</span>
         <el-icon><ArrowRight /></el-icon>
@@ -42,21 +42,21 @@
      
 
       <!-- 数据统计（带下拉菜单） -->
-      <router-link to="/products" class="menu-item">
+      <router-link to="/products" class="menu-item" active-class="active">
         <el-icon><PieChart /></el-icon>
         <span>数据统计</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
       <!-- 收支明细 -->
-      <router-link to="/finance" class="menu-item">
+      <router-link to="/finance" class="menu-item" active-class="active">
         <el-icon><Money /></el-icon>
         <span>收支明细</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
       <!-- 基础设置 -->
-      <router-link to="/settings" class="menu-item">
+      <router-link to="/settings" class="menu-item" active-class="active">
         <el-icon><Setting /></el-icon>
         <span>基础设置</span>
         <el-icon><ArrowRight /></el-icon>
@@ -190,6 +190,7 @@ export default {
 /* 激活状态的菜单项 */
 .menu-item.active {
   background-color: #1976D2;
+  color: #e0e0e0;
 }
 
 .menu-item i {

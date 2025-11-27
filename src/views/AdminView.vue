@@ -5,18 +5,18 @@
     
     <!-- 主内容区域 -->
     <div class="content-area">
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-// 引入AdminNave组件
+// 引入组件
 import AdminNave from '../components/admin/nave/AdminNave.vue'
 
 export default {
   name: 'AdminView',
   components: {
-    // 注册AdminNave组件
     AdminNave
   }
 }

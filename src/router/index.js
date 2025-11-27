@@ -7,6 +7,7 @@ import SceneryView from '../views/SceneryView.vue'
 import SceneryMessageView from '../views/SceneryMessageView.vue'
 import TicketMessagesView from '../views/TicketMessagesView.vue'
 import AdminView from '../views/AdminView.vue'
+import AdminIndex from '../components/admin/index/AdminIndex.vue'
 
 const routes = [
   {
@@ -60,7 +61,13 @@ const routes = [
     name: 'admin',
     component: AdminView,
     // 这里可以添加子路由，对应数据统计等功能
-    children: []
+    children: [
+      {
+        path: '',
+        name: 'adminHome',
+        component: AdminIndex
+      }
+    ]
   }
 ]
 
