@@ -6,6 +6,7 @@ import TicketView from '../views/TicketView.vue'
 import SceneryView from '../views/SceneryView.vue'
 import SceneryMessageView from '../views/SceneryMessageView.vue'
 import TicketMessagesView from '../views/TicketMessagesView.vue'
+import AdminView from '../views/AdminView.vue'
 
 const routes = [
   {
@@ -52,6 +53,14 @@ const routes = [
   {
     path: '/',
     redirect: '/index'
+  },
+  // 添加管理员后台路由
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminView,
+    // 这里可以添加子路由，对应数据统计等功能
+    children: []
   }
 ]
 
