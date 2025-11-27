@@ -77,11 +77,26 @@
       </router-link>
 
       <!-- 基础设置 -->
-      <router-link to="/settings" class="menu-item" active-class="active" exact>
+      <div class="menu-item" @click="toggleSettingsMenu" :class="{active: isSettingsMenuOpen}">
         <el-icon><Setting /></el-icon>
         <span>基础设置</span>
-        <el-icon><ArrowRight /></el-icon>
-      </router-link>
+        <el-icon v-if="!isSettingsMenuOpen"><ArrowRight /></el-icon>
+        <el-icon v-else><ArrowDown /></el-icon>
+      </div>
+      <div v-if="isSettingsMenuOpen" class="submenu">
+        <!-- 退出登录 -->
+        <router-link to="/settings" class="menu-item" active-class="active" exact>
+          <span>退出登录</span>
+        </router-link>
+        <!-- 账号注销 -->
+        <router-link to="/settings" class="menu-item" active-class="active" exact>
+          <span>账号注销</span>
+        </router-link>
+        <!-- 权限管理 -->
+        <router-link to="/settings" class="menu-item" active-class="active" exact>
+          <span>权限管理</span>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -107,7 +122,8 @@ export default {
       // 默认展开数据统计下拉菜单，与图片显示一致
       dropdownOpen: true,
       isTicketsMenuOpen: false,
-      isTrainMenuOpen: false
+      isTrainMenuOpen: false,
+      isSettingsMenuOpen: false
     }
   },
   // 组件方法
@@ -129,6 +145,12 @@ export default {
      */
     toggleTrainMenu() {
       this.isTrainMenuOpen = !this.isTrainMenuOpen;
+    },
+    /**
+     * 切换基础设置菜单显示状态
+     */
+    toggleSettingsMenu() {
+      this.isSettingsMenuOpen = !this.isSettingsMenuOpen;
     },
     /**
      * 点击外部关闭下拉菜单的处理函数
