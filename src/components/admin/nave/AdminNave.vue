@@ -14,7 +14,7 @@
     <!-- 导航菜单 -->
     <div class="menu-section">
       <!-- 我的主页 -->
-      <router-link to="/admin" class="menu-item" active-class="active">
+      <router-link to="/admin" class="menu-item" active-class="active" exact>
         <el-icon><Platform /></el-icon><span>我的主页</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
@@ -63,21 +63,21 @@
      
 
       <!-- 数据统计（带下拉菜单） -->
-      <router-link to="/products" class="menu-item" active-class="active">
+      <router-link to="/products" class="menu-item" active-class="active" exact>
         <el-icon><PieChart /></el-icon>
         <span>数据统计</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
       <!-- 收支明细 -->
-      <router-link to="/finance" class="menu-item" active-class="active">
+      <router-link to="/finance" class="menu-item" active-class="active" exact>
         <el-icon><Money /></el-icon>
         <span>收支明细</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
       <!-- 基础设置 -->
-      <router-link to="/settings" class="menu-item" active-class="active">
+      <router-link to="/settings" class="menu-item" active-class="active" exact>
         <el-icon><Setting /></el-icon>
         <span>基础设置</span>
         <el-icon><ArrowRight /></el-icon>
