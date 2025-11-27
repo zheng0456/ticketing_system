@@ -19,19 +19,25 @@
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
-      <!-- 订单中心 -->
-      <router-link to="/order" class="menu-item" active-class="active">
-        <el-icon><SetUp /></el-icon>
-        <span>订单中心</span>
-        <el-icon><ArrowRight /></el-icon>
-      </router-link>
 
-      <!--列车管理中心 -->
-      <router-link to="/train" class="menu-item" active-class="active">
+
+      <!-- 列车管理中心 -->
+      <div class="menu-item" @click="toggleTrainMenu" :class="{active: isTrainMenuOpen}">
         <el-icon><Guide /></el-icon>
         <span>列车管理</span>
-        <el-icon><ArrowRight /></el-icon>
-      </router-link>
+        <el-icon v-if="!isTrainMenuOpen"><ArrowRight /></el-icon>
+        <el-icon v-else><ArrowDown /></el-icon>
+      </div>
+      <div v-if="isTrainMenuOpen" class="submenu">
+        <!-- 车辆管理 -->
+        <router-link to="/train" class="menu-item" active-class="active">
+          <span>车辆管理</span>
+        </router-link>
+        <!-- 车站管理 -->
+        <router-link to="/train" class="menu-item" active-class="active">
+          <span>车站管理</span>
+        </router-link>
+      </div>
 
       <!-- 票务管理 -->
       <div class="menu-item" @click="toggleTicketsMenu" :class="{active: isTicketsMenuOpen}">
@@ -81,7 +87,7 @@
 </template>
 
 <script>
-import { Platform, ArrowRight, ArrowDown, SetUp, PieChart, Money, Setting, Guide, MapLocation } from '@element-plus/icons-vue'
+import { Platform, ArrowRight, ArrowDown, PieChart, Money, Setting, Guide, MapLocation } from '@element-plus/icons-vue'
 
 export default {
   name: 'AdminNave',
@@ -89,7 +95,6 @@ export default {
      Platform,
      ArrowRight,
      ArrowDown,
-     SetUp,
      PieChart,
      Money,
      Setting,
@@ -101,7 +106,8 @@ export default {
     return {
       // 默认展开数据统计下拉菜单，与图片显示一致
       dropdownOpen: true,
-      isTicketsMenuOpen: false
+      isTicketsMenuOpen: false,
+      isTrainMenuOpen: false
     }
   },
   // 组件方法
@@ -117,6 +123,12 @@ export default {
      */
     toggleTicketsMenu() {
       this.isTicketsMenuOpen = !this.isTicketsMenuOpen;
+    },
+    /**
+     * 切换列车管理菜单显示状态
+     */
+    toggleTrainMenu() {
+      this.isTrainMenuOpen = !this.isTrainMenuOpen;
     },
     /**
      * 点击外部关闭下拉菜单的处理函数
