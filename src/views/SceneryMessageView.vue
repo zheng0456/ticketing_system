@@ -1,4 +1,5 @@
 <template>
+  <HeaderNav />
   <div class="scenery-message-view">
     <!-- 引入北京景点组件 -->
     <BeijingScenery />
@@ -8,12 +9,13 @@
 <script>
 // 导入BeijingScenery组件
 import BeijingScenery from '../components/scenery/scenerymessages/BeijingScenery.vue'
-
+import HeaderNav from '@/components/index/HeaderNav.vue'
 export default {
   name: 'SceneryMessageView',
   components: {
     // 注册引入的组件
-    BeijingScenery
+    BeijingScenery,
+    HeaderNav
   },
   data() {
     return {
