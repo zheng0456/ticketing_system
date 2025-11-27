@@ -34,11 +34,26 @@
       </router-link>
 
       <!-- 票务管理 -->
-      <router-link to="/tickets" class="menu-item" active-class="active">
+      <div class="menu-item" @click="toggleTicketsMenu" :class="{active: isTicketsMenuOpen}">
         <el-icon><MapLocation /></el-icon>
         <span>票务管理</span>
-        <el-icon><ArrowRight /></el-icon>
-      </router-link>
+        <el-icon v-if="!isTicketsMenuOpen"><ArrowRight /></el-icon>
+        <el-icon v-else><ArrowDown /></el-icon>
+      </div>
+      <div v-if="isTicketsMenuOpen" class="submenu">
+        <!-- 车票管理 -->
+        <router-link to="/tickets" class="menu-item" active-class="active">
+          <span>车票管理</span>
+        </router-link>
+        <!-- 景点票管理 -->
+        <router-link to="/tickets" class="menu-item" active-class="active">
+          <span>景点票管理</span>
+        </router-link>
+        <!-- 退票管理 -->
+        <router-link to="/tickets" class="menu-item" active-class="active">
+          <span>退票管理</span>
+        </router-link>
+      </div>
      
 
       <!-- 数据统计（带下拉菜单） -->
@@ -66,13 +81,14 @@
 </template>
 
 <script>
-import { Platform, ArrowRight, SetUp, PieChart, Money, Setting, Guide, MapLocation } from '@element-plus/icons-vue'
+import { Platform, ArrowRight, ArrowDown, SetUp, PieChart, Money, Setting, Guide, MapLocation } from '@element-plus/icons-vue'
 
 export default {
   name: 'AdminNave',
   components: {
      Platform,
      ArrowRight,
+     ArrowDown,
      SetUp,
      PieChart,
      Money,
@@ -84,7 +100,8 @@ export default {
   data() {
     return {
       // 默认展开数据统计下拉菜单，与图片显示一致
-      dropdownOpen: true
+      dropdownOpen: true,
+      isTicketsMenuOpen: false
     }
   },
   // 组件方法
@@ -94,6 +111,12 @@ export default {
      */
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
+    },
+    /**
+     * 切换票务管理菜单显示状态
+     */
+    toggleTicketsMenu() {
+      this.isTicketsMenuOpen = !this.isTicketsMenuOpen;
     },
     /**
      * 点击外部关闭下拉菜单的处理函数
@@ -200,6 +223,15 @@ export default {
   text-align: center;
 }
 
+/* 子菜单样式 */
+.submenu {
+  width: 100%;
+}
+
+.submenu .menu-item {
+  background-color: #1976D2;
+}
+
 .menu-item span {
   flex: 1;
 }
@@ -266,13 +298,4 @@ export default {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* 图标样式 */
-.icon-home::before { content: "🖥️"; }
-.icon-order::before { content: "📋"; }
-.icon-product::before { content: "🛍️"; }
-.icon-stats::before { content: "📊"; }
-.icon-finance::before { content: "💰"; }
-.icon-settings::before { content: "⚙️"; }
-.icon-arrow::before { content: "›"; }
-.icon-dropdown::before { content: "▼"; }
 </style>
