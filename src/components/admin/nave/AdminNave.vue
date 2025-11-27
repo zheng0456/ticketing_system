@@ -26,12 +26,20 @@
         <el-icon><ArrowRight /></el-icon>
       </router-link>
 
-      <!-- 商品中心 -->
-      <router-link to="/product" class="menu-item">
-        <el-icon><Handbag /></el-icon>
-        <span>商品中心</span>
+      <!--列车管理中心 -->
+      <router-link to="/train" class="menu-item">
+        <el-icon><Guide /></el-icon>
+        <span>列车管理</span>
         <el-icon><ArrowRight /></el-icon>
       </router-link>
+
+      <!-- 票务管理 -->
+      <router-link to="/tickets" class="menu-item">
+        <el-icon><MapLocation /></el-icon>
+        <span>票务管理</span>
+        <el-icon><ArrowRight /></el-icon>
+      </router-link>
+     
 
       <!-- 数据统计（带下拉菜单） -->
       <router-link to="/products" class="menu-item">
@@ -58,18 +66,19 @@
 </template>
 
 <script>
-import { Platform, ArrowRight, Handbag, SetUp, PieChart, Money, Setting } from '@element-plus/icons-vue'
+import { Platform, ArrowRight, SetUp, PieChart, Money, Setting, Guide, MapLocation } from '@element-plus/icons-vue'
 
 export default {
   name: 'AdminNave',
   components: {
      Platform,
      ArrowRight,
-     Handbag,
      SetUp,
      PieChart,
      Money,
-     Setting
+     Setting,
+     Guide,
+     MapLocation
     },
   // 组件数据
   data() {
