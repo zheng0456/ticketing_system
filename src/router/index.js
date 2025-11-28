@@ -83,7 +83,7 @@ const routes = [
       {
         path: 'refund-tickets',
         name: 'refundTickets',
-        component: AdminScenery // 临时使用AdminScenery组件，后续可以替换为专门的退票管理组件
+        component: () => import('../components/admin/ticket/AdminReturnTicket.vue')
       }
     ]
   }
