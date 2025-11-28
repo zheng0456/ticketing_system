@@ -79,6 +79,13 @@
         <span>火车票收支明细</span>
         <el-icon><ArrowRight /></el-icon>
       </div>
+      
+      <!-- 景点票收支明细 -->
+      <div class="menu-item" @click="navigateToSceneryDetails" :class="{active: isSceneryDetailsActive}">
+        <el-icon><Money /></el-icon>
+        <span>景点票收支明细</span>
+        <el-icon><ArrowRight /></el-icon>
+      </div>
 
       <!-- 收支明细 -->
       <router-link to="/finance" class="menu-item" active-class="active" exact>
@@ -141,7 +148,8 @@ export default {
         isRefundTicketsActive: false,
         isRefundSceneryActive: false,
         isStatisticsActive: false,
-        isTicketDetailsActive: false
+        isTicketDetailsActive: false,
+        isSceneryDetailsActive: false
       }
   },
   // 组件方法
@@ -312,6 +320,7 @@ export default {
         this.isRefundTicketsActive = false;
         this.isRefundSceneryActive = false;
         this.isTicketDetailsActive = false;
+        this.isSceneryDetailsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/statistics');
       },
@@ -332,8 +341,30 @@ export default {
         this.isRefundTicketsActive = false;
         this.isRefundSceneryActive = false;
         this.isStatisticsActive = false;
+        this.isSceneryDetailsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/ticket-details');
+      },
+      
+      /**
+       * 导航到景点票收支明细页面
+       */
+      navigateToSceneryDetails() {
+        // 设置当前选中状态
+        this.isSceneryDetailsActive = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isTicketsMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
+        this.isStatisticsActive = false;
+        this.isTicketDetailsActive = false;
+        // 执行路由跳转
+        this.$router.push('/admin/scenery-details');
       },
       /**
        * 切换基础设置菜单显示状态
@@ -352,6 +383,8 @@ export default {
          this.isRefundTicketsActive = false;
          this.isRefundSceneryActive = false;
          this.isStatisticsActive = false;
+         this.isTicketDetailsActive = false;
+         this.isSceneryDetailsActive = false;
        },
     /**
      * 点击外部关闭下拉菜单的处理函数

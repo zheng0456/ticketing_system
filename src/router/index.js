@@ -101,6 +101,11 @@ const routes = [
         path: 'ticket-details',
         name: 'ticketDetails',
         component: () => import('../components/admin/account/DetailsTicket.vue')
+      },
+      {
+        path: 'scenery-details',
+        name: 'sceneryDetails',
+        component: () => import('../components/admin/account/DetailsScenery.vue')
       }
     ]
   }
