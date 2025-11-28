@@ -13,6 +13,7 @@
       <div class="operation-area">
         <el-button type="success" @click="handleBatchInsert">批量新增</el-button>
         <el-button type="primary" @click="handleAdd">新增</el-button>
+        <el-button type="info" @click="handleSetSeckill">设置秒杀</el-button>
         <el-button type="danger" @click="handleDeleteSelected">删除</el-button>
       </div>
     </div>
@@ -192,6 +193,56 @@
         </div>
       </div>
     </el-dialog>
+
+    <!-- 秒杀设置对话框 -->
+    <el-dialog
+      v-model="seckillDialogVisible"
+      title="设置秒杀"
+      width="50%"
+    >
+      <el-form
+        ref="seckillFormRef"
+        :model="seckillForm"
+        :rules="seckillRules"
+        label-width="120px"
+      >
+        <el-form-item label="景点名称" disabled>
+          <el-input v-model="seckillForm.sceneryName" placeholder="景点名称" disabled />
+        </el-form-item>
+        <el-form-item label="秒杀价格" prop="seckillPrice">
+          <el-input v-model.number="seckillForm.seckillPrice" placeholder="请输入秒杀价格" type="number" min="0.01" step="0.01" />
+        </el-form-item>
+        <el-form-item label="秒杀数量" prop="seckillCount">
+          <el-input v-model.number="seckillForm.seckillCount" placeholder="请输入秒杀数量" type="number" min="1" />
+        </el-form-item>
+        <el-form-item label="开始时间" prop="startTime">
+          <el-date-picker
+            v-model="seckillForm.startTime"
+            type="datetime"
+            placeholder="选择开始时间"
+            style="width: 100%;"
+            :picker-options="{ placement: 'bottom-right' }"
+            popper-append-to-body="false"
+          />
+        </el-form-item>
+        <el-form-item label="结束时间" prop="endTime">
+          <el-date-picker
+            v-model="seckillForm.endTime"
+            type="datetime"
+            placeholder="选择结束时间"
+            style="width: 100%;"
+            :picker-options="{ placement: 'bottom-right' }"
+            popper-append-to-body="false"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="seckillDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleSeckillConfirm">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -265,6 +316,7 @@ export default {
       // 对话框
       dialogVisible: false,
       detailDialogVisible: false,
+      seckillDialogVisible: false,
       dialogType: 'add',
       // 表单数据
       sceneryForm: {
@@ -280,6 +332,32 @@ export default {
       },
       // 选中的景点详情
       selectedScenery: {},
+      // 秒杀表单数据
+      seckillForm: {
+        sceneryId: '',
+        sceneryName: '',
+        seckillPrice: '',
+        seckillCount: '',
+        startTime: '',
+        endTime: ''
+      },
+      // 秒杀表单验证规则
+      seckillRules: {
+        seckillPrice: [
+          { required: true, message: '请输入秒杀价格', trigger: 'blur' },
+          { type: 'number', min: 0.01, message: '秒杀价格必须大于0', trigger: 'blur' }
+        ],
+        seckillCount: [
+          { required: true, message: '请输入秒杀数量', trigger: 'blur' },
+          { type: 'number', min: 1, message: '秒杀数量必须大于0', trigger: 'blur' }
+        ],
+        startTime: [
+          { required: true, message: '请选择开始时间', trigger: 'change' }
+        ],
+        endTime: [
+          { required: true, message: '请选择结束时间', trigger: 'change' }
+        ]
+      },
       // 表单验证规则
       rules: {
         sceneryName: [
@@ -415,6 +493,57 @@ export default {
       this.$message.info(`查看景点 ${row.sceneryName} 的评论`)
     },
     
+    // 设置秒杀
+    handleSetSeckill() {
+      if (this.selectedRows.length === 0) {
+        this.$message.warning('请选择要设置秒杀的景点')
+        return
+      }
+      
+      if (this.selectedRows.length > 1) {
+        this.$message.warning('只能选择一个景点设置秒杀')
+        return
+      }
+      
+      const selectedScenery = this.selectedRows[0]
+      this.seckillForm = {
+        sceneryId: selectedScenery.id,
+        sceneryName: selectedScenery.sceneryName,
+        seckillPrice: '',
+        seckillCount: '',
+        startTime: '',
+        endTime: ''
+      }
+      this.seckillDialogVisible = true
+    },
+    
+    // 秒杀设置确认
+    handleSeckillConfirm() {
+      this.$refs.seckillFormRef.validate((valid) => {
+        if (valid) {
+          // 验证时间逻辑
+          const startTime = new Date(this.seckillForm.startTime)
+          const endTime = new Date(this.seckillForm.endTime)
+          const now = new Date()
+          
+          if (startTime < now) {
+            this.$message.warning('开始时间不能早于当前时间')
+            return
+          }
+          
+          if (endTime <= startTime) {
+            this.$message.warning('结束时间必须晚于开始时间')
+            return
+          }
+          
+          // 模拟保存秒杀设置
+          console.log('秒杀设置:', this.seckillForm)
+          this.$message.success('秒杀设置成功')
+          this.seckillDialogVisible = false
+        }
+      })
+    },
+    
     // 表单提交
     handleDialogConfirm() {
       this.$refs.sceneryFormRef.validate((valid) => {
@@ -522,7 +651,24 @@ export default {
 }
 
 .detail-value {
-  flex: 1;
-  word-break: break-all;
-}
+    flex: 1;
+    word-break: break-all;
+  }
+  
+  /* 日期选择器样式 */
+  .el-date-editor {
+    border: 1px solid #409EFF;
+    border-radius: 4px;
+    transition: all 0.3s;
+  }
+  
+  .el-date-editor:hover {
+    border-color: #66b1ff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+  }
+  
+  .el-date-editor.is-active {
+    border-color: #409EFF;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+  }
 </style>
