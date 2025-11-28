@@ -34,7 +34,7 @@
           <span>车辆管理</span>
         </router-link>
         <!-- 车站管理 -->
-        <router-link to="/train" class="menu-item" active-class="active">
+        <router-link to="/admin/train-station" class="menu-item" active-class="active">
           <span>车站管理</span>
         </router-link>
       </div>

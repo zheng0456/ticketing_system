@@ -11,6 +11,7 @@ import AdminIndex from '../components/admin/index/AdminIndex.vue'
 import AdminScenery from '../components/admin/ticket/AdminScenery.vue'
 import AdminTicket from '../components/admin/ticket/AdminTicket.vue'
 import AdminTrain from '../components/admin/train/AdminTrain.vue'
+import AdminTrainStation from '../components/admin/train/AdminTrainStation.vue'
 
 const routes = [
   {
@@ -75,6 +76,12 @@ const routes = [
         path: 'train',
         name: 'train',
         component: AdminTrain
+      },
+      {
+        path: 'train-station',
+        name: 'train-station',
+        component: AdminTrainStation,
+        meta: { title: '车站管理' }
       },
       {
         path: 'train-tickets',
