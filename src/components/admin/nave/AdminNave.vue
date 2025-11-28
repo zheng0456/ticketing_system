@@ -104,7 +104,7 @@
           <span>账号注销</span>
         </router-link>
         <!-- 权限管理 -->
-        <router-link to="/settings" class="menu-item" active-class="active" exact>
+        <router-link to="/admin/permission" class="menu-item" active-class="active" exact>
           <span>权限管理</span>
         </router-link>
       </div>
