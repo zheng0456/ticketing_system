@@ -12,6 +12,7 @@ import AdminScenery from '../components/admin/ticket/AdminScenery.vue'
 import AdminTicket from '../components/admin/ticket/AdminTicket.vue'
 import AdminTrain from '../components/admin/train/AdminTrain.vue'
 import AdminTrainStation from '../components/admin/train/AdminTrainStation.vue'
+import UserLogOut from '../components/admin/user/UserLogOut.vue'
 
 const routes = [
   {
@@ -115,10 +116,15 @@ const routes = [
         name: 'ticketDetails',
         component: () => import('../components/admin/account/DetailsTicket.vue')
       },
-      {
-        path: 'scenery-details',
+      {        path: 'scenery-details',
         name: 'sceneryDetails',
         component: () => import('../components/admin/account/DetailsScenery.vue')
+      },
+      // 账号注销路由
+      {        path: 'logout',
+        name: 'logout',
+        component: UserLogOut,
+        meta: { title: '账号注销' }
       }
     ]
   }

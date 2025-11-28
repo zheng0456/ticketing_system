@@ -87,13 +87,6 @@
         <el-icon><ArrowRight /></el-icon>
       </div>
 
-      <!-- 收支明细 -->
-      <router-link to="/finance" class="menu-item" active-class="active" exact>
-        <el-icon><Money /></el-icon>
-        <span>收支明细</span>
-        <el-icon><ArrowRight /></el-icon>
-      </router-link>
-
       <!-- 基础设置 -->
       <div class="menu-item" @click="toggleSettingsMenu" :class="{active: isSettingsMenuOpen}">
         <el-icon><Setting /></el-icon>
@@ -103,11 +96,11 @@
       </div>
       <div v-if="isSettingsMenuOpen" class="submenu">
         <!-- 退出登录 -->
-        <router-link to="/settings" class="menu-item" active-class="active" exact>
+        <router-link to="/login" class="menu-item" active-class="active" exact>
           <span>退出登录</span>
         </router-link>
         <!-- 账号注销 -->
-        <router-link to="/settings" class="menu-item" active-class="active" exact>
+        <router-link to="/admin/logout" class="menu-item" active-class="active" exact>
           <span>账号注销</span>
         </router-link>
         <!-- 权限管理 -->
