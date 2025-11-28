@@ -84,6 +84,12 @@ const routes = [
         path: 'refund-tickets',
         name: 'refundTickets',
         component: () => import('../components/admin/ticket/AdminReturnTicket.vue')
+      },
+      // 数据统计路由
+      {
+        path: 'statistics',
+        name: 'statistics',
+        component: () => import('../components/admin/statistics/AdminDataStatistics.vue')
       }
     ]
   }

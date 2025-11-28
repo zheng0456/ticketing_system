@@ -62,12 +62,12 @@
       </div>
      
 
-      <!-- 数据统计（带下拉菜单） -->
-      <router-link to="/products" class="menu-item" active-class="active" exact>
+      <!-- 数据统计 -->
+      <div class="menu-item" @click="navigateToStatistics" :class="{active: isStatisticsActive}">
         <el-icon><PieChart /></el-icon>
         <span>数据统计</span>
         <el-icon><ArrowRight /></el-icon>
-      </router-link>
+      </div>
 
       <!-- 收支明细 -->
       <router-link to="/finance" class="menu-item" active-class="active" exact>
@@ -127,7 +127,8 @@ export default {
         isAdminPageActive: false,
         isTrainTicketsActive: false,
         isSceneryTicketsActive: false,
-        isRefundTicketsActive: false
+        isRefundTicketsActive: false,
+        isStatisticsActive: false
       }
   },
   // 组件方法
@@ -142,6 +143,11 @@ export default {
         this.isTrainMenuOpen = false;
         this.isTicketsMenuOpen = false;
         this.isSettingsMenuOpen = false;
+        // 重置其他选中状态
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        this.isStatisticsActive = false;
         // 导航到管理员页面
         this.$router.push('/admin');
       },
@@ -158,6 +164,7 @@ export default {
          this.isTrainTicketsActive = false;
          this.isSceneryTicketsActive = false;
          this.isRefundTicketsActive = false;
+         this.isStatisticsActive = false;
        },
       /**
        * 导航到车票管理页面
@@ -173,6 +180,7 @@ export default {
         this.isSettingsMenuOpen = false;
         this.isSceneryTicketsActive = false;
         this.isRefundTicketsActive = false;
+        this.isStatisticsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/train-tickets');
       },
@@ -190,6 +198,7 @@ export default {
         this.isSettingsMenuOpen = false;
         this.isTrainTicketsActive = false;
         this.isRefundTicketsActive = false;
+        this.isStatisticsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/scenery-tickets');
       },
@@ -207,6 +216,7 @@ export default {
         this.isSettingsMenuOpen = false;
         this.isTrainTicketsActive = false;
         this.isSceneryTicketsActive = false;
+        this.isStatisticsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/refund-tickets');
       },
@@ -214,17 +224,18 @@ export default {
         * 切换票务管理菜单显示状态
         */
        toggleTicketsMenu() {
-         // 重置"我的主页"的选中状态
-         this.isAdminPageActive = false;
-         // 切换票务管理菜单状态
-         this.isTicketsMenuOpen = !this.isTicketsMenuOpen;
-         // 关闭其他菜单
-         this.isTrainMenuOpen = false;
-         this.isSettingsMenuOpen = false;
-         // 重置票务管理子菜单选中状态
-         this.isTrainTicketsActive = false;
-         this.isSceneryTicketsActive = false;
-         this.isRefundTicketsActive = false;
+      // 重置"我的主页"的选中状态
+      this.isAdminPageActive = false;
+      // 切换票务管理菜单状态
+      this.isTicketsMenuOpen = !this.isTicketsMenuOpen;
+      // 关闭其他菜单
+      this.isTrainMenuOpen = false;
+      this.isSettingsMenuOpen = false;
+      // 重置票务管理子菜单选中状态
+      this.isTrainTicketsActive = false;
+      this.isSceneryTicketsActive = false;
+      this.isRefundTicketsActive = false;
+      this.isStatisticsActive = false;
        },
     /**
      * 切换列车管理菜单显示状态
@@ -241,11 +252,32 @@ export default {
       this.isTrainTicketsActive = false;
       this.isSceneryTicketsActive = false;
       this.isRefundTicketsActive = false;
+      this.isStatisticsActive = false;
     },
     /**
         * 切换基础设置菜单显示状态
         */
-       toggleSettingsMenu() {
+       /**
+       * 导航到数据统计页面
+       */
+      navigateToStatistics() {
+        // 设置当前选中状态
+        this.isStatisticsActive = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isTicketsMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        // 执行路由跳转
+        this.$router.push('/admin/statistics');
+      },
+      /**
+       * 切换基础设置菜单显示状态
+       */
+      toggleSettingsMenu() {
          // 重置"我的主页"的选中状态
          this.isAdminPageActive = false;
          // 切换基础设置菜单状态
@@ -253,10 +285,11 @@ export default {
          // 关闭其他菜单
          this.isTrainMenuOpen = false;
          this.isTicketsMenuOpen = false;
-         // 重置票务管理子菜单选中状态
+         // 重置其他选中状态
          this.isTrainTicketsActive = false;
          this.isSceneryTicketsActive = false;
          this.isRefundTicketsActive = false;
+         this.isStatisticsActive = false;
        },
     /**
      * 点击外部关闭下拉菜单的处理函数
