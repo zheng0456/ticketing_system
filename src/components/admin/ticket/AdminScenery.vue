@@ -4,11 +4,6 @@
     <div class="search-operation-bar">
       <div class="search-area">
         <el-input
-          v-model="searchForm.sceneryName"
-          placeholder="景点名称"
-          style="width: 200px; margin-right: 10px;"
-        />
-        <el-input
           v-model="searchForm.areaName"
           placeholder="景区名称"
           style="width: 200px; margin-right: 10px;"
@@ -16,6 +11,7 @@
         <el-button type="primary" @click="handleSearch">查询</el-button>
       </div>
       <div class="operation-area">
+        <el-button type="success" @click="handleBatchInsert">批量新增</el-button>
         <el-button type="primary" @click="handleAdd">新增</el-button>
         <el-button type="danger" @click="handleDeleteSelected">删除</el-button>
       </div>
@@ -47,39 +43,33 @@
       <el-table-column prop="openTime" label="开放时间" width="150" />
       <el-table-column prop="servicePhone" label="服务电话" width="150" />
       <el-table-column prop="address" label="详细地址" min-width="200" />
-      <el-table-column label="操作" width="200" fixed="right">
+      <el-table-column label="操作" width="240" fixed="right">
         <template #default="scope">
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleDetail(scope.row)"
-            style="margin-right: 5px;"
-          >
-            详情
-          </el-button>
-          <el-button
-            type="warning"
-            size="small"
-            @click="handleEdit(scope.row)"
-            style="margin-right: 5px;"
-          >
-            修改
-          </el-button>
-          <el-button
-            type="info"
-            size="small"
-            @click="handleViewComments(scope.row)"
-            style="margin-right: 5px;"
-          >
-            查看评论
-          </el-button>
-          <el-button
-            type="danger"
-            size="small"
-            @click="handleDelete(scope.row)"
-          >
-            删除
-          </el-button>
+          <div style="display: flex; align-items: center;">
+            <el-button
+              type="primary"
+              size="small"
+              @click="handleDetail(scope.row)"
+              style="margin-right: 5px;"
+            >
+              详情
+            </el-button>
+            <el-button
+              type="warning"
+              size="small"
+              @click="handleEdit(scope.row)"
+              style="margin-right: 5px;"
+            >
+              修改
+            </el-button>
+            <el-button
+              type="danger"
+              size="small"
+              @click="handleDelete(scope.row)"
+            >
+              删除
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -338,6 +328,13 @@ export default {
     handleSearch() {
       this.pagination.currentPage = 1
       this.loadSceneryList()
+    },
+    
+    // 批量插入
+    handleBatchInsert() {
+      // 这里可以实现批量插入的逻辑
+      this.$message.info('批量插入功能待实现')
+      // 后续可以添加批量导入文件或表单等功能
     },
     
     // 新增
