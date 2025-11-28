@@ -10,6 +10,7 @@ import AdminView from '../views/AdminView.vue'
 import AdminIndex from '../components/admin/index/AdminIndex.vue'
 import AdminScenery from '../components/admin/ticket/AdminScenery.vue'
 import AdminTicket from '../components/admin/ticket/AdminTicket.vue'
+import AdminTrain from '../components/admin/train/AdminTrain.vue'
 
 const routes = [
   {
@@ -70,6 +71,11 @@ const routes = [
         component: AdminIndex
       },
       // 票务管理相关路由
+      {
+        path: 'train',
+        name: 'train',
+        component: AdminTrain
+      },
       {
         path: 'train-tickets',
         name: 'trainTickets',

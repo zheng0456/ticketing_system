@@ -30,7 +30,7 @@
       </div>
       <div v-if="isTrainMenuOpen" class="submenu">
         <!-- 车辆管理 -->
-        <router-link to="/train" class="menu-item" active-class="active">
+        <router-link to="/admin/train" class="menu-item" active-class="active">
           <span>车辆管理</span>
         </router-link>
         <!-- 车站管理 -->
