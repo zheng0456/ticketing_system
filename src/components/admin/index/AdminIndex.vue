@@ -70,41 +70,6 @@
         </div>
       </div>
     </div>
-    
-    <!-- 运营快捷入口 -->
-    <div class="quick-entry">
-      <h3>运营快捷入口</h3>
-      <div class="entry-grid">
-        <div class="entry-item">
-          <div class="entry-icon plus">+</div>
-          <div class="entry-name">添加商品</div>
-        </div>
-        <div class="entry-item">
-          <div class="entry-icon list">≡</div>
-          <div class="entry-name">订单中心</div>
-        </div>
-        <div class="entry-item">
-          <div class="entry-icon user">👤</div>
-          <div class="entry-name">用户管理</div>
-        </div>
-        <div class="entry-item">
-          <div class="entry-icon chart">📊</div>
-          <div class="entry-name">数据统计</div>
-        </div>
-        <div class="entry-item">
-          <div class="entry-icon ad">AD</div>
-          <div class="entry-name">票务管理</div>
-        </div>
-        <div class="entry-item">
-          <div class="entry-icon topic">⭐</div>
-          <div class="entry-name">收支明细</div>
-        </div>
-        <div class="entry-item">
-          <div class="entry-icon flash">⚡</div>
-          <div class="entry-name">秒杀管理</div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
