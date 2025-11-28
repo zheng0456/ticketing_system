@@ -471,12 +471,52 @@ export default {
           }
         ]
 
+        // 应用筛选条件
+        let filteredData = [...mockData]
+        
+        // 应用搜索条件
+        if (this.searchParams.trainNumber) {
+          filteredData = filteredData.filter(item => 
+            item.trainNumber.toLowerCase().includes(this.searchParams.trainNumber.toLowerCase())
+          )
+        }
+        
+        if (this.searchParams.orderId) {
+          filteredData = filteredData.filter(item => 
+            item.orderId.toLowerCase().includes(this.searchParams.orderId.toLowerCase())
+          )
+        }
+        
+        // 应用日期范围筛选
+        if (this.dateRange && this.dateRange.length === 2) {
+          const startTime = new Date(this.dateRange[0]).setHours(0, 0, 0, 0)
+          const endTime = new Date(this.dateRange[1]).setHours(23, 59, 59, 999)
+          filteredData = filteredData.filter(item => {
+            const transactionDate = new Date(item.transactionTime)
+            return transactionDate >= startTime && transactionDate <= endTime
+          })
+        }
+        
+        // 应用交易类型筛选
+        if (this.filterParams.transactionType) {
+          filteredData = filteredData.filter(item => 
+            item.transactionType === this.filterParams.transactionType
+          )
+        }
+        
+        // 应用交易状态筛选
+        if (this.filterParams.status) {
+          filteredData = filteredData.filter(item => 
+            item.status === this.filterParams.status
+          )
+        }
+        
         // 计算统计数据
-        this.calculateStatistics(mockData)
+        this.calculateStatistics(filteredData)
         
         // 设置交易列表
-        this.transactionList = mockData
-        this.pagination.total = mockData.length
+        this.transactionList = filteredData
+        this.pagination.total = filteredData.length
         this.loading = false
       }, 500)
     },
