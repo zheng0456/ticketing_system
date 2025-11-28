@@ -48,17 +48,17 @@
       </div>
       <div v-if="isTicketsMenuOpen" class="submenu">
         <!-- 车票管理 -->
-        <router-link to="/tickets" class="menu-item" active-class="active" exact>
+        <div class="menu-item" @click="navigateToTrainTickets" :class="{active: isTrainTicketsActive}">
           <span>车票管理</span>
-        </router-link>
+        </div>
         <!-- 景点票管理 -->
-        <router-link to="/admin/tickets" class="menu-item" active-class="active" exact>
+        <div class="menu-item" @click="navigateToSceneryTickets" :class="{active: isSceneryTicketsActive}">
           <span>景点票管理</span>
-        </router-link>
+        </div>
         <!-- 退票管理 -->
-        <router-link to="/tickets" class="menu-item" active-class="active" exact>
+        <div class="menu-item" @click="navigateToRefundTickets" :class="{active: isRefundTicketsActive}">
           <span>退票管理</span>
-        </router-link>
+        </div>
       </div>
      
 
@@ -118,48 +118,114 @@ export default {
     },
   // 组件数据
   data() {
-    return {
-      // 默认展开数据统计下拉菜单，与图片显示一致
-      dropdownOpen: true,
-      isTicketsMenuOpen: false,
-      isTrainMenuOpen: false,
-      isSettingsMenuOpen: false,
-      isAdminPageActive: false
-    }
+      return {
+        // 默认展开数据统计下拉菜单，与图片显示一致
+        dropdownOpen: true,
+        isTicketsMenuOpen: false,
+        isTrainMenuOpen: false,
+        isSettingsMenuOpen: false,
+        isAdminPageActive: false,
+        isTrainTicketsActive: false,
+        isSceneryTicketsActive: false,
+        isRefundTicketsActive: false
+      }
   },
   // 组件方法
-  methods: {
+    methods: {
+      /**
+       * 导航到管理员主页
+       */
+      navigateToAdmin() {
+        // 设置当前页面为选中状态
+        this.isAdminPageActive = true;
+        // 关闭其他菜单的选中状态
+        this.isTrainMenuOpen = false;
+        this.isTicketsMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        // 导航到管理员页面
+        this.$router.push('/admin');
+      },
+      /**
+        * 切换下拉菜单的显示状态
+        */
+       toggleDropdown() {
+         this.dropdownOpen = !this.dropdownOpen;
+         // 重置其他选中状态
+         this.isAdminPageActive = false;
+         this.isTrainMenuOpen = false;
+         this.isTicketsMenuOpen = false;
+         this.isSettingsMenuOpen = false;
+         this.isTrainTicketsActive = false;
+         this.isSceneryTicketsActive = false;
+         this.isRefundTicketsActive = false;
+       },
+      /**
+       * 导航到车票管理页面
+       */
+      navigateToTrainTickets() {
+        // 设置当前选中状态
+        this.isTrainTicketsActive = true;
+        // 保持父级菜单展开
+        this.isTicketsMenuOpen = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        // 执行路由跳转
+        this.$router.push('/tickets');
+      },
+      /**
+       * 导航到景点票管理页面
+       */
+      navigateToSceneryTickets() {
+        // 设置当前选中状态
+        this.isSceneryTicketsActive = true;
+        // 保持父级菜单展开
+        this.isTicketsMenuOpen = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        // 执行路由跳转
+        this.$router.push('/admin/tickets');
+      },
+      /**
+       * 导航到退票管理页面
+       */
+      navigateToRefundTickets() {
+        // 设置当前选中状态
+        this.isRefundTicketsActive = true;
+        // 保持父级菜单展开
+        this.isTicketsMenuOpen = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        // 执行路由跳转
+        this.$router.push('/tickets');
+      },
     /**
-     * 导航到管理员主页
-     */
-    navigateToAdmin() {
-      // 设置当前页面为选中状态
-      this.isAdminPageActive = true;
-      // 关闭其他菜单的选中状态
-      this.isTrainMenuOpen = false;
-      this.isTicketsMenuOpen = false;
-      this.isSettingsMenuOpen = false;
-      // 导航到管理员页面
-      this.$router.push('/admin');
-    },
-    /**
-     * 切换下拉菜单的显示状态
-     */
-    toggleDropdown() {
-      this.dropdownOpen = !this.dropdownOpen;
-    },
-    /**
-     * 切换票务管理菜单显示状态
-     */
-    toggleTicketsMenu() {
-      // 重置"我的主页"的选中状态
-      this.isAdminPageActive = false;
-      // 切换票务管理菜单状态
-      this.isTicketsMenuOpen = !this.isTicketsMenuOpen;
-      // 关闭其他菜单
-      this.isTrainMenuOpen = false;
-      this.isSettingsMenuOpen = false;
-    },
+        * 切换票务管理菜单显示状态
+        */
+       toggleTicketsMenu() {
+         // 重置"我的主页"的选中状态
+         this.isAdminPageActive = false;
+         // 切换票务管理菜单状态
+         this.isTicketsMenuOpen = !this.isTicketsMenuOpen;
+         // 关闭其他菜单
+         this.isTrainMenuOpen = false;
+         this.isSettingsMenuOpen = false;
+         // 重置票务管理子菜单选中状态
+         this.isTrainTicketsActive = false;
+         this.isSceneryTicketsActive = false;
+         this.isRefundTicketsActive = false;
+       },
     /**
      * 切换列车管理菜单显示状态
      */
@@ -171,19 +237,27 @@ export default {
       // 关闭其他菜单
       this.isTicketsMenuOpen = false;
       this.isSettingsMenuOpen = false;
+      // 重置票务管理子菜单选中状态
+      this.isTrainTicketsActive = false;
+      this.isSceneryTicketsActive = false;
+      this.isRefundTicketsActive = false;
     },
     /**
-     * 切换基础设置菜单显示状态
-     */
-    toggleSettingsMenu() {
-      // 重置"我的主页"的选中状态
-      this.isAdminPageActive = false;
-      // 切换设置菜单状态
-      this.isSettingsMenuOpen = !this.isSettingsMenuOpen;
-      // 关闭其他菜单
-      this.isTrainMenuOpen = false;
-      this.isTicketsMenuOpen = false;
-    },
+        * 切换基础设置菜单显示状态
+        */
+       toggleSettingsMenu() {
+         // 重置"我的主页"的选中状态
+         this.isAdminPageActive = false;
+         // 切换基础设置菜单状态
+         this.isSettingsMenuOpen = !this.isSettingsMenuOpen;
+         // 关闭其他菜单
+         this.isTrainMenuOpen = false;
+         this.isTicketsMenuOpen = false;
+         // 重置票务管理子菜单选中状态
+         this.isTrainTicketsActive = false;
+         this.isSceneryTicketsActive = false;
+         this.isRefundTicketsActive = false;
+       },
     /**
      * 点击外部关闭下拉菜单的处理函数
      * @param {MouseEvent} event - 鼠标点击事件
