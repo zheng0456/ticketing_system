@@ -95,6 +95,12 @@ const routes = [
         path: 'statistics',
         name: 'statistics',
         component: () => import('../components/admin/statistics/AdminDataStatistics.vue')
+      },
+      // 收支明细路由
+      {
+        path: 'ticket-details',
+        name: 'ticketDetails',
+        component: () => import('../components/admin/account/DetailsTicket.vue')
       }
     ]
   }

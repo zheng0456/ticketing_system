@@ -72,6 +72,13 @@
         <span>数据统计</span>
         <el-icon><ArrowRight /></el-icon>
       </div>
+      
+      <!-- 火车票收支明细 -->
+      <div class="menu-item" @click="navigateToTicketDetails" :class="{active: isTicketDetailsActive}">
+        <el-icon><Money /></el-icon>
+        <span>火车票收支明细</span>
+        <el-icon><ArrowRight /></el-icon>
+      </div>
 
       <!-- 收支明细 -->
       <router-link to="/finance" class="menu-item" active-class="active" exact>
@@ -133,7 +140,8 @@ export default {
         isSceneryTicketsActive: false,
         isRefundTicketsActive: false,
         isRefundSceneryActive: false,
-        isStatisticsActive: false
+        isStatisticsActive: false,
+        isTicketDetailsActive: false
       }
   },
   // 组件方法
@@ -303,8 +311,29 @@ export default {
         this.isSceneryTicketsActive = false;
         this.isRefundTicketsActive = false;
         this.isRefundSceneryActive = false;
+        this.isTicketDetailsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/statistics');
+      },
+      
+      /**
+       * 导航到火车票收支明细页面
+       */
+      navigateToTicketDetails() {
+        // 设置当前选中状态
+        this.isTicketDetailsActive = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isTicketsMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
+        this.isStatisticsActive = false;
+        // 执行路由跳转
+        this.$router.push('/admin/ticket-details');
       },
       /**
        * 切换基础设置菜单显示状态
