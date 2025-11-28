@@ -8,6 +8,7 @@ import SceneryMessageView from '../views/SceneryMessageView.vue'
 import TicketMessagesView from '../views/TicketMessagesView.vue'
 import AdminView from '../views/AdminView.vue'
 import AdminIndex from '../components/admin/index/AdminIndex.vue'
+import AdminScenery from '../components/admin/ticket/AdminScenery.vue'
 
 const routes = [
   {
@@ -66,6 +67,12 @@ const routes = [
         path: '',
         name: 'adminHome',
         component: AdminIndex
+      },
+      // 票务管理相关路由
+      {
+        path: 'tickets',
+        name: 'tickets',
+        component: AdminScenery
       }
     ]
   }

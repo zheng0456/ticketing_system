@@ -52,7 +52,7 @@
           <span>车票管理</span>
         </router-link>
         <!-- 景点票管理 -->
-        <router-link to="/tickets" class="menu-item" active-class="active">
+        <router-link to="/admin/tickets" class="menu-item" active-class="active">
           <span>景点票管理</span>
         </router-link>
         <!-- 退票管理 -->
