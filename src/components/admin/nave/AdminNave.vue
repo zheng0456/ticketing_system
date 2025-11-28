@@ -59,6 +59,10 @@
         <div class="menu-item" @click="navigateToRefundTickets" :class="{active: isRefundTicketsActive}">
           <span>退票管理</span>
         </div>
+        <!-- 景点退票管理 -->
+        <div class="menu-item" @click="navigateToRefundScenery" :class="{active: isRefundSceneryActive}">
+          <span>景点退票管理</span>
+        </div>
       </div>
      
 
@@ -128,6 +132,7 @@ export default {
         isTrainTicketsActive: false,
         isSceneryTicketsActive: false,
         isRefundTicketsActive: false,
+        isRefundSceneryActive: false,
         isStatisticsActive: false
       }
   },
@@ -147,6 +152,7 @@ export default {
         this.isTrainTicketsActive = false;
         this.isSceneryTicketsActive = false;
         this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
         this.isStatisticsActive = false;
         // 导航到管理员页面
         this.$router.push('/admin');
@@ -164,6 +170,7 @@ export default {
          this.isTrainTicketsActive = false;
          this.isSceneryTicketsActive = false;
          this.isRefundTicketsActive = false;
+         this.isRefundSceneryActive = false;
          this.isStatisticsActive = false;
        },
       /**
@@ -180,6 +187,7 @@ export default {
         this.isSettingsMenuOpen = false;
         this.isSceneryTicketsActive = false;
         this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
         this.isStatisticsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/train-tickets');
@@ -198,6 +206,7 @@ export default {
         this.isSettingsMenuOpen = false;
         this.isTrainTicketsActive = false;
         this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
         this.isStatisticsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/scenery-tickets');
@@ -216,9 +225,29 @@ export default {
         this.isSettingsMenuOpen = false;
         this.isTrainTicketsActive = false;
         this.isSceneryTicketsActive = false;
+        this.isRefundSceneryActive = false;
         this.isStatisticsActive = false;
         // 执行路由跳转
         this.$router.push('/admin/refund-tickets');
+      },
+      /**
+       * 导航到景点退票管理页面
+       */
+      navigateToRefundScenery() {
+        // 设置当前选中状态
+        this.isRefundSceneryActive = true;
+        // 保持父级菜单展开
+        this.isTicketsMenuOpen = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isSettingsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        this.isStatisticsActive = false;
+        // 执行路由跳转
+        this.$router.push('/admin/refund-scenery');
       },
     /**
         * 切换票务管理菜单显示状态
@@ -235,6 +264,7 @@ export default {
       this.isTrainTicketsActive = false;
       this.isSceneryTicketsActive = false;
       this.isRefundTicketsActive = false;
+      this.isRefundSceneryActive = false;
       this.isStatisticsActive = false;
        },
     /**
@@ -252,6 +282,7 @@ export default {
       this.isTrainTicketsActive = false;
       this.isSceneryTicketsActive = false;
       this.isRefundTicketsActive = false;
+      this.isRefundSceneryActive = false;
       this.isStatisticsActive = false;
     },
     /**
@@ -271,6 +302,7 @@ export default {
         this.isTrainTicketsActive = false;
         this.isSceneryTicketsActive = false;
         this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
         // 执行路由跳转
         this.$router.push('/admin/statistics');
       },
@@ -289,6 +321,7 @@ export default {
          this.isTrainTicketsActive = false;
          this.isSceneryTicketsActive = false;
          this.isRefundTicketsActive = false;
+         this.isRefundSceneryActive = false;
          this.isStatisticsActive = false;
        },
     /**
