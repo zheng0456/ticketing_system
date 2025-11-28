@@ -9,6 +9,7 @@ import TicketMessagesView from '../views/TicketMessagesView.vue'
 import AdminView from '../views/AdminView.vue'
 import AdminIndex from '../components/admin/index/AdminIndex.vue'
 import AdminScenery from '../components/admin/ticket/AdminScenery.vue'
+import AdminTicket from '../components/admin/ticket/AdminTicket.vue'
 
 const routes = [
   {
@@ -70,9 +71,19 @@ const routes = [
       },
       // 票务管理相关路由
       {
-        path: 'tickets',
-        name: 'tickets',
+        path: 'train-tickets',
+        name: 'trainTickets',
+        component: AdminTicket
+      },
+      {
+        path: 'scenery-tickets',
+        name: 'sceneryTickets',
         component: AdminScenery
+      },
+      {
+        path: 'refund-tickets',
+        name: 'refundTickets',
+        component: AdminScenery // 临时使用AdminScenery组件，后续可以替换为专门的退票管理组件
       }
     ]
   }

@@ -174,7 +174,7 @@ export default {
         this.isSceneryTicketsActive = false;
         this.isRefundTicketsActive = false;
         // 执行路由跳转
-        this.$router.push('/tickets');
+        this.$router.push('/admin/train-tickets');
       },
       /**
        * 导航到景点票管理页面
@@ -191,7 +191,7 @@ export default {
         this.isTrainTicketsActive = false;
         this.isRefundTicketsActive = false;
         // 执行路由跳转
-        this.$router.push('/admin/tickets');
+        this.$router.push('/admin/scenery-tickets');
       },
       /**
        * 导航到退票管理页面
@@ -208,7 +208,7 @@ export default {
         this.isTrainTicketsActive = false;
         this.isSceneryTicketsActive = false;
         // 执行路由跳转
-        this.$router.push('/tickets');
+        this.$router.push('/admin/refund-tickets');
       },
     /**
         * 切换票务管理菜单显示状态
