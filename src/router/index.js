@@ -162,6 +162,11 @@ router.beforeEach((to, from, next) => {
   // 定义不需要登录的白名单路由
   const whiteList = ['/login'];
   
+  // 当用户访问登录页面时，自动清除登录状态
+  if (to.path === '/login') {
+    localStorage.removeItem('userInfo');
+  }
+  
   // 如果用户未登录且访问的不是白名单路由，则重定向到登录页面
   if (!isLoggedIn && !whiteList.includes(to.path)) {
     next('/login');
