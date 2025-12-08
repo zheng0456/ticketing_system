@@ -174,12 +174,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="载客量" prop="capacity">
+            <el-form-item label="车厢数量" prop="capacity">
               <el-input-number
                 v-model="trainForm.capacity"
                 :min="1"
-                :max="5000"
-                placeholder="请输入载客量"
+                :max="100"
+                placeholder="请输入车厢数量"
               />
             </el-form-item>
           </el-col>
