@@ -8,11 +8,7 @@
     <!-- 搜索和操作区域 -->
     <div class="search-operation-section">
       <div class="search-bar">
-        <el-input
-          v-model="searchParams.stationCode"
-          placeholder="车站代码"
-          style="width: 150px; margin-right: 10px;"
-        />
+        
         <el-input
           v-model="searchParams.stationName"
           placeholder="车站名称"
@@ -72,8 +68,6 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="stationId" label="车站ID" width="120" />
-        <el-table-column prop="stationCode" label="车站代码" width="100" />
         <el-table-column prop="stationName" label="车站名称" width="180" />
         <el-table-column prop="city" label="所在城市" width="120" />
         <el-table-column prop="province" label="所在省份" width="120" />
@@ -86,7 +80,6 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="platformCount" label="站台数量" width="100" />
         <el-table-column prop="remark" label="备注" width="180" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="scope">
@@ -148,11 +141,6 @@
       >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="车站代码" prop="stationCode">
-              <el-input v-model="stationForm.stationCode" placeholder="请输入车站代码" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="车站名称" prop="stationName">
               <el-input v-model="stationForm.stationName" placeholder="请输入车站名称" />
             </el-form-item>
@@ -185,16 +173,6 @@
                 type="date"
                 placeholder="请选择开通日期"
                 style="width: 100%;"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="站台数量" prop="platformCount">
-              <el-input-number
-                v-model="stationForm.platformCount"
-                :min="1"
-                :max="50"
-                placeholder="请输入站台数量"
               />
             </el-form-item>
           </el-col>
@@ -238,14 +216,11 @@
       width="60%"
     >
       <el-descriptions :column="2" border>
-        <el-descriptions-item label="车站ID">{{ detailData.stationId }}</el-descriptions-item>
-        <el-descriptions-item label="车站代码">{{ detailData.stationCode }}</el-descriptions-item>
         <el-descriptions-item label="车站名称">{{ detailData.stationName }}</el-descriptions-item>
         <el-descriptions-item label="所在城市">{{ detailData.city }}</el-descriptions-item>
         <el-descriptions-item label="所在省份">{{ detailData.province }}</el-descriptions-item>
         <el-descriptions-item label="开通日期">{{ detailData.openDate }}</el-descriptions-item>
         <el-descriptions-item label="详细地址" :span="2">{{ detailData.address }}</el-descriptions-item>
-        <el-descriptions-item label="站台数量">{{ detailData.platformCount }}</el-descriptions-item>
         <el-descriptions-item label="状态">
           <el-tag :type="getStatusTagType(detailData.status)">
             {{ getStatusText(detailData.status) }}
@@ -263,6 +238,8 @@
 </template>
 
 <script>
+import api from '../../../api'
+
 export default {
   name: 'AdminTrainStation',
   data() {
@@ -273,7 +250,6 @@ export default {
       stationList: [],
       // 搜索参数
       searchParams: {
-        stationCode: '',
         stationName: '',
         city: '',
         status: ''
@@ -293,14 +269,11 @@ export default {
       dialogType: 'add',
       // 表单数据
       stationForm: {
-        stationId: '',
-        stationCode: '',
         stationName: '',
         city: '',
         province: '',
         address: '',
         openDate: '',
-        platformCount: 1,
         status: 'operating',
         remark: ''
       },
@@ -308,10 +281,6 @@ export default {
       detailData: {},
       // 表单验证规则
       formRules: {
-        stationCode: [
-          { required: true, message: '请输入车站代码', trigger: 'blur' },
-          { min: 2, max: 10, message: '车站代码长度应在 2 到 10 个字符之间', trigger: 'blur' }
-        ],
         stationName: [
           { required: true, message: '请输入车站名称', trigger: 'blur' },
           { min: 1, max: 50, message: '车站名称长度应在 1 到 50 个字符之间', trigger: 'blur' }
@@ -329,9 +298,6 @@ export default {
         openDate: [
           { required: true, message: '请选择开通日期', trigger: 'change' }
         ],
-        platformCount: [
-          { required: true, message: '请输入站台数量', trigger: 'blur' }
-        ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
@@ -346,23 +312,24 @@ export default {
   mounted() {
     // 初始化时加载数据
     this.loadStationList();
-    this.loadStatistics();
   },
   methods: {
     // 加载车站列表
     async loadStationList() {
       this.loading = true;
       try {
-        // 这里应该是实际的API调用，现在使用模拟数据
-        // const { data } = await this.$api.trainStation.list({
-        //   ...this.searchParams,
-        //   pageNum: this.pagination.currentPage,
-        //   pageSize: this.pagination.pageSize
-        // });
+        // 发送POST请求到指定端点
+        const { data } = await api.post('/inventory/admin/trainStation', {
+          ...this.searchParams,
+          pageNum: this.pagination.currentPage,
+          pageSize: this.pagination.pageSize
+        });
         
-        // 模拟数据
-        this.stationList = this.getMockData();
-        this.pagination.total = 20;
+        this.stationList = data.list || [];
+        this.pagination.total = data.total || 0;
+        
+        // 计算统计数据
+        this.loadStatistics();
         
       } catch (error) {
         this.$message.error('获取车站列表失败');
@@ -372,16 +339,15 @@ export default {
       }
     },
     
-    // 加载统计数据
-    async loadStatistics() {
+    // 计算统计数据
+    loadStatistics() {
       try {
-        // 模拟统计数据
-        this.totalStations = 20;
-        this.operatingStations = 15;
-        this.buildingStations = 3;
-        this.closedStations = 2;
+        this.totalStations = this.stationList.length;
+        this.operatingStations = this.stationList.filter(station => station.status === 'operating').length;
+        this.buildingStations = this.stationList.filter(station => station.status === 'building').length;
+        this.closedStations = this.stationList.filter(station => station.status === 'closed').length;
       } catch (error) {
-        console.error('Error loading statistics:', error);
+        console.error('Error calculating statistics:', error);
       }
     },
     
@@ -394,7 +360,6 @@ export default {
     // 重置搜索条件
     handleReset() {
       this.searchParams = {
-        stationCode: '',
         stationName: '',
         city: '',
         status: ''
@@ -524,14 +489,11 @@ export default {
         this.$refs.stationForm.resetFields();
       }
       this.stationForm = {
-        stationId: '',
-        stationCode: '',
         stationName: '',
         city: '',
         province: '',
         address: '',
         openDate: '',
-        platformCount: 1,
         status: 'operating',
         remark: ''
       };
@@ -555,26 +517,6 @@ export default {
         'closed': '已关闭'
       };
       return textMap[status] || status;
-    },
-    
-    // 生成模拟数据
-    getMockData() {
-      const statuses = ['operating', 'building', 'closed'];
-      const cities = ['北京', '上海', '广州', '深圳', '杭州', '南京', '武汉', '成都'];
-      const provinces = ['北京市', '上海市', '广东省', '广东省', '浙江省', '江苏省', '湖北省', '四川省'];
-      
-      return Array.from({ length: 10 }, (_, index) => ({
-        stationId: `S${20240001 + index}`,
-        stationCode: `ST${String(index + 1).padStart(3, '0')}`,
-        stationName: `测试车站${index + 1}`,
-        city: cities[index % cities.length],
-        province: provinces[index % provinces.length],
-        address: `${provinces[index % provinces.length]}${cities[index % cities.length]}市测试区测试路${index + 1}号`,
-        openDate: `2023-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
-        platformCount: Math.floor(Math.random() * 10) + 1,
-        status: statuses[Math.floor(Math.random() * statuses.length)],
-        remark: index % 3 === 0 ? '这是一个测试车站' : ''
-      }));
     }
   }
 };
