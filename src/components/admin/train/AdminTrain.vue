@@ -13,11 +13,7 @@
           placeholder="车次号"
           style="width: 180px; margin-right: 10px;"
         />
-        <el-input
-          v-model="searchParams.trainName"
-          placeholder="车辆名称"
-          style="width: 200px; margin-right: 10px;"
-        />
+        
         <el-select
           v-model="searchParams.trainType"
           placeholder="车型"
@@ -79,7 +75,6 @@
         <el-table-column type="selection" width="55" />
         <el-table-column prop="trainId" label="车辆ID" width="120" />
         <el-table-column prop="trainNumber" label="车次号" width="120" />
-        <el-table-column prop="trainName" label="车辆名称" width="180" />
         <el-table-column prop="trainType" label="车型" width="100">
           <template #default="scope">
             <el-tag :type="getTypeTagType(scope.row.trainType)">
@@ -165,11 +160,6 @@
           <el-col :span="12">
             <el-form-item label="车次号" prop="trainNumber">
               <el-input v-model="trainForm.trainNumber" placeholder="请输入车次号" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="车辆名称" prop="trainName">
-              <el-input v-model="trainForm.trainName" placeholder="请输入车辆名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -273,10 +263,6 @@
         </div>
         <div class="detail-row">
           <div class="detail-item">
-            <span class="detail-label">车辆名称：</span>
-            <span class="detail-value">{{ selectedTrain.trainName }}</span>
-          </div>
-          <div class="detail-item">
             <span class="detail-label">车型：</span>
             <span class="detail-value">
               <el-tag :type="getTypeTagType(selectedTrain.trainType)">
@@ -331,6 +317,8 @@
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   name: 'AdminTrain',
   data() {
@@ -338,7 +326,6 @@ export default {
       // 搜索参数
       searchParams: {
         trainNumber: '',
-        trainName: '',
         trainType: '',
         status: ''
       },
@@ -367,7 +354,6 @@ export default {
       trainForm: {
         trainId: '',
         trainNumber: '',
-        trainName: '',
         trainType: '',
         capacity: 0,
         manufactureDate: '',
@@ -380,9 +366,6 @@ export default {
       formRules: {
         trainNumber: [
           { required: true, message: '请输入车次号', trigger: 'blur' }
-        ],
-        trainName: [
-          { required: true, message: '请输入车辆名称', trigger: 'blur' }
         ],
         trainType: [
           { required: true, message: '请选择车型', trigger: 'change' }
@@ -456,168 +439,28 @@ export default {
     // 加载车辆数据
     loadTrainData() {
       this.loading = true
-      // 模拟API请求
-      setTimeout(() => {
-        // 模拟车辆数据
-        const mockData = [
-          {
-            trainId: 'TR001',
-            trainNumber: 'G101',
-            trainName: '和谐号CR400AF',
-            trainType: 'high-speed',
-            capacity: 556,
-            manufactureDate: '2020-05-15',
-            serviceLife: 4,
-            status: 'running',
-            lastMaintenanceDate: '2023-12-10',
-            remark: '北线主力列车'
-          },
-          {
-            trainId: 'TR002',
-            trainNumber: 'G102',
-            trainName: '复兴号CR400BF',
-            trainType: 'high-speed',
-            capacity: 576,
-            manufactureDate: '2021-03-20',
-            serviceLife: 3,
-            status: 'running',
-            lastMaintenanceDate: '2024-01-05',
-            remark: '南线主力列车'
-          },
-          {
-            trainId: 'TR003',
-            trainNumber: 'D201',
-            trainName: '和谐号CRH380B',
-            trainType: 'bullet',
-            capacity: 610,
-            manufactureDate: '2018-07-10',
-            serviceLife: 6,
-            status: 'maintenance',
-            lastMaintenanceDate: '2024-01-20',
-            remark: '正在进行年度检修'
-          },
-          {
-            trainId: 'TR004',
-            trainNumber: 'T101',
-            trainName: '25T型客车',
-            trainType: 'normal',
-            capacity: 1280,
-            manufactureDate: '2015-09-05',
-            serviceLife: 9,
-            status: 'running',
-            lastMaintenanceDate: '2023-11-28',
-            remark: '长途普通列车'
-          },
-          {
-            trainId: 'TR005',
-            trainNumber: 'G103',
-            trainName: '复兴号CR300AF',
-            trainType: 'high-speed',
-            capacity: 613,
-            manufactureDate: '2022-01-18',
-            serviceLife: 2,
-            status: 'running',
-            lastMaintenanceDate: '2024-02-12',
-            remark: '新增高速列车'
-          },
-          {
-            trainId: 'TR006',
-            trainNumber: 'D202',
-            trainName: '和谐号CRH2A',
-            trainType: 'bullet',
-            capacity: 556,
-            manufactureDate: '2017-04-12',
-            serviceLife: 7,
-            status: 'stopped',
-            lastMaintenanceDate: '2023-10-05',
-            remark: '待报废处理'
-          },
-          {
-            trainId: 'TR007',
-            trainNumber: 'K101',
-            trainName: '25G型客车',
-            trainType: 'normal',
-            capacity: 1480,
-            manufactureDate: '2016-11-30',
-            serviceLife: 8,
-            status: 'running',
-            lastMaintenanceDate: '2023-12-20',
-            remark: '京广线快车'
-          },
-          {
-            trainId: 'TR008',
-            trainNumber: 'G104',
-            trainName: '复兴号CR400AF-B',
-            trainType: 'high-speed',
-            capacity: 1283,
-            manufactureDate: '2022-08-05',
-            serviceLife: 2,
-            status: 'running',
-            lastMaintenanceDate: '2024-02-01',
-            remark: '长编组高速列车'
-          },
-          {
-            trainId: 'TR009',
-            trainNumber: 'Z101',
-            trainName: '25T型直达特快',
-            trainType: 'normal',
-            capacity: 1350,
-            manufactureDate: '2014-03-20',
-            serviceLife: 10,
-            status: 'maintenance',
-            lastMaintenanceDate: '2024-02-15',
-            remark: '正在进行中修'
-          },
-          {
-            trainId: 'TR010',
-            trainNumber: 'G105',
-            trainName: '复兴号CR400BF-A',
-            trainType: 'high-speed',
-            capacity: 1193,
-            manufactureDate: '2021-10-12',
-            serviceLife: 3,
-            status: 'running',
-            lastMaintenanceDate: '2024-01-25',
-            remark: '长编组高速列车'
-          }
-        ]
-
-        // 应用筛选条件
-        let filteredData = [...mockData]
-        
-        // 应用搜索条件
-        if (this.searchParams.trainNumber) {
-          filteredData = filteredData.filter(item => 
-            item.trainNumber.toLowerCase().includes(this.searchParams.trainNumber.toLowerCase())
-          )
-        }
-        
-        if (this.searchParams.trainName) {
-          filteredData = filteredData.filter(item => 
-            item.trainName.toLowerCase().includes(this.searchParams.trainName.toLowerCase())
-          )
-        }
-        
-        if (this.searchParams.trainType) {
-          filteredData = filteredData.filter(item => 
-            item.trainType === this.searchParams.trainType
-          )
-        }
-        
-        if (this.searchParams.status) {
-          filteredData = filteredData.filter(item => 
-            item.status === this.searchParams.status
-          )
-        }
-        
-        // 计算统计数据
-        this.calculateStatistics(filteredData)
-        
+      // 向后端发送POST请求获取车辆数据
+      api.post('/admin/train', {
+        ...this.searchParams,
+        page: this.pagination.currentPage,
+        pageSize: this.pagination.pageSize
+      })
+      .then(response => {
+        const data = response.data
         // 设置车辆列表
-        this.trainList = filteredData
-        this.pagination.total = filteredData.length
+        this.trainList = data.list || []
+        // 更新分页信息
+        this.pagination.total = data.total || 0
+        // 计算统计数据
+        this.calculateStatistics(this.trainList)
+      })
+      .catch(error => {
+        console.error('加载车辆数据失败:', error)
+        this.$message.error('加载车辆数据失败，请稍后重试')
+      })
+      .finally(() => {
         this.loading = false
-      }, 500)
+      })
     },
 
     // 计算统计数据
@@ -638,7 +481,6 @@ export default {
     handleReset() {
       this.searchParams = {
         trainNumber: '',
-        trainName: '',
         trainType: '',
         status: ''
       }
@@ -731,7 +573,6 @@ export default {
       this.trainForm = {
         trainId: '',
         trainNumber: '',
-        trainName: '',
         trainType: '',
         capacity: 0,
         manufactureDate: '',
