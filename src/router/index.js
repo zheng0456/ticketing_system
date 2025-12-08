@@ -80,8 +80,8 @@ const routes = [
         component: AdminTrain
       },
       {
-        path: 'train-station',
-        name: 'train-station',
+        path: 'trainStation',
+        name: 'trainStation',
         component: AdminTrainStation,
         meta: { title: '车站管理' }
       },

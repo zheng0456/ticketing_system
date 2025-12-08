@@ -19,8 +19,6 @@
         <el-icon><ArrowRight /></el-icon>
       </div>
 
-
-
       <!-- 列车管理中心 -->
       <div class="menu-item" @click="toggleTrainMenu" :class="{active: isTrainMenuOpen}">
         <el-icon><Guide /></el-icon>
@@ -34,7 +32,7 @@
           <span>车辆管理</span>
         </router-link>
         <!-- 车站管理 -->
-        <router-link to="/admin/train-station" class="menu-item" active-class="active">
+        <router-link to="/admin/trainStation" class="menu-item" active-class="active">
           <span>车站管理</span>
         </router-link>
       </div>
@@ -411,6 +409,8 @@ export default {
       // 根据当前路径设置对应的激活状态
       if (currentPath === '/admin') {
         this.isAdminPageActive = true;
+      } else if (currentPath === '/admin/train' || currentPath === '/admin/trainStation') {
+        this.isTrainMenuOpen = true;
       } else if (currentPath === '/admin/train-tickets') {
         this.isTicketsMenuOpen = true;
         this.isTrainTicketsActive = true;
