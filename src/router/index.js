@@ -56,10 +56,10 @@ const routes = [
     name: 'ticketMessages',
     component: TicketMessagesView
   },
-  // 添加重定向，使根路径跳转到 /index
+  // 添加重定向，使根路径跳转到 /login
   {
     path: '/',
-    redirect: '/index'
+    redirect: '/login'
   },
   // 添加管理员后台路由
   {
@@ -152,5 +152,22 @@ const router = createRouter({
     }
   }
 })
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  // 获取用户登录信息
+  const userInfo = localStorage.getItem('userInfo');
+  const isLoggedIn = userInfo ? JSON.parse(userInfo).isLoggedIn : false;
+  
+  // 定义不需要登录的白名单路由
+  const whiteList = ['/login'];
+  
+  // 如果用户未登录且访问的不是白名单路由，则重定向到登录页面
+  if (!isLoggedIn && !whiteList.includes(to.path)) {
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router
