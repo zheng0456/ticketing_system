@@ -242,7 +242,13 @@ const handleLogin = async () => {
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       
       ElMessage.success('登录成功');
-      window.location.href = '/index';
+      // 使用response.data.msg中的路径进行跳转
+      if (response.data.msg) {
+        window.location.href = response.data.msg;
+      } else {
+        // 如果msg为空，默认跳转到首页
+        ElMessage.success('请检查网络');
+      }
     } else {
       ElMessage.error(response.data.msg || '登录失败');
     }
