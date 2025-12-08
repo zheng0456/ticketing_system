@@ -388,12 +388,65 @@ export default {
       if (dropdownElement && !dropdownElement.contains(event.target)) {
         this.dropdownOpen = false;
       }
+    },
+    /**
+     * 根据当前路由更新菜单激活状态
+     */
+    updateActiveMenu() {
+      // 获取当前路径
+      const currentPath = this.$route.path;
+      // 重置所有激活状态
+      this.isAdminPageActive = false;
+      this.isTrainMenuOpen = false;
+      this.isTicketsMenuOpen = false;
+      this.isSettingsMenuOpen = false;
+      this.isTrainTicketsActive = false;
+      this.isSceneryTicketsActive = false;
+      this.isRefundTicketsActive = false;
+      this.isRefundSceneryActive = false;
+      this.isStatisticsActive = false;
+      this.isTicketDetailsActive = false;
+      this.isSceneryDetailsActive = false;
+      
+      // 根据当前路径设置对应的激活状态
+      if (currentPath === '/admin') {
+        this.isAdminPageActive = true;
+      } else if (currentPath === '/admin/train-tickets') {
+        this.isTicketsMenuOpen = true;
+        this.isTrainTicketsActive = true;
+      } else if (currentPath === '/admin/scenery-tickets') {
+        this.isTicketsMenuOpen = true;
+        this.isSceneryTicketsActive = true;
+      } else if (currentPath === '/admin/refund-tickets') {
+        this.isTicketsMenuOpen = true;
+        this.isRefundTicketsActive = true;
+      } else if (currentPath === '/admin/refund-scenery') {
+        this.isTicketsMenuOpen = true;
+        this.isRefundSceneryActive = true;
+      } else if (currentPath === '/admin/statistics') {
+        this.isStatisticsActive = true;
+      } else if (currentPath === '/admin/ticket-details') {
+        this.isTicketDetailsActive = true;
+      } else if (currentPath === '/admin/scenery-details') {
+        this.isSceneryDetailsActive = true;
+      }
+    }
+  },
+  // 监听路由变化
+  watch: {
+    '$route.path': {
+      handler() {
+        this.updateActiveMenu();
+      },
+      immediate: true
     }
   },
   // 生命周期钩子：组件挂载后
   mounted() {
     // 添加点击外部关闭下拉菜单的事件监听器
     document.addEventListener('click', this.handleClickOutside);
+    // 检查初始路由，设置正确的激活状态
+    this.updateActiveMenu();
   },
   // 生命周期钩子：组件卸载前 (Vue 3 规范使用 beforeUnmount)
   beforeUnmount() {
