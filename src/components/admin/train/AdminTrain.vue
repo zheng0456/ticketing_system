@@ -440,7 +440,7 @@ export default {
     loadTrainData() {
       this.loading = true
       // 向后端发送POST请求获取车辆数据
-      api.post('/admin/train', {
+      api.post('/inventory/admin/train', {
         ...this.searchParams,
         page: this.pagination.currentPage,
         pageSize: this.pagination.pageSize
