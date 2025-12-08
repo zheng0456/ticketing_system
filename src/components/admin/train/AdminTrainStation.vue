@@ -462,9 +462,32 @@ export default {
       try {
         await this.$refs.stationForm.validate();
         
+        // 准备提交数据，确保日期格式正确
+        const submitData = { ...this.stationForm };
+        
+        // 手动格式化日期为yyyy-MM-dd HH:mm:ss
+        if (submitData.openDate) {
+          console.log('原始日期值:', submitData.openDate);
+          console.log('日期类型:', typeof submitData.openDate);
+          
+          // 确保获取到有效的Date对象
+          const date = submitData.openDate instanceof Date ? submitData.openDate : new Date(submitData.openDate);
+          
+          if (isNaN(date.getTime())) {
+            console.error('无法解析的日期');
+          } else {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            submitData.openDate = `${year}-${month}-${day} 00:00:00`;
+          }
+          
+          console.log('格式化后日期:', submitData.openDate);
+        }
+        
         if (this.dialogType === 'add') {
-          // 这里应该是实际的API调用
-          // await this.$api.trainStation.create(this.stationForm);
+          // 发送POST请求添加车站
+          await api.post('/inventory/admin/trainStation/add', submitData);
           this.$message.success('添加成功');
         } else {
           // 这里应该是实际的API调用
