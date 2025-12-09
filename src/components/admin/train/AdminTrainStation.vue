@@ -25,9 +25,9 @@
           style="width: 120px; margin-right: 10px;"
         >
           <el-option label="全部" value="" />
-          <el-option label="运营中" value="operating" />
-          <el-option label="建设中" value="building" />
-          <el-option label="已关闭" value="closed" />
+          <el-option label="运营中" value="1" />
+          <el-option label="建设中" value="2" />
+          <el-option label="已关闭" value="0" />
         </el-select>
         <el-button type="primary" @click="handleSearch">查询</el-button>
         <el-button @click="handleReset">重置</el-button>
@@ -72,7 +72,7 @@
         <el-table-column prop="city" label="所在城市" width="120" />
         <el-table-column prop="province" label="所在省份" width="120" />
         <el-table-column prop="address" label="详细地址" width="250" />
-        <el-table-column prop="openDate" label="开通日期" width="150" />
+        <el-table-column prop="createTime" label="开通日期" width="150" />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="scope">
             <el-tag :type="getStatusTagType(scope.row.status)">
@@ -80,7 +80,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" width="180" />
+        <el-table-column prop="vote" label="备注" width="180" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="scope">
             <div style="display: flex; align-items: center;">
@@ -167,9 +167,9 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="开通日期" prop="openDate">
+            <el-form-item label="开通日期" prop="createTime">
               <el-date-picker
-                v-model="stationForm.openDate"
+                v-model="stationForm.createTime"
                 type="date"
                 placeholder="请选择开通日期"
                 style="width: 100%;"
@@ -181,9 +181,9 @@
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
               <el-select v-model="stationForm.status" placeholder="请选择状态">
-                <el-option label="运营中" value="operating" />
-                <el-option label="建设中" value="building" />
-                <el-option label="已关闭" value="closed" />
+                <el-option label="运营中" value="1" />
+                <el-option label="建设中" value="2" />
+                <el-option label="已关闭" value="0" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -191,13 +191,13 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="备注">
-              <el-input
-                v-model="stationForm.remark"
-                placeholder="请输入备注信息"
-                type="textarea"
-                :rows="3"
-              />
-            </el-form-item>
+        <el-input
+          v-model="stationForm.vote"
+          placeholder="请输入备注信息"
+          type="textarea"
+          :rows="3"
+        />
+      </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -219,14 +219,14 @@
         <el-descriptions-item label="车站名称">{{ detailData.stationName }}</el-descriptions-item>
         <el-descriptions-item label="所在城市">{{ detailData.city }}</el-descriptions-item>
         <el-descriptions-item label="所在省份">{{ detailData.province }}</el-descriptions-item>
-        <el-descriptions-item label="开通日期">{{ detailData.openDate }}</el-descriptions-item>
+        <el-descriptions-item label="开通日期">{{ detailData.createTime }}</el-descriptions-item>
         <el-descriptions-item label="详细地址" :span="2">{{ detailData.address }}</el-descriptions-item>
         <el-descriptions-item label="状态">
           <el-tag :type="getStatusTagType(detailData.status)">
             {{ getStatusText(detailData.status) }}
           </el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="备注" :span="2">{{ detailData.remark || '无' }}</el-descriptions-item>
+        <el-descriptions-item label="备注" :span="2">{{ detailData.vote || '无' }}</el-descriptions-item>
       </el-descriptions>
       <template #footer>
         <span class="dialog-footer">
@@ -273,9 +273,9 @@ export default {
         city: '',
         province: '',
         address: '',
-        openDate: '',
-        status: 'operating',
-        remark: ''
+        createTime: '',
+        status: '1',
+        vote: ''
       },
       // 详情数据
       detailData: {},
@@ -295,7 +295,7 @@ export default {
           { required: true, message: '请输入详细地址', trigger: 'blur' },
           { max: 200, message: '详细地址长度不能超过 200 个字符', trigger: 'blur' }
         ],
-        openDate: [
+        createTime: [
           { required: true, message: '请选择开通日期', trigger: 'change' }
         ],
         status: [
@@ -343,9 +343,9 @@ export default {
     loadStatistics() {
       try {
         this.totalStations = this.stationList.length;
-        this.operatingStations = this.stationList.filter(station => station.status === 'operating').length;
-        this.buildingStations = this.stationList.filter(station => station.status === 'building').length;
-        this.closedStations = this.stationList.filter(station => station.status === 'closed').length;
+        this.operatingStations = this.stationList.filter(station => station.status === '1').length;
+        this.buildingStations = this.stationList.filter(station => station.status === '2').length;
+        this.closedStations = this.stationList.filter(station => station.status === '0').length;
       } catch (error) {
         console.error('Error calculating statistics:', error);
       }
@@ -466,12 +466,12 @@ export default {
         const submitData = { ...this.stationForm };
         
         // 手动格式化日期为yyyy-MM-dd HH:mm:ss
-        if (submitData.openDate) {
-          console.log('原始日期值:', submitData.openDate);
-          console.log('日期类型:', typeof submitData.openDate);
+        if (submitData.createTime) {
+          console.log('原始日期值:', submitData.createTime);
+          console.log('日期类型:', typeof submitData.createTime);
           
           // 确保获取到有效的Date对象
-          const date = submitData.openDate instanceof Date ? submitData.openDate : new Date(submitData.openDate);
+          const date = submitData.createTime instanceof Date ? submitData.createTime : new Date(submitData.createTime);
           
           if (isNaN(date.getTime())) {
             console.error('无法解析的日期');
@@ -479,10 +479,10 @@ export default {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            submitData.openDate = `${year}-${month}-${day} 00:00:00`;
+            submitData.createTime = `${year}-${month}-${day} 00:00:00`;
           }
           
-          console.log('格式化后日期:', submitData.openDate);
+          console.log('格式化后日期:', submitData.createTime);
         }
         
         if (this.dialogType === 'add') {
@@ -516,18 +516,18 @@ export default {
         city: '',
         province: '',
         address: '',
-        openDate: '',
-        status: 'operating',
-        remark: ''
+        createTime: '',
+        status: '1',
+        vote: ''
       };
     },
     
     // 获取状态标签类型
     getStatusTagType(status) {
       const typeMap = {
-        'operating': 'success',
-        'building': 'warning',
-        'closed': 'danger'
+        '1': 'success',
+        '2': 'warning',
+        '0': 'danger'
       };
       return typeMap[status] || 'info';
     },
@@ -535,9 +535,9 @@ export default {
     // 获取状态文本
     getStatusText(status) {
       const textMap = {
-        'operating': '运营中',
-        'building': '建设中',
-        'closed': '已关闭'
+        '1': '运营中',
+        '2': '建设中',
+        '0': '已关闭'
       };
       return textMap[status] || status;
     }
