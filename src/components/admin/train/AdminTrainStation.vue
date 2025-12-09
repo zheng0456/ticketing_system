@@ -72,7 +72,7 @@
         <el-table-column prop="city" label="所在城市" width="120" />
         <el-table-column prop="province" label="所在省份" width="120" />
         <el-table-column prop="address" label="详细地址" width="250" />
-        <el-table-column prop="createTime" label="开通日期" width="150" />
+        <el-table-column prop="createTime" label="开通日期" width="150" :formatter="formatDate" />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="scope">
             <el-tag :type="getStatusTagType(scope.row.status)">
@@ -472,7 +472,7 @@ export default {
         // 准备提交数据，确保日期格式正确
         const submitData = { ...this.stationForm };
         
-        // 手动格式化日期为yyyy-MM-dd HH:mm:ss
+        // 格式化日期为yyyy-MM-dd格式
         if (submitData.createTime) {
           console.log('原始日期值:', submitData.createTime);
           console.log('日期类型:', typeof submitData.createTime);
@@ -486,7 +486,7 @@ export default {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            submitData.createTime = `${year}-${month}-${day} 00:00:00`;
+            submitData.createTime = `${year}-${month}-${day}`;
           }
           
           console.log('格式化后日期:', submitData.createTime);
@@ -499,10 +499,10 @@ export default {
           console.log('添加车站返回结果:', addResult);
           this.$message.success('添加成功');
         } else {
-          // 这里应该是实际的API调用
+          // 发送POST请求更新车站
           console.log('编辑车站提交数据:', submitData);
-          // const updateResult = await this.$api.trainStation.update(this.stationForm.stationId, this.stationForm);
-          // console.log('编辑车站返回结果:', updateResult);
+          const updateResult = await api.post('/inventory/admin/trainStation/update', submitData);
+          console.log('编辑车站返回结果:', updateResult);
           this.$message.success('更新成功');
         }
         
@@ -551,6 +551,25 @@ export default {
         '0': '已关闭'
       };
       return textMap[String(status)] || status;
+    },
+    
+    // 日期格式化方法
+    formatDate(row, column, cellValue) {
+      if (!cellValue) return '';
+      
+      try {
+        const date = cellValue instanceof Date ? cellValue : new Date(cellValue);
+        if (isNaN(date.getTime())) return '';
+        
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        return `${year}-${month}-${day}`;
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return '';
+      }
     }
   }
 };
