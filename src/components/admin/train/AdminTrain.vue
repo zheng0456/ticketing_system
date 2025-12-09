@@ -617,37 +617,53 @@ export default {
     },
 
     // 删除车辆
-    handleDelete(row) {
-      this.$confirm(`确定要删除车辆 ${row.trainNumber} 吗？`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 模拟删除操作，使用row参数获取要删除的车辆信息
-        const index = this.trainList.findIndex(item => item.trainId === row.trainId);
-        if (index > -1) {
-          this.trainList.splice(index, 1);
-        }
+    async handleDelete(row) {
+      try {
+        await this.$confirm(`确定要删除车辆 ${row.trainNumber} 吗？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        
+        // 发送删除请求
+        await api.delete(`/inventory/admin/train/delete/${row.trainId}`)
         this.$message.success('删除成功')
         this.loadTrainData()
-      }).catch(() => {
-        this.$message.info('已取消删除')
-      })
+      } catch (error) {
+        if (error !== 'cancel') {
+          console.error('删除失败:', error)
+          this.$message.error('删除失败，请稍后重试')
+        } else {
+          this.$message.info('已取消删除')
+        }
+      }
     },
 
     // 批量删除
-    handleBatchDelete() {
-      this.$confirm(`确定要删除选中的 ${this.selectedRows.length} 辆车辆吗？`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 模拟删除操作
+    async handleBatchDelete() {
+      if (this.selectedRows.length === 0) return
+      
+      try {
+        await this.$confirm(`确定要删除选中的 ${this.selectedRows.length} 辆车辆吗？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        
+        // 获取选中的车辆ID列表
+        const ids = this.selectedRows.map(row => row.trainId).join(',')
+        // 发送批量删除请求
+        await api.delete(`/inventory/admin/train/deletes/${ids}`)
         this.$message.success('批量删除成功')
         this.loadTrainData()
-      }).catch(() => {
-        this.$message.info('已取消删除')
-      })
+      } catch (error) {
+        if (error !== 'cancel') {
+          console.error('批量删除失败:', error)
+          this.$message.error('批量删除失败，请稍后重试')
+        } else {
+          this.$message.info('已取消删除')
+        }
+      }
     },
 
     // 导出数据
@@ -662,15 +678,24 @@ export default {
     },
 
     // 表单提交
-    handleSubmit() {
-      this.$refs.trainForm.validate((valid) => {
+    async handleSubmit() {
+      this.$refs.trainForm.validate(async (valid) => {
         if (valid) {
-          // 模拟提交
-          setTimeout(() => {
+          try {
+            if (this.dialogType === 'add') {
+              // 添加车辆
+              await api.post('/inventory/admin/train/add', this.trainForm)
+            } else {
+              // 编辑车辆
+              await api.put('/inventory/admin/train/update', this.trainForm)
+            }
             this.$message.success(`${this.dialogType === 'add' ? '添加' : '编辑'}成功`)
             this.dialogVisible = false
             this.loadTrainData()
-          }, 500)
+          } catch (error) {
+            console.error(`${this.dialogType === 'add' ? '添加' : '编辑'}失败:`, error)
+            this.$message.error(`${this.dialogType === 'add' ? '添加' : '编辑'}失败，请稍后重试`)
+          }
         } else {
           return false
         }
