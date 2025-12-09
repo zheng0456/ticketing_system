@@ -403,7 +403,11 @@ export default {
     // 打开编辑对话框
     handleEdit(row) {
       this.dialogType = 'edit';
-      this.stationForm = { ...row };
+      // 确保status字段是字符串类型，与表单选择器的选项值匹配
+      this.stationForm = {
+        ...row,
+        status: String(row.status)
+      };
       this.dialogVisible = true;
     },
     
@@ -457,27 +461,22 @@ export default {
         });
         
         // 批量调用删除API
-        const deletePromises = this.selectedRows.map(async row => {
-          console.log('开始删除车站，ID:', row.id);
-          const deleteResult = await api.delete(`/inventory/admin/trainStation/delete/${row.id}`);
-          console.log('车站删除返回结果:', deleteResult);
-          
-          // 根据业务状态码判断是否删除成功
-          if (deleteResult.data && deleteResult.data.code !== 200) {
-            throw new Error(deleteResult.data.msg || `删除车站 ${row.id} 失败`);
-          }
-          
-          return deleteResult;
-        });
-        const batchResults = await Promise.all(deletePromises);
-        console.log('批量删除返回结果:', batchResults);
+        const ids = this.selectedRows.map(row => row.id).join(',');
+        console.log('开始批量删除车站，IDs:', ids);
+        const batchResult = await api.delete(`/inventory/admin/trainStation/deletes/${ids}`);
+        console.log('批量删除返回结果:', batchResult);
+        
+        // 根据业务状态码判断是否删除成功
+        if (batchResult.data && batchResult.data.code !== 200) {
+          throw new Error(batchResult.data.msg || '批量删除失败');
+        }
         
         this.$message.success('批量删除成功');
         this.loadStationList();
         this.loadStatistics();
       } catch (error) {
         if (error !== 'cancel') {
-          this.$message.error('批量删除失败');
+          this.$message.error(error.message || '批量删除失败');
           console.error('Error batch deleting stations:', error);
         }
       }
