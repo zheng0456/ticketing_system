@@ -82,7 +82,6 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="capacity" label="载客量" width="100" />
         <el-table-column prop="manufactureDate" label="制造日期" width="150" />
         <el-table-column prop="serviceLife" label="服役年限" width="100">
           <template #default="scope">
@@ -173,13 +172,73 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <!-- 软卧、硬卧、硬座车厢数量（普通列车和动车） -->
+        <el-row :gutter="20" v-if="trainForm.trainType === 'normal' || trainForm.trainType === 'bullet'">
           <el-col :span="12">
-            <el-form-item label="车厢数量" prop="capacity">
+            <el-form-item label="软卧车厢数量" prop="softSleeperCarriages">
               <el-input-number
-                v-model="trainForm.capacity"
-                :min="1"
+                v-model="trainForm.softSleeperCarriages"
+                :min="0"
+                :max="20"
+                placeholder="请输入软卧车厢数量"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="硬卧车厢数量" prop="hardSleeperCarriages">
+              <el-input-number
+                v-model="trainForm.hardSleeperCarriages"
+                :min="0"
+                :max="50"
+                placeholder="请输入硬卧车厢数量"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" v-if="trainForm.trainType === 'normal' || trainForm.trainType === 'bullet'">
+          <el-col :span="12">
+            <el-form-item label="硬座车厢数量" prop="hardSeatCarriages">
+              <el-input-number
+                v-model="trainForm.hardSeatCarriages"
+                :min="0"
                 :max="100"
-                placeholder="请输入车厢数量"
+                placeholder="请输入硬座车厢数量"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 一等座、二等座、商务座车厢数量（高铁） -->
+        <el-row :gutter="20" v-if="trainForm.trainType === 'high-speed'">
+          <el-col :span="12">
+            <el-form-item label="一等座车厢数量" prop="firstClassCarriages">
+              <el-input-number
+                v-model="trainForm.firstClassCarriages"
+                :min="0"
+                :max="20"
+                placeholder="请输入一等座车厢数量"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="二等座车厢数量" prop="secondClassCarriages">
+              <el-input-number
+                v-model="trainForm.secondClassCarriages"
+                :min="0"
+                :max="50"
+                placeholder="请输入二等座车厢数量"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" v-if="trainForm.trainType === 'high-speed'">
+          <el-col :span="12">
+            <el-form-item label="商务座车厢数量" prop="businessClassCarriages">
+              <el-input-number
+                v-model="trainForm.businessClassCarriages"
+                :min="0"
+                :max="10"
+                placeholder="请输入商务座车厢数量"
               />
             </el-form-item>
           </el-col>
@@ -270,12 +329,6 @@
               </el-tag>
             </span>
           </div>
-        </div>
-        <div class="detail-row">
-          <div class="detail-item">
-            <span class="detail-label">载客量：</span>
-            <span class="detail-value">{{ selectedTrain.capacity }}人</span>
-          </div>
           <div class="detail-item">
             <span class="detail-label">状态：</span>
             <span class="detail-value">
@@ -283,6 +336,40 @@
                 {{ getStatusText(selectedTrain.status) }}
               </el-tag>
             </span>
+          </div>
+        </div>
+        <!-- 普通列车和动车车厢信息 -->
+        <div class="detail-row" v-if="selectedTrain.trainType === 'normal' || selectedTrain.trainType === 'bullet'">
+          <div class="detail-item">
+            <span class="detail-label">软卧车厢数量：</span>
+            <span class="detail-value">{{ selectedTrain.softSleeperCarriages || 0 }}节</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">硬卧车厢数量：</span>
+            <span class="detail-value">{{ selectedTrain.hardSleeperCarriages || 0 }}节</span>
+          </div>
+        </div>
+        <div class="detail-row" v-if="selectedTrain.trainType === 'normal' || selectedTrain.trainType === 'bullet'">
+          <div class="detail-item">
+            <span class="detail-label">硬座车厢数量：</span>
+            <span class="detail-value">{{ selectedTrain.hardSeatCarriages || 0 }}节</span>
+          </div>
+        </div>
+        <!-- 高铁车厢信息 -->
+        <div class="detail-row" v-if="selectedTrain.trainType === 'high-speed'">
+          <div class="detail-item">
+            <span class="detail-label">一等座车厢数量：</span>
+            <span class="detail-value">{{ selectedTrain.firstClassCarriages || 0 }}节</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">二等座车厢数量：</span>
+            <span class="detail-value">{{ selectedTrain.secondClassCarriages || 0 }}节</span>
+          </div>
+        </div>
+        <div class="detail-row" v-if="selectedTrain.trainType === 'high-speed'">
+          <div class="detail-item">
+            <span class="detail-label">商务座车厢数量：</span>
+            <span class="detail-value">{{ selectedTrain.businessClassCarriages || 0 }}节</span>
           </div>
         </div>
         <div class="detail-row">
@@ -355,12 +442,18 @@ export default {
         trainId: '',
         trainNumber: '',
         trainType: '',
-        capacity: 0,
         manufactureDate: '',
         serviceLife: 0,
         status: '',
         lastMaintenanceDate: '',
-        remark: ''
+        remark: '',
+        // 车厢类型数量
+        softSleeperCarriages: 0, // 软卧车厢数量
+        hardSleeperCarriages: 0, // 硬卧车厢数量
+        hardSeatCarriages: 0,    // 硬座车厢数量
+        firstClassCarriages: 0,   // 一等座车厢数量
+        secondClassCarriages: 0,  // 二等座车厢数量
+        businessClassCarriages: 0 // 商务座车厢数量
       },
       // 表单验证规则
       formRules: {
@@ -370,14 +463,30 @@ export default {
         trainType: [
           { required: true, message: '请选择车型', trigger: 'change' }
         ],
-        capacity: [
-          { required: true, message: '请输入载客量', trigger: 'change' }
-        ],
         manufactureDate: [
           { required: true, message: '请选择制造日期', trigger: 'change' }
         ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
+        ],
+        // 车厢类型数量验证（非必填，根据车型动态显示）
+        softSleeperCarriages: [
+          { type: 'number', min: 0, message: '请输入有效的软卧车厢数量', trigger: 'change' }
+        ],
+        hardSleeperCarriages: [
+          { type: 'number', min: 0, message: '请输入有效的硬卧车厢数量', trigger: 'change' }
+        ],
+        hardSeatCarriages: [
+          { type: 'number', min: 0, message: '请输入有效的硬座车厢数量', trigger: 'change' }
+        ],
+        firstClassCarriages: [
+          { type: 'number', min: 0, message: '请输入有效的一等座车厢数量', trigger: 'change' }
+        ],
+        secondClassCarriages: [
+          { type: 'number', min: 0, message: '请输入有效的二等座车厢数量', trigger: 'change' }
+        ],
+        businessClassCarriages: [
+          { type: 'number', min: 0, message: '请输入有效的商务座车厢数量', trigger: 'change' }
         ]
       },
       // 选中的车辆
@@ -574,12 +683,18 @@ export default {
         trainId: '',
         trainNumber: '',
         trainType: '',
-        capacity: 0,
         manufactureDate: '',
         serviceLife: 0,
         status: '',
         lastMaintenanceDate: '',
-        remark: ''
+        remark: '',
+        // 车厢类型数量
+        softSleeperCarriages: 0, // 软卧车厢数量
+        hardSleeperCarriages: 0, // 硬卧车厢数量
+        hardSeatCarriages: 0,    // 硬座车厢数量
+        firstClassCarriages: 0,   // 一等座车厢数量
+        secondClassCarriages: 0,  // 二等座车厢数量
+        businessClassCarriages: 0 // 商务座车厢数量
       }
       if (this.$refs.trainForm) {
         this.$refs.trainForm.resetFields()
