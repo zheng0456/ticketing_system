@@ -319,14 +319,21 @@ export default {
       this.loading = true;
       try {
         // 发送POST请求到指定端点
-        const { data } = await api.post('/inventory/admin/trainStation', {
+        const response = await api.post('/inventory/admin/trainStation', {
           ...this.searchParams,
           pageNum: this.pagination.currentPage,
           pageSize: this.pagination.pageSize
         });
         
-        this.stationList = data.list || [];
-        this.pagination.total = data.total || 0;
+        // 查看接口返回数据
+        console.log('接口返回数据:', response);
+        
+        // 确保stationList始终是一个可迭代的数组
+        const result = response.data || {};
+        const responseData = result.data || [];
+        this.stationList = Array.isArray(responseData) ? responseData : [];
+        // 优先使用后端返回的total字段作为分页总数，如果没有则使用stationList.length
+        this.pagination.total = result.total || this.stationList.length || 0;
         
         // 计算统计数据
         this.loadStatistics();
@@ -343,9 +350,9 @@ export default {
     loadStatistics() {
       try {
         this.totalStations = this.stationList.length;
-        this.operatingStations = this.stationList.filter(station => station.status === '1').length;
-        this.buildingStations = this.stationList.filter(station => station.status === '2').length;
-        this.closedStations = this.stationList.filter(station => station.status === '0').length;
+        this.operatingStations = this.stationList.filter(station => String(station.status) === '1').length;
+        this.buildingStations = this.stationList.filter(station => String(station.status) === '2').length;
+        this.closedStations = this.stationList.filter(station => String(station.status) === '0').length;
       } catch (error) {
         console.error('Error calculating statistics:', error);
       }
@@ -487,11 +494,15 @@ export default {
         
         if (this.dialogType === 'add') {
           // 发送POST请求添加车站
-          await api.post('/inventory/admin/trainStation/add', submitData);
+          console.log('添加车站提交数据:', submitData);
+          const addResult = await api.post('/inventory/admin/trainStation/add', submitData);
+          console.log('添加车站返回结果:', addResult);
           this.$message.success('添加成功');
         } else {
           // 这里应该是实际的API调用
-          // await this.$api.trainStation.update(this.stationForm.stationId, this.stationForm);
+          console.log('编辑车站提交数据:', submitData);
+          // const updateResult = await this.$api.trainStation.update(this.stationForm.stationId, this.stationForm);
+          // console.log('编辑车站返回结果:', updateResult);
           this.$message.success('更新成功');
         }
         
@@ -529,7 +540,7 @@ export default {
         '2': 'warning',
         '0': 'danger'
       };
-      return typeMap[status] || 'info';
+      return typeMap[String(status)] || 'info';
     },
     
     // 获取状态文本
@@ -539,7 +550,7 @@ export default {
         '2': '建设中',
         '0': '已关闭'
       };
-      return textMap[status] || status;
+      return textMap[String(status)] || status;
     }
   }
 };
