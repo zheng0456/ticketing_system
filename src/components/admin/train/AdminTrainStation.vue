@@ -68,6 +68,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
+        <el-table-column prop="id" label="车站ID" width="100" />
         <el-table-column prop="stationName" label="车站名称" width="180" />
         <el-table-column prop="city" label="所在城市" width="120" />
         <el-table-column prop="province" label="所在省份" width="120" />
