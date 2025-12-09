@@ -473,6 +473,13 @@ export default {
         // 准备提交数据，确保日期格式正确
         const submitData = { ...this.stationForm };
         
+        // 将所有null值转换为空字符串
+        for (const key in submitData) {
+          if (submitData[key] === null) {
+            submitData[key] = '';
+          }
+        }
+        
         // 格式化日期为yyyy-MM-dd格式
         if (submitData.createTime) {
           console.log('原始日期值:', submitData.createTime);
@@ -502,7 +509,7 @@ export default {
         } else {
           // 发送POST请求更新车站
           console.log('编辑车站提交数据:', submitData);
-          const updateResult = await api.post('/inventory/admin/trainStation/update', submitData);
+          const updateResult = await api.put(`/inventory/admin/trainStation/update/${submitData.id}`, submitData);
           console.log('编辑车站返回结果:', updateResult);
           this.$message.success('更新成功');
         }
