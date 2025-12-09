@@ -414,7 +414,7 @@ export default {
     },
     
     // 删除单个车站
-    async handleDelete() {
+    async handleDelete(row) {
       try {
         await this.$confirm('确定要删除该车站吗？', '提示', {
           confirmButtonText: '确定',
@@ -422,8 +422,14 @@ export default {
           type: 'warning'
         });
         
-        // 这里应该是实际的API调用
-        // await this.$api.trainStation.delete(row.stationId);
+        // 调用删除API
+        const deleteResult = await api.delete(`/inventory/admin/trainStation/delete/${row.id}`);
+        console.log('车站删除返回结果:', deleteResult);
+        
+        // 根据业务状态码判断是否删除成功
+        if (deleteResult.data && deleteResult.data.code !== 200) {
+          throw new Error(deleteResult.data.msg || '删除失败');
+        }
         
         this.$message.success('删除成功');
         this.loadStationList();
@@ -450,9 +456,21 @@ export default {
           type: 'warning'
         });
         
-        // 这里应该是实际的API调用
-        // const ids = this.selectedRows.map(row => row.stationId);
-        // await this.$api.trainStation.batchDelete(ids);
+        // 批量调用删除API
+        const deletePromises = this.selectedRows.map(async row => {
+          console.log('开始删除车站，ID:', row.id);
+          const deleteResult = await api.delete(`/inventory/admin/trainStation/delete/${row.id}`);
+          console.log('车站删除返回结果:', deleteResult);
+          
+          // 根据业务状态码判断是否删除成功
+          if (deleteResult.data && deleteResult.data.code !== 200) {
+            throw new Error(deleteResult.data.msg || `删除车站 ${row.id} 失败`);
+          }
+          
+          return deleteResult;
+        });
+        const batchResults = await Promise.all(deletePromises);
+        console.log('批量删除返回结果:', batchResults);
         
         this.$message.success('批量删除成功');
         this.loadStationList();
