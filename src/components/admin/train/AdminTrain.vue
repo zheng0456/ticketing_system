@@ -524,16 +524,29 @@ export default {
   methods: {
     // 获取车型标签类型
     getTypeTagType(type) {
+      // 统一将车型转换为英文格式
+      const typeEng = typeof type === 'string' ? {
+        '高铁': 'high-speed',
+        '动车': 'bullet',
+        '普通列车': 'normal'
+      }[type] || type : type
+      
       const typeMap = {
         'high-speed': 'success',
         'bullet': 'primary',
         'normal': 'info'
       }
-      return typeMap[type] || 'default'
+      return typeMap[typeEng] || 'default'
     },
 
     // 获取车型文本
     getTypeText(type) {
+      // 如果已经是中文，直接返回
+      const chineseTypes = ['高铁', '动车', '普通列车']
+      if (typeof type === 'string' && chineseTypes.includes(type)) {
+        return type
+      }
+      
       const typeMap = {
         'high-speed': '高铁',
         'bullet': '动车',
@@ -544,22 +557,36 @@ export default {
 
     // 获取状态标签类型
     getStatusTagType(status) {
+      // 统一将状态转换为数字
+      const statusNum = typeof status === 'string' ? {
+        'running': 1,
+        'maintenance': 2,
+        'stopped': 0
+      }[status] || status : status
+      
       const statusMap = {
-        'running': 'success',
-        'maintenance': 'warning',
-        'stopped': 'danger'
+        1: 'success',  // 运行中
+        2: 'warning',  // 维修中
+        0: 'danger'   // 停运
       }
-      return statusMap[status] || 'default'
+      return statusMap[statusNum] || 'default'
     },
 
     // 获取状态文本
     getStatusText(status) {
+      // 统一将状态转换为数字
+      const statusNum = typeof status === 'string' ? {
+        'running': 1,
+        'maintenance': 2,
+        'stopped': 0
+      }[status] || status : status
+      
       const statusMap = {
-        'running': '运行中',
-        'maintenance': '维修中',
-        'stopped': '停运'
+        1: '运行中',  // 运行中
+        2: '维修中',  // 维修中
+        0: '停运'     // 停运
       }
-      return statusMap[status] || status
+      return statusMap[statusNum] || status
     },
 
     // 计算下一次检修日期
@@ -585,9 +612,19 @@ export default {
     // 加载车辆数据
     loadTrainData() {
       this.loading = true
+      // 将搜索参数中的车型从英文转换为中文
+      const searchData = { ...this.searchParams }
+      if (searchData.trainType) {
+        const trainTypeMap = {
+          'high-speed': '高铁',
+          'bullet': '动车',
+          'normal': '普通列车'
+        }
+        searchData.trainType = trainTypeMap[searchData.trainType] || searchData.trainType
+      }
       // 向后端发送POST请求获取车辆数据
       api.post('/inventory/admin/train', {
-        ...this.searchParams,
+        ...searchData,
         page: this.pagination.currentPage,
         pageSize: this.pagination.pageSize
       })
@@ -612,9 +649,32 @@ export default {
     // 计算统计数据
     calculateStatistics(data) {
       this.totalTrains = data.length
-      this.runningTrains = data.filter(item => item.status === 'running').length
-      this.maintenanceTrains = data.filter(item => item.status === 'maintenance').length
-      this.stoppedTrains = data.filter(item => item.status === 'stopped').length
+      // 统一使用数字状态进行过滤
+      this.runningTrains = data.filter(item => {
+        // 处理可能的字符串状态（如从后端返回的数字或前端显示的字符串）
+        const status = typeof item.status === 'string' ? {
+          'running': 1,
+          'maintenance': 2,
+          'stopped': 0
+        }[item.status] || item.status : item.status
+        return status === 1
+      }).length
+      this.maintenanceTrains = data.filter(item => {
+        const status = typeof item.status === 'string' ? {
+          'running': 1,
+          'maintenance': 2,
+          'stopped': 0
+        }[item.status] || item.status : item.status
+        return status === 2
+      }).length
+      this.stoppedTrains = data.filter(item => {
+        const status = typeof item.status === 'string' ? {
+          'running': 1,
+          'maintenance': 2,
+          'stopped': 0
+        }[item.status] || item.status : item.status
+        return status === 0
+      }).length
     },
 
     // 搜索
@@ -644,7 +704,27 @@ export default {
     // 编辑车辆
     handleEdit(row) {
       this.dialogType = 'edit'
+      // 复制行数据
       this.trainForm = { ...row }
+      // 将数字状态转换为字符串格式，以便下拉选择框显示
+      const statusMap = {
+        1: 'running',  // 运行中
+        2: 'maintenance',  // 维修中
+        0: 'stopped'  // 停运
+      }
+      if (typeof this.trainForm.status === 'number') {
+        this.trainForm.status = statusMap[this.trainForm.status] || 'stopped'
+      }
+      
+      // 将中文车型转换为英文格式，以便下拉选择框显示
+      const trainTypeMap = {
+        '高铁': 'high-speed',
+        '动车': 'bullet',
+        '普通列车': 'normal'
+      }
+      if (typeof this.trainForm.trainType === 'string') {
+        this.trainForm.trainType = trainTypeMap[this.trainForm.trainType] || this.trainForm.trainType
+      }
       this.dialogVisible = true
     },
 
@@ -748,6 +828,22 @@ export default {
             // 格式化日期字段为yyyy-mm-dd格式
             formData.manufactureDate = this.formatDate(formData.manufactureDate)
             formData.lastMaintenanceDate = this.formatDate(formData.lastMaintenanceDate)
+            
+            // 将状态从字符串转换为数字
+            const statusMap = {
+              'running': 1,  // 运行中
+              'maintenance': 2,  // 维修中
+              'stopped': 0  // 停运
+            }
+            formData.status = statusMap[formData.status] || 0
+            
+            // 将车型从英文转换为中文
+            const trainTypeMap = {
+              'high-speed': '高铁',
+              'bullet': '动车',
+              'normal': '普通列车'
+            }
+            formData.trainType = trainTypeMap[formData.trainType] || formData.trainType
             
             if (this.dialogType === 'add') {
               // 添加车辆
