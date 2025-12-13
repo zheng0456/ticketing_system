@@ -478,27 +478,40 @@ export default {
         manufactureDate: [
           { required: true, message: '请选择制造日期', trigger: 'change' }
         ],
+        lastMaintenanceDate: [
+          { required: true, message: '请选择最后检修日期', trigger: 'change' }
+        ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ],
-        // 车厢类型数量验证（非必填，根据车型动态显示）
+        // 车厢类型数量验证（必填，根据车型动态显示）
         softSleeperCarriages: [
+          { required: true, message: '请输入软卧车厢数量', trigger: 'change' },
           { type: 'number', min: 0, message: '请输入有效的软卧车厢数量', trigger: 'change' }
         ],
         hardSleeperCarriages: [
+          { required: true, message: '请输入硬卧车厢数量', trigger: 'change' },
           { type: 'number', min: 0, message: '请输入有效的硬卧车厢数量', trigger: 'change' }
         ],
         hardSeatCarriages: [
+          { required: true, message: '请输入硬座车厢数量', trigger: 'change' },
           { type: 'number', min: 0, message: '请输入有效的硬座车厢数量', trigger: 'change' }
         ],
         firstClassCarriages: [
+          { required: true, message: '请输入一等座车厢数量', trigger: 'change' },
           { type: 'number', min: 0, message: '请输入有效的一等座车厢数量', trigger: 'change' }
         ],
         secondClassCarriages: [
+          { required: true, message: '请输入二等座车厢数量', trigger: 'change' },
           { type: 'number', min: 0, message: '请输入有效的二等座车厢数量', trigger: 'change' }
         ],
         businessClassCarriages: [
+          { required: true, message: '请输入商务座车厢数量', trigger: 'change' },
           { type: 'number', min: 0, message: '请输入有效的商务座车厢数量', trigger: 'change' }
+        ],
+        serviceLife: [
+          { required: true, message: '请输入服役年限', trigger: 'change' },
+          { type: 'number', min: 0, max: 30, message: '请输入有效的服役年限', trigger: 'change' }
         ]
       },
       // 选中的车辆
