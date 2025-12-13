@@ -540,7 +540,19 @@ export default {
     // 计算下一次检修日期
     getNextMaintenanceDate(lastDate) {
       if (!lastDate) return '-'
-      const date = new Date(lastDate)
+      let date
+      // 如果是字符串格式，尝试转换为Date对象
+      if (typeof lastDate === 'string') {
+        date = new Date(lastDate)
+        // 如果转换失败，返回'-'
+        if (isNaN(date.getTime())) return '-'
+      } else if (lastDate instanceof Date) {
+        // 如果已经是Date对象，直接使用
+        date = lastDate
+      } else {
+        // 其他类型，返回'-'
+        return '-'
+      }
       date.setMonth(date.getMonth() + 3) // 假设每3个月检修一次
       return date.toISOString().split('T')[0]
     },
@@ -677,17 +689,47 @@ export default {
       this.detailDialogVisible = true
     },
 
+    // 日期格式化函数
+    formatDate(date) {
+      if (!date) return ''
+      let dateObj
+      // 如果是字符串格式，尝试转换为Date对象
+      if (typeof date === 'string') {
+        dateObj = new Date(date)
+        // 如果转换失败，返回空字符串
+        if (isNaN(dateObj.getTime())) return ''
+      } else if (date instanceof Date) {
+        // 如果已经是Date对象，直接使用
+        dateObj = date
+      } else {
+        // 其他类型，返回空字符串
+        return ''
+      }
+      // 转换为yyyy-mm-dd格式
+      const year = dateObj.getFullYear()
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0')
+      const day = String(dateObj.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    },
+
     // 表单提交
     async handleSubmit() {
       this.$refs.trainForm.validate(async (valid) => {
         if (valid) {
           try {
+            // 复制表单数据
+            const formData = { ...this.trainForm }
+            
+            // 格式化日期字段为yyyy-mm-dd格式
+            formData.manufactureDate = this.formatDate(formData.manufactureDate)
+            formData.lastMaintenanceDate = this.formatDate(formData.lastMaintenanceDate)
+            
             if (this.dialogType === 'add') {
               // 添加车辆
-              await api.post('/inventory/admin/train/add', this.trainForm)
+              await api.post('/inventory/admin/train/add', formData)
             } else {
               // 编辑车辆
-              await api.put('/inventory/admin/train/update', this.trainForm)
+              await api.put('/inventory/admin/train/update', formData)
             }
             this.$message.success(`${this.dialogType === 'add' ? '添加' : '编辑'}成功`)
             this.dialogVisible = false
