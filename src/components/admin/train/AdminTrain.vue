@@ -182,6 +182,8 @@
                 :min="0"
                 :max="20"
                 placeholder="请输入软卧车厢数量"
+                @keydown.prevent
+                class="carriage-input"
               />
             </el-form-item>
           </el-col>
@@ -192,6 +194,8 @@
                 :min="0"
                 :max="50"
                 placeholder="请输入硬卧车厢数量"
+                @keydown.prevent
+                class="carriage-input"
               />
             </el-form-item>
           </el-col>
@@ -204,6 +208,8 @@
                 :min="0"
                 :max="100"
                 placeholder="请输入硬座车厢数量"
+                @keydown.prevent
+                class="carriage-input"
               />
             </el-form-item>
           </el-col>
@@ -217,6 +223,8 @@
                 :min="0"
                 :max="20"
                 placeholder="请输入一等座车厢数量"
+                @keydown.prevent
+                class="carriage-input"
               />
             </el-form-item>
           </el-col>
@@ -227,6 +235,8 @@
                 :min="0"
                 :max="50"
                 placeholder="请输入二等座车厢数量"
+                @keydown.prevent
+                class="carriage-input"
               />
             </el-form-item>
           </el-col>
@@ -239,6 +249,8 @@
                 :min="0"
                 :max="10"
                 placeholder="请输入商务座车厢数量"
+                @keydown.prevent
+                class="carriage-input"
               />
             </el-form-item>
           </el-col>
@@ -911,4 +923,7 @@ export default {
 .dialog-footer {
   text-align: right;
 }
+  .carriage-input .el-input__inner {
+    pointer-events: none;
+  }
 </style>
