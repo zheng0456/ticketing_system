@@ -304,10 +304,10 @@
               <el-select v-model="trainForm.startStation" placeholder="请选择始发站" style="width: 100%;">
                 <el-option
                   v-for="station in stationOptions"
-                  :key="station.stationName"
+                  :key="station.id"
                   :label="station.stationName"
-                  :value="station.stationName"
-                  :disabled="station.stationName === trainForm.endStation"
+                  :value="station.id"
+                  :disabled="station.id === trainForm.endStation"
                 />
               </el-select>
             </el-form-item>
@@ -317,10 +317,10 @@
               <el-select v-model="trainForm.endStation" placeholder="请选择终点站" style="width: 100%;">
                 <el-option
                   v-for="station in stationOptions"
-                  :key="station.stationName"
+                  :key="station.id"
                   :label="station.stationName"
-                  :value="station.stationName"
-                  :disabled="station.stationName === trainForm.startStation"
+                  :value="station.id"
+                  :disabled="station.id === trainForm.startStation"
                 />
               </el-select>
             </el-form-item>
@@ -337,10 +337,10 @@
               >
                 <el-option
                   v-for="station in stationOptions"
-                  :key="station.stationName"
+                  :key="station.id"
                   :label="station.stationName"
-                  :value="station.stationName"
-                  :disabled="station.stationName === trainForm.startStation || station.stationName === trainForm.endStation"
+                  :value="station.id"
+                  :disabled="station.id === trainForm.startStation || station.id === trainForm.endStation"
                 />
               </el-select>
             </el-form-item>
@@ -455,17 +455,17 @@
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">始发站：</span>
-            <span class="detail-value">{{ selectedTrain.startStation || '-' }}</span>
+            <span class="detail-value">{{ getStationName(selectedTrain.startStation) }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">终点站：</span>
-            <span class="detail-value">{{ selectedTrain.endStation || '-' }}</span>
+            <span class="detail-value">{{ getStationName(selectedTrain.endStation) }}</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item full-width">
             <span class="detail-label">途径站点：</span>
-            <span class="detail-value">{{ selectedTrain.intermediateStations || '-' }}</span>
+            <span class="detail-value">{{ getStationNames(selectedTrain.intermediateStations) }}</span>
           </div>
         </div>
         <div class="detail-row">
@@ -667,22 +667,35 @@ export default {
 
     // 计算下一次检修日期
     getNextMaintenanceDate(lastDate) {
-      if (!lastDate) return '-'
+      if (!lastDate) return '-'  
       let date
       // 如果是字符串格式，尝试转换为Date对象
       if (typeof lastDate === 'string') {
         date = new Date(lastDate)
         // 如果转换失败，返回'-'
-        if (isNaN(date.getTime())) return '-'
+        if (isNaN(date.getTime())) return '-'  
       } else if (lastDate instanceof Date) {
         // 如果已经是Date对象，直接使用
         date = lastDate
       } else {
         // 其他类型，返回'-'
-        return '-'
+        return '-'  
       }
       date.setMonth(date.getMonth() + 3) // 假设每3个月检修一次
       return date.toISOString().split('T')[0]
+    },
+    
+    // 根据站点ID获取站点名称
+    getStationName(stationId) {
+      if (!stationId) return '-'
+      const station = this.stationOptions.find(s => s.id === stationId)
+      return station ? station.stationName : '-'  
+    },
+    
+    // 根据站点ID列表获取站点名称列表
+    getStationNames(stationIds) {
+      if (!stationIds || !Array.isArray(stationIds) || stationIds.length === 0) return '-'
+      return stationIds.map(id => this.getStationName(id)).join('，')
     },
 
     // 加载车辆数据
