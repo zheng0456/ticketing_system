@@ -329,12 +329,19 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="途径站点">
-              <el-input
+              <el-select
                 v-model="trainForm.intermediateStations"
-                type="textarea"
-                placeholder="请输入途径站点，多个站点用逗号分隔"
-                :rows="3"
-              />
+                placeholder="请选择途径站点"
+                multiple
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="station in stationOptions"
+                  :key="station.stationName"
+                  :label="station.stationName"
+                  :value="station.stationName"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -519,7 +526,7 @@ export default {
         remark: '',
         startStation: '',
         endStation: '',
-        intermediateStations: '',
+        intermediateStations: [],
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
         hardSleeperCarriages: 0, // 硬卧车厢数量
@@ -960,7 +967,7 @@ export default {
         remark: '',
         startStation: '',
         endStation: '',
-        intermediateStations: '',
+        intermediateStations: [],
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
         hardSleeperCarriages: 0, // 硬卧车厢数量
