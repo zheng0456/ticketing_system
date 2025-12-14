@@ -326,6 +326,40 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="出发时间" prop="departureTime">
+              <el-date-picker
+                v-model="trainForm.departureTime"
+                type="datetime"
+                placeholder="请选择出发时间"
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                style="width: 100%;"
+                is-range="false"
+                :picker-options="{
+                  selectableRange: '00:00:00-23:59:59'
+                }"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="到达时间" prop="arrivalTime">
+              <el-date-picker
+                v-model="trainForm.arrivalTime"
+                type="datetime"
+                placeholder="请选择到达时间"
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                style="width: 100%;"
+                is-range="false"
+                :picker-options="{
+                  selectableRange: '00:00:00-23:59:59'
+                }"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="20" v-if="trainForm.startStation && trainForm.endStation">
           <el-col :span="24">
             <el-form-item label="途径站点">
@@ -463,6 +497,16 @@
           </div>
         </div>
         <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">出发时间：</span>
+            <span class="detail-value">{{ selectedTrain.departureTime || '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">到达时间：</span>
+            <span class="detail-value">{{ selectedTrain.arrivalTime || '-' }}</span>
+          </div>
+        </div>
+        <div class="detail-row">
           <div class="detail-item full-width">
             <span class="detail-label">途径站点：</span>
             <span class="detail-value">{{ getStationNames(selectedTrain.intermediateStations) }}</span>
@@ -527,6 +571,8 @@ export default {
         remark: '',
         startStation: '',
         endStation: '',
+        departureTime: '',
+        arrivalTime: '',
         intermediateStations: [],
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
@@ -558,6 +604,12 @@ export default {
         ],
         endStation: [
           { required: true, message: '请选择终点站', trigger: 'change' }
+        ],
+        departureTime: [
+          { required: true, message: '请选择出发时间', trigger: 'change' }
+        ],
+        arrivalTime: [
+          { required: true, message: '请选择到达时间', trigger: 'change' }
         ],
         // 车厢类型数量验证（必填，根据车型动态显示）
         softSleeperCarriages: [
@@ -993,6 +1045,8 @@ export default {
         remark: '',
         startStation: '',
         endStation: '',
+        departureTime: '',
+        arrivalTime: '',
         intermediateStations: [],
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
