@@ -828,6 +828,13 @@ export default {
       if (typeof this.trainForm.trainType === 'string') {
         this.trainForm.trainType = trainTypeMap[this.trainForm.trainType] || this.trainForm.trainType
       }
+      
+      // 将途径站点字符串转换为数组格式，以便多选下拉框显示
+      if (typeof this.trainForm.intermediateStations === 'string' && this.trainForm.intermediateStations) {
+        this.trainForm.intermediateStations = this.trainForm.intermediateStations.split(',')
+      } else if (!Array.isArray(this.trainForm.intermediateStations)) {
+        this.trainForm.intermediateStations = []
+      }
       this.dialogVisible = true
     },
 
@@ -947,6 +954,11 @@ export default {
               'normal': '普通列车'
             }
             formData.trainType = trainTypeMap[formData.trainType] || formData.trainType
+            
+            // 将途径站点数组转换为逗号分隔的字符串
+            if (Array.isArray(formData.intermediateStations)) {
+              formData.intermediateStations = formData.intermediateStations.join(',')
+            }
             
             if (this.dialogType === 'add') {
               // 添加车辆
