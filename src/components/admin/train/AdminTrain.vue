@@ -301,24 +301,26 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="始发站" prop="startStation">
-              <el-select v-model="trainForm.startStation" placeholder="请选择始发站">
+              <el-select v-model="trainForm.startStation" placeholder="请选择始发站" style="width: 100%;">
                 <el-option
                   v-for="station in stationOptions"
                   :key="station.stationName"
                   :label="station.stationName"
                   :value="station.stationName"
+                  :disabled="station.stationName === trainForm.endStation"
                 />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="终点站" prop="endStation">
-              <el-select v-model="trainForm.endStation" placeholder="请选择终点站">
+              <el-select v-model="trainForm.endStation" placeholder="请选择终点站" style="width: 100%;">
                 <el-option
                   v-for="station in stationOptions"
                   :key="station.stationName"
                   :label="station.stationName"
                   :value="station.stationName"
+                  :disabled="station.stationName === trainForm.startStation"
                 />
               </el-select>
             </el-form-item>
