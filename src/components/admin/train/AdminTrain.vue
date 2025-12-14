@@ -298,6 +298,44 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="始发站" prop="startStation">
+              <el-select v-model="trainForm.startStation" placeholder="请选择始发站">
+                <el-option
+                  v-for="station in stationOptions"
+                  :key="station.stationName"
+                  :label="station.stationName"
+                  :value="station.stationName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="终点站" prop="endStation">
+              <el-select v-model="trainForm.endStation" placeholder="请选择终点站">
+                <el-option
+                  v-for="station in stationOptions"
+                  :key="station.stationName"
+                  :label="station.stationName"
+                  :value="station.stationName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="途径站点">
+              <el-input
+                v-model="trainForm.intermediateStations"
+                type="textarea"
+                placeholder="请输入途径站点，多个站点用逗号分隔"
+                :rows="3"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注">
           <el-input
             v-model="trainForm.remark"
@@ -405,6 +443,22 @@
           </div>
         </div>
         <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">始发站：</span>
+            <span class="detail-value">{{ selectedTrain.startStation || '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">终点站：</span>
+            <span class="detail-value">{{ selectedTrain.endStation || '-' }}</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item full-width">
+            <span class="detail-label">途径站点：</span>
+            <span class="detail-value">{{ selectedTrain.intermediateStations || '-' }}</span>
+          </div>
+        </div>
+        <div class="detail-row">
           <div class="detail-item full-width">
             <span class="detail-label">备注：</span>
             <span class="detail-value">{{ selectedTrain.remark || '-' }}</span>
@@ -449,6 +503,8 @@ export default {
       dialogVisible: false,
       dialogType: 'add', // 'add' 或 'edit'
       detailDialogVisible: false,
+      // 车站列表数据
+      stationOptions: [],
       // 表单数据
       trainForm: {
         trainId: '',
@@ -459,6 +515,9 @@ export default {
         status: '',
         lastMaintenanceDate: '',
         remark: '',
+        startStation: '',
+        endStation: '',
+        intermediateStations: '',
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
         hardSleeperCarriages: 0, // 硬卧车厢数量
@@ -483,6 +542,12 @@ export default {
         ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
+        ],
+        startStation: [
+          { required: true, message: '请选择始发站', trigger: 'change' }
+        ],
+        endStation: [
+          { required: true, message: '请选择终点站', trigger: 'change' }
         ],
         // 车厢类型数量验证（必填，根据车型动态显示）
         softSleeperCarriages: [
@@ -520,6 +585,7 @@ export default {
   },
   mounted() {
     this.loadTrainData()
+    this.loadStations()
   },
   methods: {
     // 获取车型标签类型
@@ -644,6 +710,20 @@ export default {
       .finally(() => {
         this.loading = false
       })
+    },
+
+    // 加载车站列表
+    async loadStations() {
+      try {
+        const response = await api.post('/inventory/admin/trainStation', {
+          pageNum: 1,
+          pageSize: 1000 // 设置一个足够大的页码，确保获取所有车站
+        })
+        this.stationOptions = response.data?.data || []
+      } catch (error) {
+        console.error('加载车站列表失败:', error)
+        this.$message.error('加载车站列表失败，请稍后重试')
+      }
     },
 
     // 计算统计数据
@@ -876,6 +956,9 @@ export default {
         status: '',
         lastMaintenanceDate: '',
         remark: '',
+        startStation: '',
+        endStation: '',
+        intermediateStations: '',
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
         hardSleeperCarriages: 0, // 硬卧车厢数量
