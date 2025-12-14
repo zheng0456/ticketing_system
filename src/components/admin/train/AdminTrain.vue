@@ -326,7 +326,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row :gutter="20" v-if="trainForm.startStation && trainForm.endStation">
           <el-col :span="24">
             <el-form-item label="途径站点">
               <el-select
