@@ -340,6 +340,7 @@
                   :key="station.stationName"
                   :label="station.stationName"
                   :value="station.stationName"
+                  :disabled="station.stationName === trainForm.startStation || station.stationName === trainForm.endStation"
                 />
               </el-select>
             </el-form-item>
