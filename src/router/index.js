@@ -12,6 +12,7 @@ import AdminScenery from '../components/admin/ticket/AdminScenery.vue'
 import AdminTicket from '../components/admin/ticket/AdminTicket.vue'
 import AdminTrain from '../components/admin/train/AdminTrain.vue'
 import AdminTrainStation from '../components/admin/train/AdminTrainStation.vue'
+import AdminTrainPassStation from '../components/admin/train/AdminTrainPassStation.vue'
 import UserLogOut from '../components/admin/user/UserLogOut.vue'
 import AdminPermission from '../components/admin/user/AdminPermission.vue'
 
@@ -84,6 +85,12 @@ const routes = [
         name: 'trainStation',
         component: AdminTrainStation,
         meta: { title: '车站管理' }
+      },
+      {
+        path: 'train-pass-station',
+        name: 'trainPassStation',
+        component: AdminTrainPassStation,
+        meta: { title: '途径车站管理' }
       },
       {
         path: 'train-tickets',

@@ -35,6 +35,10 @@
         <router-link to="/admin/trainStation" class="menu-item" active-class="active">
           <span>车站管理</span>
         </router-link>
+        <!-- 途径车站管理 -->
+        <router-link to="/admin/train-pass-station" class="menu-item" active-class="active">
+          <span>途径车站管理</span>
+        </router-link>
       </div>
 
       <!-- 票务管理 -->
