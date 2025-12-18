@@ -360,26 +360,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20" v-if="trainForm.startStation && trainForm.endStation">
-          <el-col :span="24">
-            <el-form-item label="途径站点">
-              <el-select
-                v-model="trainForm.intermediateStations"
-                placeholder="请选择途径站点"
-                multiple
-                style="width: 100%;"
-              >
-                <el-option
-                  v-for="station in stationOptions"
-                  :key="station.id"
-                  :label="station.stationName"
-                  :value="station.id"
-                  :disabled="station.id === trainForm.startStation || station.id === trainForm.endStation"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <el-form-item label="备注">
           <el-input
             v-model="trainForm.remark"
@@ -508,12 +488,6 @@
         </div>
         <div class="detail-row">
           <div class="detail-item full-width">
-            <span class="detail-label">途径站点：</span>
-            <span class="detail-value">{{ getStationNames(selectedTrain.intermediateStations) }}</span>
-          </div>
-        </div>
-        <div class="detail-row">
-          <div class="detail-item full-width">
             <span class="detail-label">备注：</span>
             <span class="detail-value">{{ selectedTrain.remark || '-' }}</span>
           </div>
@@ -573,7 +547,6 @@ export default {
         endStation: '',
         departureTime: '',
         arrivalTime: '',
-        intermediateStations: [],
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
         hardSleeperCarriages: 0, // 硬卧车厢数量
@@ -881,12 +854,6 @@ export default {
         this.trainForm.trainType = trainTypeMap[this.trainForm.trainType] || this.trainForm.trainType
       }
       
-      // 将途径站点字符串转换为数组格式，以便多选下拉框显示
-      if (typeof this.trainForm.intermediateStations === 'string' && this.trainForm.intermediateStations) {
-        this.trainForm.intermediateStations = this.trainForm.intermediateStations.split(',')
-      } else if (!Array.isArray(this.trainForm.intermediateStations)) {
-        this.trainForm.intermediateStations = []
-      }
       this.dialogVisible = true
     },
 
@@ -1007,11 +974,6 @@ export default {
             }
             formData.trainType = trainTypeMap[formData.trainType] || formData.trainType
             
-            // 将途径站点数组转换为逗号分隔的字符串
-            if (Array.isArray(formData.intermediateStations)) {
-              formData.intermediateStations = formData.intermediateStations.join(',')
-            }
-            
             if (this.dialogType === 'add') {
               // 添加车辆
               await api.post('/inventory/admin/train/add', formData)
@@ -1047,7 +1009,6 @@ export default {
         endStation: '',
         departureTime: '',
         arrivalTime: '',
-        intermediateStations: [],
         // 车厢类型数量
         softSleeperCarriages: 0, // 软卧车厢数量
         hardSleeperCarriages: 0, // 硬卧车厢数量

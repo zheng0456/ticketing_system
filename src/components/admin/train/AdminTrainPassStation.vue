@@ -37,7 +37,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="passStationId" label="记录ID" width="150" />
+        <el-table-column prop="passStationId" label="ID" width="150" />
         <el-table-column prop="trainId" label="车辆ID" width="120" />
         <el-table-column prop="trainNumber" label="车次号" width="120" />
         <el-table-column prop="stationId" label="站点ID" width="120" />
