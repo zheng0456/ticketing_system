@@ -81,7 +81,9 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="startStationName" label="始发站" width="200" />
         <el-table-column prop="startTime" label="出发时间" width="200" />
+        <el-table-column prop="endStationName" label="终点站" width="200" />
         <el-table-column prop="endTime" label="到达时间" width="200" />
         <el-table-column prop="runDuration" label="运行时长" width="200" />
         <el-table-column prop="fuyiTime" label="服役年限" width="120">
@@ -909,6 +911,8 @@ export default {
         trainNumber: row.trainNo || '',
         departureTime: row.startTime || '',
         arrivalTime: row.endTime || '',
+        startStation: row.startStationId || '',
+        endStation: row.endStationId || '',
         serviceLife: row.fuyiTime || 0,
         lastMaintenanceDate: row.maintenanceTime || '',
         remark: row.note || '',
