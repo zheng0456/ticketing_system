@@ -73,23 +73,22 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="id" label="车辆ID" width="120" />
         <el-table-column prop="trainNo" label="车次号" width="120" />
-        <el-table-column prop="trainType" label="车型" width="100">
+        <el-table-column prop="trainType" label="车型" width="120">
           <template #default="scope">
             <el-tag :type="getTypeTagType(scope.row.trainType)">
               {{ getTypeText(scope.row.trainType) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="startTime" label="出发时间" width="150" />
-        <el-table-column prop="endTime" label="到达时间" width="150" />
-        <el-table-column prop="fuyiTime" label="服役年限" width="100">
+        <el-table-column prop="startTime" label="出发时间" width="200" />
+        <el-table-column prop="endTime" label="到达时间" width="200" />
+        <el-table-column prop="fuyiTime" label="服役年限" width="120">
           <template #default="scope">
             <span>{{ scope.row.fuyiTime }}年</span>
           </template>
         </el-table-column>
-        <el-table-column prop="operateStatus" label="状态" width="100">
+        <el-table-column prop="operateStatus" label="状态" width="120">
           <template #default="scope">
             <el-tag :type="getStatusTagType(scope.row.operateStatus)">
               {{ getStatusText(scope.row.operateStatus) }}
@@ -388,10 +387,6 @@
     >
       <div class="detail-info">
         <div class="detail-row">
-          <div class="detail-item">
-            <span class="detail-label">车辆ID：</span>
-            <span class="detail-value">{{ selectedTrain.id }}</span>
-          </div>
           <div class="detail-item">
             <span class="detail-label">车次号：</span>
             <span class="detail-value">{{ selectedTrain.trainNo }}</span>
