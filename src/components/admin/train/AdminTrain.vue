@@ -73,8 +73,8 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="trainId" label="车辆ID" width="120" />
-        <el-table-column prop="trainNumber" label="车次号" width="120" />
+        <el-table-column prop="id" label="车辆ID" width="120" />
+        <el-table-column prop="trainNo" label="车次号" width="120" />
         <el-table-column prop="trainType" label="车型" width="100">
           <template #default="scope">
             <el-tag :type="getTypeTagType(scope.row.trainType)">
@@ -82,21 +82,22 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="manufactureDate" label="制造日期" width="150" />
-        <el-table-column prop="serviceLife" label="服役年限" width="100">
+        <el-table-column prop="startTime" label="出发时间" width="150" />
+        <el-table-column prop="endTime" label="到达时间" width="150" />
+        <el-table-column prop="fuyiTime" label="服役年限" width="100">
           <template #default="scope">
-            <span>{{ scope.row.serviceLife }}年</span>
+            <span>{{ scope.row.fuyiTime }}年</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="operateStatus" label="状态" width="100">
           <template #default="scope">
-            <el-tag :type="getStatusTagType(scope.row.status)">
-              {{ getStatusText(scope.row.status) }}
+            <el-tag :type="getStatusTagType(scope.row.operateStatus)">
+              {{ getStatusText(scope.row.operateStatus) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="lastMaintenanceDate" label="最后检修日期" width="150" />
-        <el-table-column prop="remark" label="备注" width="180" />
+        <el-table-column prop="maintenance_time" label="最后检修日期" width="150" />
+        <el-table-column prop="note" label="备注" width="180" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="scope">
             <div style="display: flex; align-items: center;">
@@ -389,11 +390,11 @@
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">车辆ID：</span>
-            <span class="detail-value">{{ selectedTrain.trainId }}</span>
+            <span class="detail-value">{{ selectedTrain.id }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">车次号：</span>
-            <span class="detail-value">{{ selectedTrain.trainNumber }}</span>
+            <span class="detail-value">{{ selectedTrain.trainNo }}</span>
           </div>
         </div>
         <div class="detail-row">
@@ -408,8 +409,8 @@
           <div class="detail-item">
             <span class="detail-label">状态：</span>
             <span class="detail-value">
-              <el-tag :type="getStatusTagType(selectedTrain.status)">
-                {{ getStatusText(selectedTrain.status) }}
+              <el-tag :type="getStatusTagType(selectedTrain.operateStatus)">
+                {{ getStatusText(selectedTrain.operateStatus) }}
               </el-tag>
             </span>
           </div>
@@ -450,48 +451,54 @@
         </div>
         <div class="detail-row">
           <div class="detail-item">
-            <span class="detail-label">制造日期：</span>
-            <span class="detail-value">{{ selectedTrain.manufactureDate }}</span>
+            <span class="detail-label">创建时间：</span>
+            <span class="detail-value">{{ selectedTrain.createTime }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">服役年限：</span>
-            <span class="detail-value">{{ selectedTrain.serviceLife }}年</span>
+            <span class="detail-value">{{ selectedTrain.fuyiTime }}年</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">最后检修日期：</span>
-            <span class="detail-value">{{ selectedTrain.lastMaintenanceDate }}</span>
+            <span class="detail-value">{{ selectedTrain.maintenance_time || '-' }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">下一次检修日期：</span>
-            <span class="detail-value">{{ getNextMaintenanceDate(selectedTrain.lastMaintenanceDate) }}</span>
+            <span class="detail-value">{{ getNextMaintenanceDate(selectedTrain.maintenance_time) }}</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">始发站：</span>
-            <span class="detail-value">{{ getStationName(selectedTrain.startStation) }}</span>
+            <span class="detail-value">{{ getStationName(selectedTrain.startStationId) }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">终点站：</span>
-            <span class="detail-value">{{ getStationName(selectedTrain.endStation) }}</span>
+            <span class="detail-value">{{ getStationName(selectedTrain.endStationId) }}</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">出发时间：</span>
-            <span class="detail-value">{{ selectedTrain.departureTime || '-' }}</span>
+            <span class="detail-value">{{ selectedTrain.startTime || '-' }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">到达时间：</span>
-            <span class="detail-value">{{ selectedTrain.arrivalTime || '-' }}</span>
+            <span class="detail-value">{{ selectedTrain.endTime || '-' }}</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">运行时长：</span>
+            <span class="detail-value">{{ selectedTrain.runDuration || '-' }}</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item full-width">
             <span class="detail-label">备注：</span>
-            <span class="detail-value">{{ selectedTrain.remark || '-' }}</span>
+            <span class="detail-value">{{ selectedTrain.note || '-' }}</span>
           </div>
         </div>
       </div>
@@ -745,17 +752,90 @@ export default {
         pageSize: this.pagination.pageSize
       })
       .then(response => {
+        console.log('完整响应对象:', response)
+        console.log('响应状态:', response.status)
+        console.log('响应状态文本:', response.statusText)
         const data = response.data
-        // 设置车辆列表
-        this.trainList = data.list || []
-        // 更新分页信息
-        this.pagination.total = data.total || 0
+        // 打印接口返回的数据到控制台
+        console.log('接口返回的数据:', data)
+        // 打印数据类型
+        console.log('数据类型:', Array.isArray(data) ? '数组' : typeof data)
+        
+        // 打印数据的所有属性
+        console.log('数据属性:', Object.keys(data))
+        
+        // 设置车辆列表 - 处理多种数据格式
+        let trainData = []
+        let totalCount = 0
+        
+        // 如果是直接返回ArrayList数组
+        if (Array.isArray(data)) {
+          console.log('直接使用数组数据，长度:', data.length)
+          trainData = data
+          totalCount = data.length
+        } 
+        // 如果是包含list字段的对象
+        else if (data && data.list) {
+          console.log('使用data.list字段，类型:', Array.isArray(data.list) ? '数组' : typeof data.list, '长度:', Array.isArray(data.list) ? data.list.length : 0)
+          trainData = Array.isArray(data.list) ? data.list : []
+          totalCount = data.total || 0
+        } 
+        // 如果是包含data字段的对象（可能的其他格式）
+        else if (data && data.data) {
+          console.log('使用data.data字段，类型:', Array.isArray(data.data) ? '数组' : typeof data.data, '长度:', Array.isArray(data.data) ? data.data.length : 0)
+          trainData = Array.isArray(data.data) ? data.data : []
+          totalCount = data.total || trainData.length
+        }
+        // 如果是包含records字段的对象（Ant Design Pro 常用格式）
+        else if (data && data.records) {
+          console.log('使用data.records字段，类型:', Array.isArray(data.records) ? '数组' : typeof data.records, '长度:', Array.isArray(data.records) ? data.records.length : 0)
+          trainData = Array.isArray(data.records) ? data.records : []
+          totalCount = data.total || trainData.length
+        }
+        // 如果是包含items字段的对象（另一种常见格式）
+        else if (data && data.items) {
+          console.log('使用data.items字段，类型:', Array.isArray(data.items) ? '数组' : typeof data.items, '长度:', Array.isArray(data.items) ? data.items.length : 0)
+          trainData = Array.isArray(data.items) ? data.items : []
+          totalCount = data.total || trainData.length
+        } 
+        // 默认处理
+        else {
+          console.log('未识别的数据格式，设置为空数组')
+          trainData = []
+          totalCount = 0
+        }
+        
+        // 打印处理后的数据
+        console.log('处理后的trainData:', trainData)
+        console.log('处理后的trainData长度:', trainData.length)
+        console.log('处理后的totalCount:', totalCount)
+        
+        // 设置到组件数据
+        this.trainList = trainData
+        this.pagination.total = totalCount
+        
+        console.log('组件trainList:', this.trainList)
+        console.log('组件trainList长度:', this.trainList.length)
+        
         // 计算统计数据
         this.calculateStatistics(this.trainList)
       })
       .catch(error => {
         console.error('加载车辆数据失败:', error)
+        console.error('错误配置:', error.config)
+        if (error.response) {
+          console.error('错误响应状态:', error.response.status)
+          console.error('错误响应数据:', error.response.data)
+        } else if (error.request) {
+          console.error('没有收到响应:', error.request)
+        } else {
+          console.error('请求错误:', error.message)
+        }
         this.$message.error('加载车辆数据失败，请稍后重试')
+        // 确保trainList至少是空数组
+        this.trainList = []
+        this.pagination.total = 0
+        this.calculateStatistics(this.trainList)
       })
       .finally(() => {
         this.loading = false
@@ -779,30 +859,30 @@ export default {
     // 计算统计数据
     calculateStatistics(data) {
       this.totalTrains = data.length
-      // 统一使用数字状态进行过滤
+      // 统一使用数字状态进行过滤，使用operateStatus字段
       this.runningTrains = data.filter(item => {
         // 处理可能的字符串状态（如从后端返回的数字或前端显示的字符串）
-        const status = typeof item.status === 'string' ? {
+        const status = typeof item.operateStatus === 'string' ? {
           'running': 1,
           'maintenance': 2,
           'stopped': 0
-        }[item.status] || item.status : item.status
+        }[item.operateStatus] || item.operateStatus : item.operateStatus
         return status === 1
       }).length
       this.maintenanceTrains = data.filter(item => {
-        const status = typeof item.status === 'string' ? {
+        const status = typeof item.operateStatus === 'string' ? {
           'running': 1,
           'maintenance': 2,
           'stopped': 0
-        }[item.status] || item.status : item.status
+        }[item.operateStatus] || item.operateStatus : item.operateStatus
         return status === 2
       }).length
       this.stoppedTrains = data.filter(item => {
-        const status = typeof item.status === 'string' ? {
+        const status = typeof item.operateStatus === 'string' ? {
           'running': 1,
           'maintenance': 2,
           'stopped': 0
-        }[item.status] || item.status : item.status
+        }[item.operateStatus] || item.operateStatus : item.operateStatus
         return status === 0
       }).length
     },
