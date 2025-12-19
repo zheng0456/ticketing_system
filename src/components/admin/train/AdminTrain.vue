@@ -83,6 +83,7 @@
         </el-table-column>
         <el-table-column prop="startTime" label="出发时间" width="200" />
         <el-table-column prop="endTime" label="到达时间" width="200" />
+        <el-table-column prop="runDuration" label="运行时长" width="200" />
         <el-table-column prop="fuyiTime" label="服役年限" width="120">
           <template #default="scope">
             <span>{{ scope.row.fuyiTime }}年</span>
@@ -391,6 +392,7 @@
             <span class="detail-label">车次号：</span>
             <span class="detail-value">{{ selectedTrain.trainNo }}</span>
           </div>
+          <div class="detail-item"></div>
         </div>
         <div class="detail-row">
           <div class="detail-item">
@@ -456,16 +458,6 @@
         </div>
         <div class="detail-row">
           <div class="detail-item">
-            <span class="detail-label">最后检修日期：</span>
-            <span class="detail-value">{{ selectedTrain.maintenance_time || '-' }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">下一次检修日期：</span>
-            <span class="detail-value">{{ getNextMaintenanceDate(selectedTrain.maintenance_time) }}</span>
-          </div>
-        </div>
-        <div class="detail-row">
-          <div class="detail-item">
             <span class="detail-label">始发站：</span>
             <span class="detail-value">{{ getStationName(selectedTrain.startStationId) }}</span>
           </div>
@@ -489,6 +481,7 @@
             <span class="detail-label">运行时长：</span>
             <span class="detail-value">{{ selectedTrain.runDuration || '-' }}</span>
           </div>
+          <div class="detail-item"></div>
         </div>
         <div class="detail-row">
           <div class="detail-item full-width">
