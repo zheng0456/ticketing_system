@@ -976,8 +976,8 @@ export default {
             }
             formData.trainType = trainTypeMap[formData.trainType] || formData.trainType
             
-            // 确保服役年限为浮点数格式（如0.0）
-            formData.serviceLife = Number(formData.serviceLife).toFixed(1) * 1
+            // 确保服役年限为字符串格式的浮点数（如"1.0"），防止JSON序列化时丢失小数位
+            formData.serviceLife = parseFloat(formData.serviceLife).toFixed(1)
             
             if (this.dialogType === 'add') {
               // 添加车辆
