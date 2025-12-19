@@ -293,6 +293,8 @@
                 v-model="trainForm.serviceLife"
                 :min="0"
                 :max="30"
+                :step="0.1"
+                :precision="1"
                 placeholder="请输入服役年限"
               />
             </el-form-item>
@@ -539,7 +541,7 @@ export default {
         trainNumber: '',
         trainType: '',
         manufactureDate: '',
-        serviceLife: 0,
+        serviceLife: 0.0,
         status: '',
         lastMaintenanceDate: '',
         remark: '',
@@ -974,9 +976,13 @@ export default {
             }
             formData.trainType = trainTypeMap[formData.trainType] || formData.trainType
             
+            // 确保服役年限为浮点数格式（如0.0）
+            formData.serviceLife = Number(formData.serviceLife).toFixed(1) * 1
+            
             if (this.dialogType === 'add') {
               // 添加车辆
-              await api.post('/inventory/admin/train/add', formData)
+              const addResponse = await api.post('/inventory/admin/train/add', formData)
+              console.log('添加列车API返回数据:', addResponse.data)
             } else {
               // 编辑车辆
               await api.put('/inventory/admin/train/update', formData)
@@ -1001,7 +1007,7 @@ export default {
         trainNumber: '',
         trainType: '',
         manufactureDate: '',
-        serviceLife: 0,
+        serviceLife: 0.0,
         status: '',
         lastMaintenanceDate: '',
         remark: '',
