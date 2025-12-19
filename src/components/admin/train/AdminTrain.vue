@@ -95,7 +95,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="maintenance_time" label="最后检修日期" width="150" />
+        <el-table-column prop="maintenanceTime" label="最后检修日期" width="200" />
         <el-table-column prop="note" label="备注" width="180" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="scope">
