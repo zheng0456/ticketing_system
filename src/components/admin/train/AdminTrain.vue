@@ -902,8 +902,20 @@ export default {
     // 编辑车辆
     handleEdit(row) {
       this.dialogType = 'edit'
-      // 复制行数据
-      this.trainForm = { ...row }
+      // 复制行数据并映射字段名
+      this.trainForm = {
+        ...row,
+        // 映射字段名到表单使用的字段
+        trainNumber: row.trainNo || '',
+        departureTime: row.startTime || '',
+        arrivalTime: row.endTime || '',
+        serviceLife: row.fuyiTime || 0,
+        lastMaintenanceDate: row.maintenanceTime || '',
+        remark: row.note || '',
+        status: row.operateStatus,
+        manufactureDate: row.manufactureDate || new Date()
+      }
+      
       // 将数字状态转换为字符串格式，以便下拉选择框显示
       const statusMap = {
         1: 'running',  // 运行中
@@ -1074,7 +1086,7 @@ export default {
         trainId: '',
         trainNumber: '',
         trainType: '',
-        manufactureDate: '',
+        manufactureDate: new Date(),
         serviceLife: 0.0,
         status: '',
         lastMaintenanceDate: '',
