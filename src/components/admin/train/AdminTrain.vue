@@ -158,14 +158,15 @@
         label-width="120px"
         style="padding-right: 40px;"
       >
-        <el-row :gutter="20">
+        <!-- 仅在添加时显示车次号和车型 -->
+        <el-row :gutter="20" v-if="dialogType === 'add'">
           <el-col :span="12">
             <el-form-item label="车次号" prop="trainNumber">
               <el-input v-model="trainForm.trainNumber" placeholder="请输入车次号" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row :gutter="20" v-if="dialogType === 'add'">
           <el-col :span="12">
             <el-form-item label="车型" prop="trainType">
               <el-select v-model="trainForm.trainType" placeholder="请选择车型">
@@ -176,8 +177,8 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- 软卧、硬卧、硬座车厢数量（普通列车和动车） -->
-        <el-row :gutter="20" v-if="trainForm.trainType === 'normal' || trainForm.trainType === 'bullet'">
+        <!-- 软卧、硬卧、硬座车厢数量（普通列车和动车）-仅在添加时显示 -->
+        <el-row :gutter="20" v-if="(trainForm.trainType === 'normal' || trainForm.trainType === 'bullet') && dialogType === 'add'">
           <el-col :span="12">
             <el-form-item label="软卧车厢数量" prop="softSleeperCarriages">
               <el-input-number
@@ -203,7 +204,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20" v-if="trainForm.trainType === 'normal' || trainForm.trainType === 'bullet'">
+        <el-row :gutter="20" v-if="(trainForm.trainType === 'normal' || trainForm.trainType === 'bullet') && dialogType === 'add'">
           <el-col :span="12">
             <el-form-item label="硬座车厢数量" prop="hardSeatCarriages">
               <el-input-number
@@ -217,8 +218,8 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- 一等座、二等座、商务座车厢数量（高铁） -->
-        <el-row :gutter="20" v-if="trainForm.trainType === 'high-speed'">
+        <!-- 一等座、二等座、商务座车厢数量（高铁）-仅在添加时显示 -->
+        <el-row :gutter="20" v-if="trainForm.trainType === 'high-speed' && dialogType === 'add'">
           <el-col :span="12">
             <el-form-item label="一等座车厢数量" prop="firstClassCarriages">
               <el-input-number
@@ -244,7 +245,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20" v-if="trainForm.trainType === 'high-speed'">
+        <el-row :gutter="20" v-if="trainForm.trainType === 'high-speed' && dialogType === 'add'">
           <el-col :span="12">
             <el-form-item label="商务座车厢数量" prop="businessClassCarriages">
               <el-input-number
@@ -259,7 +260,8 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="12">
+          <!-- 仅在添加时显示制造日期 -->
+          <el-col :span="12" v-if="dialogType === 'add'">
             <el-form-item label="制造日期" prop="manufactureDate">
               <el-date-picker
                 v-model="trainForm.manufactureDate"
@@ -269,7 +271,8 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- 状态字段始终显示，在编辑时占据整行 -->
+          <el-col :span="dialogType === 'add' ? 12 : 24">
             <el-form-item label="状态" prop="status">
               <el-select v-model="trainForm.status" placeholder="请选择状态">
                 <el-option label="运行中" value="running" />
