@@ -911,6 +911,7 @@ export default {
       this.trainForm = {
         ...row,
         // 映射字段名到表单使用的字段
+        trainId: row.trainId === undefined ? '' : row.trainId, // 使用正确的字段名trainId，确保数字0被保留
         trainNumber: row.trainNo || '',
         departureTime: row.startTime || '',
         arrivalTime: row.endTime || '',
@@ -960,8 +961,13 @@ export default {
           type: 'warning'
         })
         
-        // 发送删除请求
-        await api.delete(`/inventory/admin/train/delete/${row.trainId}`)
+        // 发送删除请求（使用批量删除接口，传递列表形式的ID）
+        console.log('删除列车API请求信息:', {
+          url: `/inventory/admin/train/deletes`,
+          trainIds: [row.id],
+          trainNumber: row.trainNumber
+        })
+        await api.post(`/inventory/admin/train/deletes`, { ids: [row.id] })
         this.$message.success('删除成功')
         this.loadTrainData()
       } catch (error) {
@@ -985,10 +991,16 @@ export default {
           type: 'warning'
         })
         
-        // 获取选中的车辆ID列表
-        const ids = this.selectedRows.map(row => row.trainId).join(',')
+        // 获取选中的车辆ID列表（数组形式）
+        const ids = this.selectedRows.map(row => row.id)
+        // 打印批量删除日志
+        console.log('批量删除列车API请求信息:', {
+          url: `/inventory/admin/train/deletes`,
+          trainIds: ids,
+          totalCount: this.selectedRows.length
+        })
         // 发送批量删除请求
-        await api.delete(`/inventory/admin/train/deletes/${ids}`)
+        await api.post(`/inventory/admin/train/deletes`, { ids })
         this.$message.success('批量删除成功')
         this.loadTrainData()
       } catch (error) {
@@ -1068,11 +1080,19 @@ export default {
             
             if (this.dialogType === 'add') {
               // 添加车辆
+              console.log('添加列车API请求信息:', {
+                url: '/inventory/admin/train/add',
+                data: formData
+              })
               const addResponse = await api.post('/inventory/admin/train/add', formData)
               console.log('添加列车API返回数据:', addResponse.data)
             } else {
               // 编辑车辆
-              await api.put('/inventory/admin/train/update', formData)
+              console.log('编辑列车API请求信息:', {
+                url: `/inventory/admin/train/update/${formData.id}`,
+                data: formData
+              })
+              await api.put(`/inventory/admin/train/update/${formData.id}`, formData)
             }
             this.$message.success(`${this.dialogType === 'add' ? '添加' : '编辑'}成功`)
             this.dialogVisible = false
