@@ -967,7 +967,7 @@ export default {
           trainIds: [row.id],
           trainNumber: row.trainNumber
         })
-        await api.post(`/inventory/admin/train/deletes`, { ids: [row.id] })
+        await api.post(`/inventory/admin/train/deletes`, [row.id])
         this.$message.success('删除成功')
         this.loadTrainData()
       } catch (error) {
@@ -1000,7 +1000,7 @@ export default {
           totalCount: this.selectedRows.length
         })
         // 发送批量删除请求
-        await api.post(`/inventory/admin/train/deletes`, { ids })
+        await api.post(`/inventory/admin/train/deletes`, ids)
         this.$message.success('批量删除成功')
         this.loadTrainData()
       } catch (error) {
