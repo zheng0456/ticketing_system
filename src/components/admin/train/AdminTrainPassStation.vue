@@ -23,7 +23,7 @@
       </div>
 
       <div class="operation-bar">
-        <el-button type="success" @click="handleAdd">添加站点</el-button>
+        <el-button type="success" @click="handleAdd">添加途径站点</el-button>
         <el-button type="danger" @click="handleBatchDelete" :disabled="selectedRows.length === 0">批量删除</el-button>
       </div>
     </div>
@@ -101,9 +101,9 @@
               <el-select v-model="passStationForm.trainId" placeholder="请选择车次号" style="width: 100%;">
                 <el-option
                   v-for="train in trainOptions"
-                  :key="train.trainId"
-                  :label="train.trainNumber"
-                  :value="train.trainId"
+                  :key="train.trainId || train.id"
+                  :label="train.trainNumber || train.trainNo"
+                  :value="train.trainId || train.id"
                 />
               </el-select>
             </el-form-item>
@@ -113,9 +113,9 @@
               <el-select v-model="passStationForm.stationId" placeholder="请选择站点" style="width: 100%;">
                 <el-option
                   v-for="station in stationOptions"
-                  :key="station.stationId"
-                  :label="station.stationName"
-                  :value="station.stationId"
+                  :key="station.stationId || station.id"
+                  :label="station.stationName || station.name"
+                  :value="station.stationId || station.id"
                 />
               </el-select>
             </el-form-item>
@@ -149,6 +149,20 @@
                 :picker-options="{
                   selectableRange: '00:00:00-23:59:59'
                 }"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="途径顺序" prop="passStationOrder">
+              <el-input
+                v-model="passStationForm.passStationOrder"
+                type="number"
+                placeholder="请输入途径顺序"
+                style="width: 100%;"
+                :min="1"
+                :step="1"
               />
             </el-form-item>
           </el-col>
@@ -201,7 +215,8 @@ export default {
         trainId: '',
         stationId: '',
         arrivalTime: '',
-        departureTime: ''
+        departureTime: '',
+        passStationOrder: ''
       },
       // 表单验证规则
       formRules: {
@@ -216,6 +231,21 @@ export default {
         ],
         departureTime: [
           { required: true, message: '请选择离开时间', trigger: 'change' }
+        ],
+        passStationOrder: [
+          { required: true, message: '请输入途径顺序', trigger: 'blur' },
+          { 
+            validator: (rule, value, callback) => {
+              if (value <= 0) {
+                callback(new Error('途径顺序必须是正整数'));
+              } else if (!Number.isInteger(Number(value))) {
+                callback(new Error('途径顺序必须是正整数'));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur'
+          }
         ]
       }
     };
@@ -252,8 +282,35 @@ export default {
           page: 1,
           pageSize: 1000
         });
-        this.trainOptions = response.data.list || [];
+        console.log('从 /inventory/admin/train 接口获取的车辆数据:', response.data);
+        const data = response.data;
+        let trainData = [];
+        
+        // 处理多种数据格式，与AdminTrain.vue保持一致
+        if (Array.isArray(data)) {
+          trainData = data;
+        } else if (data && data.list) {
+          trainData = Array.isArray(data.list) ? data.list : [];
+        } else if (data && data.data) {
+          trainData = Array.isArray(data.data) ? data.data : [];
+        } else if (data && data.records) {
+          trainData = Array.isArray(data.records) ? data.records : [];
+        } else if (data && data.items) {
+          trainData = Array.isArray(data.items) ? data.items : [];
+        } else {
+          // 如果以上格式都不匹配，尝试直接使用data
+          trainData = data;
+        }
+        
+        // 确保trainData是数组
+        if (!Array.isArray(trainData)) {
+          trainData = [];
+        }
+        
+        console.log('处理后的车辆数据:', trainData);
+        this.trainOptions = trainData;
       } catch (error) {
+        console.error('加载车辆列表失败:', error);
         this.$message.error('加载车辆列表失败：' + error.message);
       }
     },
@@ -265,8 +322,35 @@ export default {
           pageNum: 1,
           pageSize: 1000
         });
-        this.stationOptions = response.data.data || [];
+        console.log('从 /inventory/admin/trainStation 接口获取的站点数据:', response.data);
+        const data = response.data;
+        let stationData = [];
+        
+        // 处理多种数据格式，与AdminTrain.vue保持一致
+        if (Array.isArray(data)) {
+          stationData = data;
+        } else if (data && data.list) {
+          stationData = Array.isArray(data.list) ? data.list : [];
+        } else if (data && data.data) {
+          stationData = Array.isArray(data.data) ? data.data : [];
+        } else if (data && data.records) {
+          stationData = Array.isArray(data.records) ? data.records : [];
+        } else if (data && data.items) {
+          stationData = Array.isArray(data.items) ? data.items : [];
+        } else {
+          // 如果以上格式都不匹配，尝试直接使用data
+          stationData = data;
+        }
+        
+        // 确保stationData是数组
+        if (!Array.isArray(stationData)) {
+          stationData = [];
+        }
+        
+        console.log('处理后的站点数据:', stationData);
+        this.stationOptions = stationData;
       } catch (error) {
+        console.error('加载站点列表失败:', error);
         this.$message.error('加载站点列表失败：' + error.message);
       }
     },
@@ -312,7 +396,8 @@ export default {
         trainId: '',
         stationId: '',
         arrivalTime: '',
-        departureTime: ''
+        departureTime: '',
+        passStationOrder: ''
       };
       this.dialogVisible = true;
     },
@@ -325,7 +410,8 @@ export default {
         trainId: row.trainId,
         stationId: row.stationId,
         arrivalTime: row.arrivalTime,
-        departureTime: row.departureTime
+        departureTime: row.departureTime,
+        passStationOrder: row.passStationOrder
       };
       this.dialogVisible = true;
     },
