@@ -459,8 +459,8 @@ export default {
         // 参考AdminTrain.vue的实现，确保字段名与后端接口匹配
         const submitData = {
           ...this.passStationForm,
-          stationId: Number(this.passStationForm.stationId),
-          trainId: Number(this.passStationForm.trainId)
+          stationId: this.passStationForm.stationId,
+          trainId: this.passStationForm.trainId
         };
         
         console.log('提交到后端的数据:', submitData);
