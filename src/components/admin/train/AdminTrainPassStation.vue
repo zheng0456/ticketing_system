@@ -493,9 +493,9 @@ export default {
         // 打印删除日志
         console.log('删除经停站API请求信息:', {
           url: '/inventory/admin/trainPassStation/delete',
-          passStationId: row.id
+          passStationIds: [row.id]
         })
-        await api.post('/inventory/admin/trainPassStation/delete', { passStationId: row.id });
+        await api.post('/inventory/admin/trainPassStation/delete', { passStationIds: [row.id] });
         this.$message.success('删除成功');
         this.loadPassStationData();
       } catch (error) {
@@ -522,11 +522,11 @@ export default {
         const ids = this.selectedRows.map(row => row.id);
         // 打印批量删除日志
         console.log('批量删除经停站API请求信息:', {
-          url: '/inventory/admin/trainPassStation/deleteBatch',
+          url: '/inventory/admin/trainPassStation/delete',
           passStationIds: ids,
           totalCount: this.selectedRows.length
         })
-        await api.post('/inventory/admin/trainPassStation/deleteBatch', { passStationIds: ids });
+        await api.post('/inventory/admin/trainPassStation/delete', { passStationIds: ids });
         this.$message.success('批量删除成功');
         this.loadPassStationData();
       } catch (error) {
