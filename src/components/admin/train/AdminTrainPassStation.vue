@@ -38,7 +38,6 @@
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="trainNumber" label="车次号" width="120" />
-        <el-table-column prop="stationId" label="途经站点ID" width="120" />
         <el-table-column prop="stationName" label="站点名称" width="150" />
         <el-table-column prop="passOrder" label="途经顺序" width="120" />
         <el-table-column prop="arriveTime" label="到达时间" width="180" />
