@@ -37,14 +37,13 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="passStationId" label="ID" width="150" />
-        <el-table-column prop="trainId" label="车辆ID" width="120" />
         <el-table-column prop="trainNumber" label="车次号" width="120" />
-        <el-table-column prop="stationId" label="站点ID" width="120" />
+        <el-table-column prop="stationId" label="途经站点ID" width="120" />
         <el-table-column prop="stationName" label="站点名称" width="150" />
-        <el-table-column prop="arrivalTime" label="到达时间" width="180" />
-        <el-table-column prop="departureTime" label="离开时间" width="180" />
-        <el-table-column prop="stopDuration" label="停留时长（分钟）" width="150" />
+        <el-table-column prop="passOrder" label="途经顺序" width="120" />
+        <el-table-column prop="arriveTime" label="到达时间" width="180" />
+        <el-table-column prop="departTime" label="离开时间" width="180" />
+        <el-table-column prop="stayDuration" label="停留时长" width="150" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="scope">
             <div style="display: flex; align-items: center;">
@@ -124,47 +123,47 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="到达时间" prop="arrivalTime">
-              <el-date-picker
-                v-model="passStationForm.arrivalTime"
-                type="datetime"
-                placeholder="请选择到达时间"
-                format="YYYY-MM-DD HH:mm:ss"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                style="width: 100%;"
-                :picker-options="{
-                  selectableRange: '00:00:00-23:59:59'
-                }"
-              />
-            </el-form-item>
+          <el-date-picker
+            v-model="passStationForm.arrivalTime"
+            type="datetime"
+            placeholder="请选择到达时间"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            style="width: 100%;"
+            :picker-options="{
+              selectableRange: '00:00:00-23:59:59'
+            }"
+          />
+        </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="离开时间" prop="departureTime">
-              <el-date-picker
-                v-model="passStationForm.departureTime"
-                type="datetime"
-                placeholder="请选择离开时间"
-                format="YYYY-MM-DD HH:mm:ss"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                style="width: 100%;"
-                :picker-options="{
-                  selectableRange: '00:00:00-23:59:59'
-                }"
-              />
-            </el-form-item>
+          <el-date-picker
+            v-model="passStationForm.departureTime"
+            type="datetime"
+            placeholder="请选择离开时间"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            style="width: 100%;"
+            :picker-options="{
+              selectableRange: '00:00:00-23:59:59'
+            }"
+          />
+        </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="途径顺序" prop="passStationOrder">
-              <el-input
-                v-model="passStationForm.passStationOrder"
-                type="number"
-                placeholder="请输入途径顺序"
-                style="width: 100%;"
-                :min="1"
-                :step="1"
-              />
-            </el-form-item>
+          <el-input
+            v-model="passStationForm.passStationOrder"
+            type="number"
+            placeholder="请输入途径顺序"
+            style="width: 100%;"
+            :min="1"
+            :step="1"
+          />
+        </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -266,8 +265,35 @@ export default {
           trainNumber: this.searchParams.trainNumber,
           stationName: this.searchParams.stationName
         });
-        this.passStationList = response.data.list || [];
-        this.pagination.total = response.data.total || 0;
+        console.log('从 /inventory/admin/trainPassStation 接口获取的数据:', response.data);
+        const data = response.data;
+        let stationListData = [];
+        let totalCount = 0;
+        
+        // 处理多种数据格式，与loadTrainOptions和loadStationOptions保持一致
+        if (Array.isArray(data)) {
+          stationListData = data;
+          totalCount = data.length;
+        } else if (data && data.list) {
+          stationListData = Array.isArray(data.list) ? data.list : [];
+          totalCount = data.total || 0;
+        } else if (data && data.data) {
+          stationListData = Array.isArray(data.data) ? data.data : [];
+          totalCount = data.total || 0;
+        } else if (data && data.records) {
+          stationListData = Array.isArray(data.records) ? data.records : [];
+          totalCount = data.total || 0;
+        } else if (data && data.items) {
+          stationListData = Array.isArray(data.items) ? data.items : [];
+          totalCount = data.total || 0;
+        } else {
+          // 如果以上格式都不匹配，尝试直接使用data
+          stationListData = Array.isArray(data) ? data : [];
+          totalCount = stationListData.length;
+        }
+        
+        this.passStationList = stationListData;
+        this.pagination.total = totalCount;
       } catch (error) {
         this.$message.error('加载数据失败：' + error.message);
       } finally {
@@ -406,12 +432,12 @@ export default {
     handleEdit(row) {
       this.dialogType = 'edit';
       this.passStationForm = {
-        passStationId: row.passStationId,
-        trainId: row.trainId,
-        stationId: row.stationId,
-        arrivalTime: row.arrivalTime,
-        departureTime: row.departureTime,
-        passStationOrder: row.passStationOrder
+        passStationId: row.id || '',
+        trainId: row.trainId === undefined ? '' : row.trainId, // 使用正确的字段名trainId，确保数字0被保留
+        stationId: row.stationId || '',
+        arrivalTime: row.arriveTime || '',
+        departureTime: row.departTime || '',
+        passStationOrder: row.passOrder || ''
       };
       this.dialogVisible = true;
     },
@@ -429,11 +455,21 @@ export default {
           }
         }
 
+        // 创建提交数据对象并转换stationId和trainId为Number类型
+        // 参考AdminTrain.vue的实现，确保字段名与后端接口匹配
+        const submitData = {
+          ...this.passStationForm,
+          stationId: Number(this.passStationForm.stationId),
+          trainId: Number(this.passStationForm.trainId)
+        };
+        
+        console.log('提交到后端的数据:', submitData);
+
         if (this.dialogType === 'add') {
-          await api.post('/inventory/admin/trainPassStation/add', this.passStationForm);
+          await api.post('/inventory/admin/trainPassStation/add', submitData);
           this.$message.success('添加成功');
         } else {
-          await api.post('/inventory/admin/trainPassStation/update', this.passStationForm);
+          await api.post('/inventory/admin/trainPassStation/update', submitData);
           this.$message.success('编辑成功');
         }
         
@@ -458,9 +494,9 @@ export default {
         // 打印删除日志
         console.log('删除经停站API请求信息:', {
           url: '/inventory/admin/trainPassStation/delete',
-          passStationId: row.passStationId
+          passStationId: row.id
         })
-        await api.post('/inventory/admin/trainPassStation/delete', { passStationId: row.passStationId });
+        await api.post('/inventory/admin/trainPassStation/delete', { passStationId: row.id });
         this.$message.success('删除成功');
         this.loadPassStationData();
       } catch (error) {
@@ -484,7 +520,7 @@ export default {
           type: 'warning'
         });
         
-        const ids = this.selectedRows.map(row => row.passStationId);
+        const ids = this.selectedRows.map(row => row.id);
         // 打印批量删除日志
         console.log('批量删除经停站API请求信息:', {
           url: '/inventory/admin/trainPassStation/deleteBatch',
