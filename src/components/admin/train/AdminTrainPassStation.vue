@@ -493,9 +493,10 @@ export default {
         // 打印删除日志
         console.log('删除经停站API请求信息:', {
           url: '/inventory/admin/trainPassStation/delete',
-          passStationIds: [row.id]
+          passStationIds: [row.id || row.passStationId]
         })
-        await api.post('/inventory/admin/trainPassStation/delete', { passStationIds: [row.id] });
+        // 直接传递ID数组，与AdminTrain.vue保持一致的请求格式
+        await api.post('/inventory/admin/trainPassStation/delete', [row.id || row.passStationId]);
         this.$message.success('删除成功');
         this.loadPassStationData();
       } catch (error) {
@@ -519,14 +520,15 @@ export default {
           type: 'warning'
         });
         
-        const ids = this.selectedRows.map(row => row.id);
+        const ids = this.selectedRows.map(row => row.id || row.passStationId);
         // 打印批量删除日志
         console.log('批量删除经停站API请求信息:', {
           url: '/inventory/admin/trainPassStation/delete',
           passStationIds: ids,
           totalCount: this.selectedRows.length
         })
-        await api.post('/inventory/admin/trainPassStation/delete', { passStationIds: ids });
+        // 直接传递ID数组，与AdminTrain.vue保持一致的请求格式
+        await api.post('/inventory/admin/trainPassStation/delete', ids);
         this.$message.success('批量删除成功');
         this.loadPassStationData();
       } catch (error) {
