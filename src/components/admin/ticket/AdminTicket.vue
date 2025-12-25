@@ -25,7 +25,6 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="index" label="编号" width="80" type="index" />
       <el-table-column prop="trainNumber" label="车次" width="120" />
       <el-table-column prop="departureStation" label="出发站" width="150" />
       <el-table-column prop="arrivalStation" label="到达站" width="150" />
@@ -99,20 +98,11 @@
         <el-form-item label="到达站" prop="arrivalStation">
           <el-input v-model="ticketForm.arrivalStation" placeholder="请输入到达站" />
         </el-form-item>
-        <el-form-item label="出发时间" prop="departureTime">
-          <el-input v-model="ticketForm.departureTime" placeholder="请输入出发时间" />
-        </el-form-item>
-        <el-form-item label="到达时间" prop="arrivalTime">
-          <el-input v-model="ticketForm.arrivalTime" placeholder="请输入到达时间" />
-        </el-form-item>
         <el-form-item label="价格" prop="price">
           <el-input v-model.number="ticketForm.price" placeholder="请输入价格" type="number" />
         </el-form-item>
-        <el-form-item label="座位数" prop="seatCount">
+        <el-form-item label="座位类型" prop="seatCount">
           <el-input v-model.number="ticketForm.seatCount" placeholder="请输入座位数" type="number" />
-        </el-form-item>
-        <el-form-item label="车型" prop="trainType">
-          <el-input v-model="ticketForm.trainType" placeholder="请输入车型" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -168,6 +158,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'AdminTicket',
   data() {
@@ -387,23 +379,31 @@ export default {
       this.$refs.ticketFormRef.validate((valid) => {
         if (valid) {
           if (this.dialogType === 'add') {
-            // 模拟新增
-            const newTicket = {
-              ...this.ticketForm,
-              id: Date.now() // 临时ID
-            }
-            this.ticketList.unshift(newTicket)
-            this.pagination.total++
-            this.$message.success('新增成功')
+            // 新增操作：发送POST请求
+            axios.post('/inventory/admin/ticket/add', this.ticketForm)
+              .then(response => {
+                if (response.data.success) {
+                  // 请求成功后刷新列表
+                  this.loadTicketList()
+                  this.$message.success('新增成功')
+                  this.dialogVisible = false
+                } else {
+                  this.$message.error(response.data.message || '新增失败')
+                }
+              })
+              .catch(error => {
+                console.error('新增失败:', error)
+                this.$message.error('网络错误，新增失败')
+              })
           } else {
             // 模拟编辑
             const index = this.ticketList.findIndex(item => item.id === this.ticketForm.id)
             if (index > -1) {
               this.ticketList.splice(index, 1, { ...this.ticketForm })
               this.$message.success('修改成功')
+              this.dialogVisible = false
             }
           }
-          this.dialogVisible = false
         }
       })
     },
