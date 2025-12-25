@@ -90,13 +90,14 @@
         label-width="120px"
       >
         <el-form-item label="车次" prop="trainNumber">
-          <el-input v-model="ticketForm.trainNumber" placeholder="请输入车次" />
-        </el-form-item>
-        <el-form-item label="出发站" prop="departureStation">
-          <el-input v-model="ticketForm.departureStation" placeholder="请输入出发站" />
-        </el-form-item>
-        <el-form-item label="到达站" prop="arrivalStation">
-          <el-input v-model="ticketForm.arrivalStation" placeholder="请输入到达站" />
+          <el-select v-model="ticketForm.trainNumber" placeholder="请选择车次" style="width: 100%">
+            <el-option
+              v-for="train in trainList"
+              :key="train.trainNumber || train.trainNo || train.id"
+              :label="train.trainNumber || train.trainNo"
+              :value="train.trainNumber || train.trainNo"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="价格" prop="price">
           <el-input v-model.number="ticketForm.price" placeholder="请输入价格" type="number" />
@@ -158,7 +159,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import api from '@/api'
 
 export default {
   name: 'AdminTicket',
@@ -169,52 +170,11 @@ export default {
         trainNumber: ''
       },
       // 火车票列表数据
-      ticketList: [
-        {
-          id: 1,
-          trainNumber: 'G101',
-          departureStation: '北京南站',
-          arrivalStation: '上海虹桥站',
-          departureTime: '08:00',
-          arrivalTime: '13:00',
-          price: 553,
-          seatCount: 556,
-          trainType: '高铁'
-        },
-        {
-          id: 2,
-          trainNumber: 'D301',
-          departureStation: '上海虹桥站',
-          arrivalStation: '南京南站',
-          departureTime: '10:30',
-          arrivalTime: '12:00',
-          price: 134.5,
-          seatCount: 720,
-          trainType: '动车'
-        },
-        {
-          id: 3,
-          trainNumber: 'T109',
-          departureStation: '北京西站',
-          arrivalStation: '上海站',
-          departureTime: '20:05',
-          arrivalTime: '次日10:00',
-          price: 188.5,
-          seatCount: 600,
-          trainType: '特快'
-        },
-        {
-          id: 4,
-          trainNumber: 'K133',
-          departureStation: '广州站',
-          arrivalStation: '长沙站',
-          departureTime: '13:20',
-          arrivalTime: '21:45',
-          price: 98,
-          seatCount: 800,
-          trainType: '快速'
-        }
-      ],
+      ticketList: [],
+      // 车次列表数据
+      trainList: [],
+      // 站点列表数据
+      stationOptions: [],
       // 选中的行数据
       selectedRows: [],
       // 加载状态
@@ -246,8 +206,8 @@ export default {
       // 表单验证规则
       rules: {
         trainNumber: [
-          { required: true, message: '请输入车次', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
+          { required: true, message: '请选择车次', trigger: 'change' },
+          { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'change' }
         ],
         departureStation: [
           { required: true, message: '请输入出发站', trigger: 'blur' }
@@ -277,13 +237,15 @@ export default {
   },
   mounted() {
     this.loadTicketList()
+    this.loadTrainList()
+    this.loadStationOptions()
   },
   methods: {
     // 加载火车票列表
     loadTicketList() {
       this.loading = true
       // 通过POST请求获取火车票列表数据
-      axios.post('/inventory/admin/ticket', {
+      api.post('/inventory/admin/ticket', {
         trainNumber: this.searchForm.trainNumber,
         page: this.pagination.currentPage,
         pageSize: this.pagination.pageSize
@@ -305,6 +267,90 @@ export default {
           this.ticketList = []
           this.pagination.total = 0
           this.loading = false
+        })
+    },
+    
+    // 加载车次列表
+    loadTrainList() {
+      // 通过POST请求获取车次数据，与AdminTrainPassStation.vue保持一致的参数格式
+      api.post('/inventory/admin/train', {
+        page: 1,
+        pageSize: 1000
+      })
+        .then(response => {
+          const data = response.data
+          let trainData = []
+          
+          // 处理多种可能的数据格式，与AdminTrainPassStation.vue保持一致
+          if (Array.isArray(data)) {
+            trainData = data
+          } else if (data && data.list) {
+            trainData = Array.isArray(data.list) ? data.list : []
+          } else if (data && data.data) {
+            trainData = Array.isArray(data.data) ? data.data : []
+          } else if (data && data.records) {
+            trainData = Array.isArray(data.records) ? data.records : []
+          } else if (data && data.items) {
+            trainData = Array.isArray(data.items) ? data.items : []
+          } else {
+            // 如果以上格式都不匹配，尝试直接使用data
+            trainData = data
+          }
+          
+          // 确保trainData是数组
+          if (!Array.isArray(trainData)) {
+            trainData = []
+          }
+          
+          console.log('处理后的车次数据:', trainData)
+          this.trainList = trainData
+        })
+        .catch(error => {
+          console.error('获取车次数据失败:', error)
+          this.$message.error('网络错误，获取车次数据失败')
+          this.trainList = []
+        })
+    },
+    
+    // 加载站点列表
+    loadStationOptions() {
+      // 通过POST请求获取站点数据，与AdminTrainPassStation.vue保持一致的参数格式
+      api.post('/inventory/admin/trainStation', {
+        pageNum: 1,
+        pageSize: 1000
+      })
+        .then(response => {
+          const data = response.data
+          let stationData = []
+          
+          // 处理多种可能的数据格式，与AdminTrainPassStation.vue保持一致
+          if (Array.isArray(data)) {
+            stationData = data
+          } else if (data && data.list) {
+            stationData = Array.isArray(data.list) ? data.list : []
+          } else if (data && data.data) {
+            stationData = Array.isArray(data.data) ? data.data : []
+          } else if (data && data.records) {
+            stationData = Array.isArray(data.records) ? data.records : []
+          } else if (data && data.items) {
+            stationData = Array.isArray(data.items) ? data.items : []
+          } else {
+            // 如果以上格式都不匹配，尝试直接使用data
+            stationData = data
+          }
+          
+          // 确保stationData是数组
+          if (!Array.isArray(stationData)) {
+            stationData = []
+          }
+          
+          console.log('处理后的站点数据:', stationData)
+          this.stationOptions = stationData
+        })
+        .catch(error => {
+          console.error('获取站点数据失败:', error)
+          this.$message.error('网络错误，获取站点数据失败')
+          this.stationOptions = []
         })
     },
     
@@ -399,21 +445,21 @@ export default {
         if (valid) {
           if (this.dialogType === 'add') {
             // 新增操作：发送POST请求
-            axios.post('/inventory/admin/ticket/add', this.ticketForm)
-              .then(response => {
-                if (response.data.success) {
-                  // 请求成功后刷新列表
-                  this.loadTicketList()
-                  this.$message.success('新增成功')
-                  this.dialogVisible = false
-                } else {
-                  this.$message.error(response.data.message || '新增失败')
-                }
-              })
-              .catch(error => {
-                console.error('新增失败:', error)
-                this.$message.error('网络错误，新增失败')
-              })
+                api.post('/inventory/admin/ticket/add', this.ticketForm)
+                  .then(response => {
+                    if (response.data.success) {
+                      // 请求成功后刷新列表
+                      this.loadTicketList()
+                      this.$message.success('新增成功')
+                      this.dialogVisible = false
+                    } else {
+                      this.$message.error(response.data.message || '新增失败')
+                    }
+                  })
+                  .catch(error => {
+                    console.error('新增失败:', error)
+                    this.$message.error('网络错误，新增失败')
+                  })
           } else {
             // 模拟编辑
             const index = this.ticketList.findIndex(item => item.id === this.ticketForm.id)
