@@ -413,7 +413,7 @@ export default {
       // 根据当前路径设置对应的激活状态
       if (currentPath === '/admin') {
         this.isAdminPageActive = true;
-      } else if (currentPath === '/admin/train' || currentPath === '/admin/trainStation') {
+      } else if (currentPath === '/admin/train' || currentPath === '/admin/trainStation' || currentPath === '/admin/train-pass-station') {
         this.isTrainMenuOpen = true;
       } else if (currentPath === '/admin/train-tickets') {
         this.isTicketsMenuOpen = true;
