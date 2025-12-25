@@ -31,7 +31,7 @@
       <el-table-column prop="departureTime" label="出发时间" width="150" />
       <el-table-column prop="arrivalTime" label="到达时间" width="150" />
       <el-table-column prop="price" label="价格" width="100" />
-      <el-table-column prop="seatCount" label="座位数" width="100" />
+      <el-table-column prop="seatCount" label="座位类型" width="100" />
       <el-table-column prop="trainType" label="车型" width="100" />
       <el-table-column label="操作" width="240" fixed="right">
         <template #default="scope">
@@ -282,11 +282,30 @@ export default {
     // 加载火车票列表
     loadTicketList() {
       this.loading = true
-      // 模拟API请求
-      setTimeout(() => {
-        // 实际项目中这里应该调用真实的API
-        this.loading = false
-      }, 500)
+      // 通过POST请求获取火车票列表数据
+      axios.post('/inventory/admin/ticket', {
+        trainNumber: this.searchForm.trainNumber,
+        page: this.pagination.currentPage,
+        pageSize: this.pagination.pageSize
+      })
+        .then(response => {
+          if (response.data.success) {
+            this.ticketList = response.data.data.list
+            this.pagination.total = response.data.data.total
+          } else {
+            this.$message.error(response.data.message || '获取数据失败')
+            this.ticketList = []
+            this.pagination.total = 0
+          }
+          this.loading = false
+        })
+        .catch(error => {
+          console.error('获取火车票列表失败:', error)
+          this.$message.error('网络错误，获取数据失败')
+          this.ticketList = []
+          this.pagination.total = 0
+          this.loading = false
+        })
     },
     
     // 搜索
