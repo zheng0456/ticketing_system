@@ -90,7 +90,7 @@
         label-width="120px"
       >
         <el-form-item label="车次" prop="trainNumber">
-          <el-select v-model="ticketForm.trainNumber" placeholder="请选择车次" style="width: 100%">
+          <el-select v-model="ticketForm.trainNumber" placeholder="请选择车次" style="width: 100%" @change="handleTrainChange">
             <el-option
               v-for="train in trainList"
               :key="train.trainNumber || train.trainNo || train.id"
@@ -102,9 +102,7 @@
         <el-form-item label="价格" prop="price">
           <el-input v-model.number="ticketForm.price" placeholder="请输入价格" type="double" :step="0.01" />
         </el-form-item>
-        <el-form-item label="座位类型" prop="seatCount">
-          <el-input v-model.number="ticketForm.seatCount" placeholder="请输入座位类型" type="number" />
-        </el-form-item>
+      
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -360,6 +358,20 @@ export default {
       this.loadTicketList()
     },
     
+    // 处理车次选择变化
+    handleTrainChange(trainNumber) {
+      // 根据选中的trainNumber找到对应的train对象
+      const selectedTrain = this.trainList.find(train => 
+        (train.trainNumber || train.trainNo) === trainNumber
+      )
+      // 如果找到对应的train对象，将其id赋值给ticketForm.trainId
+      if (selectedTrain && selectedTrain.id) {
+        this.ticketForm.trainId = selectedTrain.id
+      } else {
+        this.ticketForm.trainId = ''
+      }
+    },
+    
     // 批量插入
     handleBatchInsert() {
       // 这里可以实现批量插入的逻辑
@@ -373,13 +385,8 @@ export default {
       this.ticketForm = {
         id: '',
         trainNumber: '',
-        departureStation: '',
-        arrivalStation: '',
-        departureTime: '',
-        arrivalTime: '',
         price: 0,
-        seatCount: '',
-        trainType: ''
+        trainId: ''
       }
       this.dialogVisible = true
     },
