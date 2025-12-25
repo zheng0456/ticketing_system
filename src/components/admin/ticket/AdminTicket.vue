@@ -100,10 +100,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="价格" prop="price">
-          <el-input v-model.number="ticketForm.price" placeholder="请输入价格" type="number" />
+          <el-input v-model.number="ticketForm.price" placeholder="请输入价格" type="double" :step="0.01" />
         </el-form-item>
         <el-form-item label="座位类型" prop="seatCount">
-          <el-input v-model.number="ticketForm.seatCount" placeholder="请输入座位数" type="number" />
+          <el-input v-model.number="ticketForm.seatCount" placeholder="请输入座位类型" type="number" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -197,7 +197,7 @@ export default {
         arrivalStation: '',
         departureTime: '',
         arrivalTime: '',
-        price: '',
+        price: 0,
         seatCount: '',
         trainType: ''
       },
@@ -377,7 +377,7 @@ export default {
         arrivalStation: '',
         departureTime: '',
         arrivalTime: '',
-        price: '',
+        price: 0,
         seatCount: '',
         trainType: ''
       }
