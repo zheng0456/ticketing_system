@@ -10,9 +10,6 @@
         />
         <el-button type="primary" @click="handleSearch">查询</el-button>
       </div>
-      <div class="operation-area">
-        <el-button type="danger" @click="handleDeleteSelected">删除</el-button>
-      </div>
     </div>
 
     <!-- 数据表格 -->
@@ -39,7 +36,7 @@
               type="primary"
               size="small"
               @click="handleDetail(scope.row)"
-              style="margin-right: 5px;"
+              style="margin-right: 50px;"
             >
               详情
             </el-button>
@@ -47,16 +44,9 @@
               type="warning"
               size="small"
               @click="handleEdit(scope.row)"
-              style="margin-right: 5px;"
+              style="margin-right: 50px;"
             >
               修改
-            </el-button>
-            <el-button
-              type="danger"
-              size="small"
-              @click="handleDelete(scope.row)"
-            >
-              删除
             </el-button>
           </div>
         </template>
@@ -284,7 +274,7 @@ export default {
             arrivalStation: item.end_station_name,
             departureTime: item.start_time,
             arrivalTime: item.end_time,
-            price: 0, // 价格字段暂时设置为默认值，等待API提供正确的价格字段
+            price: item.price || 0, // 从API响应中获取价格字段
             seatCount: item.num || 0, // num字段代表座位数量
             seatType: item.seat_type, // seat_type字段代表座位类型
             trainType: item.train_type || '', // 接口返回的车型字段
@@ -471,13 +461,38 @@ export default {
     handleDialogConfirm() {
       this.$refs.ticketFormRef.validate((valid) => {
         if (valid) {
-          // 模拟编辑
-          const index = this.ticketList.findIndex(item => item.id === this.ticketForm.id)
-          if (index > -1) {
-            this.ticketList.splice(index, 1, { ...this.ticketForm })
-            this.$message.success('修改成功')
-            this.dialogVisible = false
+          // 将前端字段映射为后端期望的字段格式，并将id和price转换为字符串类型
+          const requestData = {
+            id: String(this.ticketForm.id),
+            price: String(this.ticketForm.price),
           }
+          
+          // 发送POST请求到修改接口
+          api.post('/inventory/admin/ticket/updata', requestData)
+            .then(response => {
+              // 打印接口返回的数据
+              console.log('修改接口返回数据:', response)
+              console.log('响应状态码:', response.status)
+              console.log('响应数据:', response.data)
+              
+              // 更灵活的成功条件判断：状态码200或success字段为true
+              if (response.status === 200 || (response.data && response.data.success)) {
+                // 请求成功后更新本地数据
+                const index = this.ticketList.findIndex(item => item.id === this.ticketForm.id)
+                if (index > -1) {
+                  this.ticketList.splice(index, 1, { ...this.ticketForm })
+                }
+                this.$message.success('修改成功')
+                this.dialogVisible = false
+              } else {
+                console.error('修改失败原因:', response.data)
+                this.$message.error(response.data && response.data.message || '修改失败')
+              }
+            })
+            .catch(error => {
+              console.error('修改火车票失败:', error)
+              this.$message.error('网络错误，修改失败')
+            })
         }
       })
     },
