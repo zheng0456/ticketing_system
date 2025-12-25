@@ -11,8 +11,6 @@
         <el-button type="primary" @click="handleSearch">查询</el-button>
       </div>
       <div class="operation-area">
-        <el-button type="success" @click="handleBatchInsert">批量新增</el-button>
-        <el-button type="primary" @click="handleAdd">新增</el-button>
         <el-button type="danger" @click="handleDeleteSelected">删除</el-button>
       </div>
     </div>
@@ -31,7 +29,8 @@
       <el-table-column prop="departureTime" label="出发时间" width="150" />
       <el-table-column prop="arrivalTime" label="到达时间" width="150" />
       <el-table-column prop="price" label="价格" width="100" />
-      <el-table-column prop="seatCount" label="座位类型" width="100" />
+      <el-table-column prop="seatCount" label="座位数量" width="100" />
+      <el-table-column prop="seatType" label="座位类型" width="100" />
       <el-table-column prop="trainType" label="车型" width="100" />
       <el-table-column label="操作" width="240" fixed="right">
         <template #default="scope">
@@ -80,7 +79,7 @@
     <!-- 新增/编辑对话框 -->
     <el-dialog
       v-model="dialogVisible"
-      :title="dialogType === 'add' ? '新增火车票' : '修改火车票'"
+      :title="'修改火车票'"
       width="60%"
     >
       <el-form
@@ -89,16 +88,6 @@
         :rules="rules"
         label-width="120px"
       >
-        <el-form-item label="车次" prop="trainNumber">
-          <el-select v-model="ticketForm.trainNumber" placeholder="请选择车次" style="width: 100%" @change="handleTrainChange">
-            <el-option
-              v-for="train in trainList"
-              :key="train.trainNumber || train.trainNo || train.id"
-              :label="train.trainNumber || train.trainNo"
-              :value="train.trainNumber || train.trainNo"
-            />
-          </el-select>
-        </el-form-item>
         <el-form-item label="价格" prop="price">
           <el-input v-model.number="ticketForm.price" placeholder="请输入价格" type="double" :step="0.01" />
         </el-form-item>
@@ -144,8 +133,12 @@
           <span class="detail-value">{{ selectedTicket.price }}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">座位数：</span>
+          <span class="detail-label">座位数量：</span>
           <span class="detail-value">{{ selectedTicket.seatCount }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">座位类型：</span>
+          <span class="detail-value">{{ selectedTicket.seatType }}</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">车型：</span>
@@ -186,7 +179,7 @@ export default {
       // 对话框
       dialogVisible: false,
       detailDialogVisible: false,
-      dialogType: 'add',
+      dialogType: 'edit',
       // 表单数据
       ticketForm: {
         id: '',
@@ -196,7 +189,8 @@ export default {
         departureTime: '',
         arrivalTime: '',
         price: 0,
-        seatCount: '',
+        seatCount: 0, // 改为数字类型
+        seatType: '', // 添加座位类型字段
         trainType: ''
       },
       // 选中的火车票详情
@@ -224,8 +218,11 @@ export default {
           { type: 'number', message: '请输入有效的数字', trigger: 'blur' }
         ],
         seatCount: [
-          { required: true, message: '请输入座位数', trigger: 'blur' },
+          { required: true, message: '请输入座位数量', trigger: 'blur' },
           { type: 'number', message: '请输入有效的数字', trigger: 'blur' }
+        ],
+        seatType: [
+          { required: true, message: '请输入座位类型', trigger: 'blur' }
         ],
         trainType: [
           { required: true, message: '请输入车型', trigger: 'blur' }
@@ -249,14 +246,57 @@ export default {
         pageSize: this.pagination.pageSize
       })
         .then(response => {
-          if (response.data.success) {
-            this.ticketList = response.data.data.list
-            this.pagination.total = response.data.data.total
+          // 打印完整的响应数据结构
+          console.log('API响应数据:', response)
+          console.log('API响应数据.data:', response.data)
+          
+          // 检查响应数据的结构，用户提供的数据显示是直接返回数组
+          let rawList = []
+          let total = 0
+          
+          // 根据用户提供的数据结构，尝试不同的获取方式
+          if (Array.isArray(response.data)) {
+            // 直接返回数组的情况
+            rawList = response.data
+            total = response.data.length
+          } else if (response.data.data && Array.isArray(response.data.data)) {
+            // 返回 {data: Array} 的情况
+            rawList = response.data.data
+            total = response.data.data.length
+          } else if (response.data.success && response.data.data && Array.isArray(response.data.data.list)) {
+            // 返回 {success: true, data: {list: Array, total: number}} 的情况
+            rawList = response.data.data.list
+            total = response.data.data.total
           } else {
-            this.$message.error(response.data.message || '获取数据失败')
-            this.ticketList = []
-            this.pagination.total = 0
+            // 其他情况，尝试直接使用
+            rawList = response.data || []
+            total = Array.isArray(rawList) ? rawList.length : 0
           }
+          
+          // 打印原始列表数据
+          console.log('原始列表数据:', rawList)
+          
+          // 将接口返回的字段映射到页面表格所需的字段名
+          this.ticketList = rawList.map(item => ({
+            id: item.id,
+            trainNumber: item.train_no,
+            departureStation: item.start_station_name,
+            arrivalStation: item.end_station_name,
+            departureTime: item.start_time,
+            arrivalTime: item.end_time,
+            price: 0, // 价格字段暂时设置为默认值，等待API提供正确的价格字段
+            seatCount: item.num || 0, // num字段代表座位数量
+            seatType: item.seat_type, // seat_type字段代表座位类型
+            trainType: item.train_type || '', // 接口返回的车型字段
+            trainId: item.train_id
+          }))
+          
+          // 打印映射后的列表数据
+          console.log('映射后的列表数据:', this.ticketList)
+          
+          this.pagination.total = total
+          console.log('总记录数:', this.pagination.total)
+          
           this.loading = false
         })
         .catch(error => {
@@ -372,25 +412,6 @@ export default {
       }
     },
     
-    // 批量插入
-    handleBatchInsert() {
-      // 这里可以实现批量插入的逻辑
-      this.$message.info('批量插入功能待实现')
-      // 后续可以添加批量导入文件或表单等功能
-    },
-    
-    // 新增
-    handleAdd() {
-      this.dialogType = 'add'
-      this.ticketForm = {
-        id: '',
-        trainNumber: '',
-        price: 0,
-        trainId: ''
-      }
-      this.dialogVisible = true
-    },
-    
     // 编辑
     handleEdit(row) {
       this.dialogType = 'edit'
@@ -450,31 +471,12 @@ export default {
     handleDialogConfirm() {
       this.$refs.ticketFormRef.validate((valid) => {
         if (valid) {
-          if (this.dialogType === 'add') {
-            // 新增操作：发送POST请求
-                api.post('/inventory/admin/ticket/add', this.ticketForm)
-                  .then(response => {
-                    if (response.data.success) {
-                      // 请求成功后刷新列表
-                      this.loadTicketList()
-                      this.$message.success('新增成功')
-                      this.dialogVisible = false
-                    } else {
-                      this.$message.error(response.data.message || '新增失败')
-                    }
-                  })
-                  .catch(error => {
-                    console.error('新增失败:', error)
-                    this.$message.error('网络错误，新增失败')
-                  })
-          } else {
-            // 模拟编辑
-            const index = this.ticketList.findIndex(item => item.id === this.ticketForm.id)
-            if (index > -1) {
-              this.ticketList.splice(index, 1, { ...this.ticketForm })
-              this.$message.success('修改成功')
-              this.dialogVisible = false
-            }
+          // 模拟编辑
+          const index = this.ticketList.findIndex(item => item.id === this.ticketForm.id)
+          if (index > -1) {
+            this.ticketList.splice(index, 1, { ...this.ticketForm })
+            this.$message.success('修改成功')
+            this.dialogVisible = false
           }
         }
       })
