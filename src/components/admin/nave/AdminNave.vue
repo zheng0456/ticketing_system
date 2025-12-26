@@ -90,7 +90,7 @@
       </div>
 
       <!-- 基础设置 -->
-      <div class="menu-item" @click="toggleSettingsMenu" :class="{active: isSettingsMenuOpen}">
+      <div class="menu-item" @click="handleSettingsMenuClick" :class="{active: isSettingsMenuOpen}" data-path="/admin/settings">
         <el-icon><Setting /></el-icon>
         <span>基础设置</span>
         <el-icon v-if="!isSettingsMenuOpen"><ArrowRight /></el-icon>
@@ -98,17 +98,17 @@
       </div>
       <div v-if="isSettingsMenuOpen" class="submenu">
         <!-- 退出登录 -->
-        <router-link to="/login" class="menu-item" active-class="active" exact>
+        <div class="menu-item" @click="navigateToLogin" :class="{active: isLoginActive}">
           <span>退出登录</span>
-        </router-link>
+        </div>
         <!-- 账号注销 -->
-        <router-link to="/admin/logout" class="menu-item" active-class="active" exact>
+        <div class="menu-item" @click="navigateToLogout" :class="{active: isLogoutActive}">
           <span>账号注销</span>
-        </router-link>
+        </div>
         <!-- 权限管理 -->
-        <router-link to="/admin/permission" class="menu-item" active-class="active" exact>
+        <div class="menu-item" @click="navigateToPermission" :class="{active: isPermissionActive}">
           <span>权限管理</span>
-        </router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -144,7 +144,11 @@ export default {
         isRefundSceneryActive: false,
         isStatisticsActive: false,
         isTicketDetailsActive: false,
-        isSceneryDetailsActive: false
+        isSceneryDetailsActive: false,
+        // 基础设置子菜单激活状态
+        isLoginActive: false,
+        isLogoutActive: false,
+        isPermissionActive: false
       }
   },
   // 组件方法
@@ -396,7 +400,89 @@ export default {
          this.isStatisticsActive = false;
          this.isTicketDetailsActive = false;
          this.isSceneryDetailsActive = false;
+         // 重置基础设置子菜单选中状态
+         this.isLoginActive = false;
+         this.isLogoutActive = false;
+         this.isPermissionActive = false;
        },
+      /**
+       * 处理基础设置菜单点击事件
+       */
+      handleSettingsMenuClick() {
+        this.toggleSettingsMenu();
+      },
+      /**
+       * 导航到登录页（退出登录）
+       */
+      navigateToLogin() {
+        // 设置当前选中状态
+        this.isLoginActive = true;
+        // 保持父级菜单展开
+        this.isSettingsMenuOpen = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isTicketsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
+        this.isStatisticsActive = false;
+        this.isTicketDetailsActive = false;
+        this.isSceneryDetailsActive = false;
+        this.isLogoutActive = false;
+        this.isPermissionActive = false;
+        // 执行路由跳转
+        this.$router.push('/login');
+      },
+      /**
+       * 导航到账号注销页
+       */
+      navigateToLogout() {
+        // 设置当前选中状态
+        this.isLogoutActive = true;
+        // 保持父级菜单展开
+        this.isSettingsMenuOpen = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isTicketsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
+        this.isStatisticsActive = false;
+        this.isTicketDetailsActive = false;
+        this.isSceneryDetailsActive = false;
+        this.isLoginActive = false;
+        this.isPermissionActive = false;
+        // 执行路由跳转
+        this.$router.push('/admin/logout');
+      },
+      /**
+       * 导航到权限管理页
+       */
+      navigateToPermission() {
+        // 设置当前选中状态
+        this.isPermissionActive = true;
+        // 保持父级菜单展开
+        this.isSettingsMenuOpen = true;
+        // 重置其他选中状态
+        this.isAdminPageActive = false;
+        this.isTrainMenuOpen = false;
+        this.isTicketsMenuOpen = false;
+        this.isTrainTicketsActive = false;
+        this.isSceneryTicketsActive = false;
+        this.isRefundTicketsActive = false;
+        this.isRefundSceneryActive = false;
+        this.isStatisticsActive = false;
+        this.isTicketDetailsActive = false;
+        this.isSceneryDetailsActive = false;
+        this.isLoginActive = false;
+        this.isLogoutActive = false;
+        // 执行路由跳转
+        this.$router.push('/admin/permission');
+      },
     /**
      * 点击外部关闭下拉菜单的处理函数
      * @param {MouseEvent} event - 鼠标点击事件
@@ -425,6 +511,10 @@ export default {
       this.isStatisticsActive = false;
       this.isTicketDetailsActive = false;
       this.isSceneryDetailsActive = false;
+      // 重置基础设置子菜单激活状态
+      this.isLoginActive = false;
+      this.isLogoutActive = false;
+      this.isPermissionActive = false;
       
       // 根据当前路径设置对应的激活状态
       if (currentPath === '/admin') {
@@ -451,6 +541,17 @@ export default {
         this.isTicketDetailsActive = true;
       } else if (currentPath === '/admin/scenery-details') {
         this.isSceneryDetailsActive = true;
+      } else if (currentPath === '/admin/settings') {
+        this.isSettingsMenuOpen = true;
+      } else if (currentPath === '/login') {
+        this.isSettingsMenuOpen = true;
+        this.isLoginActive = true;
+      } else if (currentPath === '/admin/logout') {
+        this.isSettingsMenuOpen = true;
+        this.isLogoutActive = true;
+      } else if (currentPath === '/admin/permission') {
+        this.isSettingsMenuOpen = true;
+        this.isPermissionActive = true;
       }
     }
   },
