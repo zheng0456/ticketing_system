@@ -175,8 +175,8 @@ const router = useRouter();
 const departure = ref('');
 const destination = ref('');
 // 日期
-const departDate = ref('2025-11-19');
-const returnDate = ref('2025-11-20');
+const departDate = ref(new Date().toISOString().split('T')[0]);
+const returnDate = ref(new Date().toISOString().split('T')[0]);
 // 乘客类型：普通/学生
 const passengerType = ref('normal');
 
@@ -363,6 +363,13 @@ onMounted(() => {
   // 设置出发日期
   if (route.query.departureDate) {
     departDate.value = route.query.departureDate;
+    // 如果URL中有出发日期参数，更新日期列表中的激活状态
+    const index = dateList.value.findIndex(date => date.fullDate === departDate.value);
+    if (index !== -1) {
+      dateList.value.forEach((date, i) => {
+        date.isActive = i === index;
+      });
+    }
   }
   
   // 如果是往返，设置返程日期
