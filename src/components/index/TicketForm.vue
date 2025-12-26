@@ -30,12 +30,12 @@
       </div>
       <div class="form-group inline-group">
         <label>出发日期</label>
-        <input type="date" v-model="departureDate" />
+        <input type="date" v-model="departureDate" :min="currentDate" />
       </div>
       <transition name="slide">
         <div class="form-group inline-group" v-if="tripType === 'round'">
           <label>返程日期</label>
-          <input type="date" v-model="returnDate" />
+          <input type="date" v-model="returnDate" :min="minReturnDate" />
         </div>
       </transition>
       <div class="form-group checkbox-group">
@@ -61,12 +61,18 @@ export default {
     TicketFromCity
   },
   data() {
+    const today = new Date().toISOString().split('T')[0]
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const tomorrowDate = tomorrow.toISOString().split('T')[0]
+    
     return {
       departureCity: '',
       arrivalCity: '',
       tripType: 'single', // 'single' 或 'round'
-      departureDate: new Date().toISOString().split('T')[0],
-      returnDate: new Date().toISOString().split('T')[0],
+      currentDate: today,
+      departureDate: today,
+      returnDate: tomorrowDate,
       isStudent: false,
       isHighSpeed: false,
       currentIndex: 0,
@@ -76,6 +82,21 @@ export default {
         require('@/assets/img/index2.jpg'),
         require('@/assets/img/index3.jpg')
       ]
+    }
+  },
+  computed: {
+    minReturnDate() {
+      const departDate = new Date(this.departureDate)
+      departDate.setDate(departDate.getDate() + 1)
+      return departDate.toISOString().split('T')[0]
+    }
+  },
+  watch: {
+    departureDate(newDate) {
+      const minReturn = this.minReturnDate
+      if (this.returnDate <= newDate) {
+        this.returnDate = minReturn
+      }
     }
   },
   mounted() {
@@ -102,6 +123,19 @@ export default {
       this.startCarousel()
     },
     handleQuery() {
+      // 日期验证
+      if (this.departureDate < this.currentDate) {
+        alert('出发日期不能小于今天')
+        return
+      }
+      
+      if (this.tripType === 'round') {
+        if (this.returnDate <= this.departureDate) {
+          alert('返程日期必须大于出发日期')
+          return
+        }
+      }
+      
       // 构建查询参数
       const queryParams = {
         type: this.tripType,
