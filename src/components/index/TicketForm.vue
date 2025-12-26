@@ -39,12 +39,12 @@
         </div>
       </transition>
       <div class="form-group checkbox-group">
-        <input type="checkbox" id="student" />
+        <input type="checkbox" id="student" v-model="isStudent" />
         <label for="student">学生</label>
-        <input type="checkbox" id="high-speed" />
+        <input type="checkbox" id="high-speed" v-model="isHighSpeed" />
         <label for="high-speed">高铁/动车</label>
       </div>
-      <button class="query-btn">查询</button>
+      <button class="query-btn" @click="handleQuery">查询</button>
       <div class="history-links">
         <a href="#">删除历史</a>
       </div>
@@ -67,6 +67,8 @@ export default {
       tripType: 'single', // 'single' 或 'round'
       departureDate: new Date().toISOString().split('T')[0],
       returnDate: new Date().toISOString().split('T')[0],
+      isStudent: false,
+      isHighSpeed: false,
       currentIndex: 0,
       carouselInterval: null,
       carouselImages: [
@@ -98,6 +100,28 @@ export default {
       this.currentIndex = index
       this.stopCarousel()
       this.startCarousel()
+    },
+    handleQuery() {
+      // 构建查询参数
+      const queryParams = {
+        type: this.tripType,
+        departureCity: this.departureCity,
+        arrivalCity: this.arrivalCity,
+        departureDate: this.departureDate,
+        isStudent: this.isStudent,
+        isHighSpeed: this.isHighSpeed
+      }
+      
+      // 如果是往返，添加返程日期参数
+      if (this.tripType === 'round') {
+        queryParams.returnDate = this.returnDate
+      }
+      
+      // 跳转到票务查询页面
+      this.$router.push({
+        path: '/ticket',
+        query: queryParams
+      })
     }
   }
 }

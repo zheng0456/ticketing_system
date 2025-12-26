@@ -344,12 +344,42 @@ const navigateToTicketMessages = () => {
 onMounted(() => {
   generateDateList();
   
-  // 根据URL参数设置行程类型
+  // 根据URL参数设置行程类型和其他查询参数
   const ticketType = route.query.type;
   if (ticketType === 'round') {
     tripType.value = 'round';
   } else {
     tripType.value = 'single';
+  }
+  
+  // 设置出发地和目的地
+  if (route.query.departureCity) {
+    departure.value = route.query.departureCity;
+  }
+  if (route.query.arrivalCity) {
+    destination.value = route.query.arrivalCity;
+  }
+  
+  // 设置出发日期
+  if (route.query.departureDate) {
+    departDate.value = route.query.departureDate;
+  }
+  
+  // 如果是往返，设置返程日期
+  if (tripType.value === 'round' && route.query.returnDate) {
+    returnDate.value = route.query.returnDate;
+  }
+  
+  // 设置学生票选项
+  if (route.query.isStudent === 'true') {
+    passengerType.value = 'student';
+  } else {
+    passengerType.value = 'normal';
+  }
+  
+  // 设置高铁/动车选项
+  if (route.query.isHighSpeed === 'true') {
+    selectedTrainTypes.value = ['gc', 'd'];
   }
   
   // 组件加载时显示默认数据
