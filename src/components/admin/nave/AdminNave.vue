@@ -20,13 +20,13 @@
       </div>
 
       <!-- 列车管理中心 -->
-      <div class="menu-item" :class="{active: isTrainMenuOpen}" @click="handleTrainMenuClick" data-path="/admin/trains">
+      <div v-if="hasTrainMenuAccess" class="menu-item" :class="{active: isTrainMenuOpen}" @click="handleTrainMenuClick" data-path="/admin/trains">
         <el-icon><Guide /></el-icon>
         <span>列车管理</span>
         <el-icon v-if="!isTrainMenuOpen"><ArrowRight /></el-icon>
         <el-icon v-else><ArrowDown /></el-icon>
       </div>
-      <div v-if="isTrainMenuOpen" class="submenu">
+      <div v-if="hasTrainMenuAccess && isTrainMenuOpen" class="submenu">
         <!-- 车辆管理 -->
         <router-link to="/admin/train" class="menu-item" active-class="active">
           <span>车辆管理</span>
@@ -42,48 +42,48 @@
       </div>
 
       <!-- 票务管理 -->
-      <div class="menu-item" @click="handleTicketsMenuClick" :class="{active: isTicketsMenuOpen}" data-path="/admin/tickets">
+      <div v-if="hasTicketsMenuAccess" class="menu-item" @click="handleTicketsMenuClick" :class="{active: isTicketsMenuOpen}" data-path="/admin/tickets">
         <el-icon><MapLocation /></el-icon>
         <span>票务管理</span>
         <el-icon v-if="!isTicketsMenuOpen"><ArrowRight /></el-icon>
         <el-icon v-else><ArrowDown /></el-icon>
       </div>
-      <div v-if="isTicketsMenuOpen" class="submenu">
+      <div v-if="hasTicketsMenuAccess && isTicketsMenuOpen" class="submenu">
         <!-- 车票管理 -->
-        <div class="menu-item" @click="navigateToTrainTickets" :class="{active: isTrainTicketsActive}">
+        <div v-if="hasTrainTicketsAccess" class="menu-item" @click="navigateToTrainTickets" :class="{active: isTrainTicketsActive}">
           <span>车票管理</span>
         </div>
         <!-- 景点票管理 -->
-        <div class="menu-item" @click="navigateToSceneryTickets" :class="{active: isSceneryTicketsActive}">
+        <div v-if="hasSceneryTicketsAccess" class="menu-item" @click="navigateToSceneryTickets" :class="{active: isSceneryTicketsActive}">
           <span>景点票管理</span>
         </div>
         <!-- 退票管理 -->
-        <div class="menu-item" @click="navigateToRefundTickets" :class="{active: isRefundTicketsActive}">
+        <div v-if="hasRefundTicketsAccess" class="menu-item" @click="navigateToRefundTickets" :class="{active: isRefundTicketsActive}">
           <span>退票管理</span>
         </div>
         <!-- 景点退票管理 -->
-        <div class="menu-item" @click="navigateToRefundScenery" :class="{active: isRefundSceneryActive}">
+        <div v-if="hasRefundSceneryAccess" class="menu-item" @click="navigateToRefundScenery" :class="{active: isRefundSceneryActive}">
           <span>景点退票管理</span>
         </div>
       </div>
      
 
       <!-- 数据统计 -->
-      <div class="menu-item" @click="navigateToStatistics" :class="{active: isStatisticsActive}">
+      <div v-if="hasStatisticsAccess" class="menu-item" @click="navigateToStatistics" :class="{active: isStatisticsActive}">
         <el-icon><PieChart /></el-icon>
         <span>数据统计</span>
         <el-icon><ArrowRight /></el-icon>
       </div>
       
       <!-- 火车票收支明细 -->
-      <div class="menu-item" @click="navigateToTicketDetails" :class="{active: isTicketDetailsActive}">
+      <div v-if="hasTicketDetailsAccess" class="menu-item" @click="navigateToTicketDetails" :class="{active: isTicketDetailsActive}">
         <el-icon><Money /></el-icon>
         <span>火车票收支明细</span>
         <el-icon><ArrowRight /></el-icon>
       </div>
       
       <!-- 景点票收支明细 -->
-      <div class="menu-item" @click="navigateToSceneryDetails" :class="{active: isSceneryDetailsActive}">
+      <div v-if="hasSceneryDetailsAccess" class="menu-item" @click="navigateToSceneryDetails" :class="{active: isSceneryDetailsActive}">
         <el-icon><Money /></el-icon>
         <span>景点票收支明细</span>
         <el-icon><ArrowRight /></el-icon>
@@ -106,7 +106,7 @@
           <span>账号注销</span>
         </div>
         <!-- 权限管理 -->
-        <div class="menu-item" @click="navigateToPermission" :class="{active: isPermissionActive}">
+        <div v-if="hasPermissionMenuAccess" class="menu-item" @click="navigateToPermission" :class="{active: isPermissionActive}">
           <span>权限管理</span>
         </div>
       </div>
@@ -148,7 +148,19 @@ export default {
         // 基础设置子菜单激活状态
         isLoginActive: false,
         isLogoutActive: false,
-        isPermissionActive: false
+        isPermissionActive: false,
+        // 权限控制相关
+        userMenu: [], // 存储用户可访问的菜单路径
+        hasTrainMenuAccess: false,
+        hasTicketsMenuAccess: false,
+        hasPermissionMenuAccess: false,
+        hasStatisticsAccess: false,
+        hasTicketDetailsAccess: false,
+        hasSceneryDetailsAccess: false,
+        hasTrainTicketsAccess: false,
+        hasSceneryTicketsAccess: false,
+        hasRefundTicketsAccess: false,
+        hasRefundSceneryAccess: false
       }
   },
   // 组件方法
@@ -494,6 +506,90 @@ export default {
       }
     },
     /**
+     * 加载用户菜单数据
+     */
+    loadUserMenu() {
+      try {
+        const userMenuStr = localStorage.getItem('userMenu');
+        if (userMenuStr) {
+          this.userMenu = JSON.parse(userMenuStr);
+          console.log('✅ 加载用户菜单数据成功:', this.userMenu);
+          this.checkMenuPermissions();
+        } else {
+          console.log('⚠️  未找到用户菜单数据');
+          this.userMenu = [];
+        }
+      } catch (error) {
+        console.error('❌ 加载用户菜单数据失败:', error);
+        this.userMenu = [];
+      }
+    },
+    
+    /**
+     * 检查菜单访问权限
+     */
+    checkMenuPermissions() {
+      // 检查列车管理菜单权限
+      this.hasTrainMenuAccess = this.userMenu.some(item => 
+        item.filePath && (item.filePath === '/admin/train' || item.filePath === '/admin/trainStation' || item.filePath === '/admin/train-pass-station')
+      );
+      
+      // 检查票务管理菜单权限
+      this.hasTicketsMenuAccess = this.userMenu.some(item => 
+        item.filePath && (item.filePath === '/admin/train-tickets' || item.filePath === '/admin/scenery-tickets' || item.filePath === '/admin/refund-tickets' || item.filePath === '/admin/refund-scenery')
+      );
+      
+      // 检查票务管理子菜单权限
+      this.hasTrainTicketsAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/train-tickets'
+      );
+      
+      this.hasSceneryTicketsAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/scenery-tickets'
+      );
+      
+      this.hasRefundTicketsAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/refund-tickets'
+      );
+      
+      this.hasRefundSceneryAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/refund-scenery'
+      );
+      
+      // 检查权限管理菜单权限
+      this.hasPermissionMenuAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/permission'
+      );
+      
+      // 检查数据统计菜单权限
+      this.hasStatisticsAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/statistics'
+      );
+      
+      // 检查火车票收支明细菜单权限
+      this.hasTicketDetailsAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/ticket-details'
+      );
+      
+      // 检查景点票收支明细菜单权限
+      this.hasSceneryDetailsAccess = this.userMenu.some(item => 
+        item.filePath && item.filePath === '/admin/scenery-details'
+      );
+      
+      console.log('🔍 菜单权限检查结果:');
+      console.log('   - 列车管理菜单:', this.hasTrainMenuAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 票务管理菜单:', this.hasTicketsMenuAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 车票管理:', this.hasTrainTicketsAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 景点票管理:', this.hasSceneryTicketsAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 退票管理:', this.hasRefundTicketsAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 景点退票管理:', this.hasRefundSceneryAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 数据统计:', this.hasStatisticsAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 火车票收支明细:', this.hasTicketDetailsAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 景点票收支明细:', this.hasSceneryDetailsAccess ? '✅ 可访问' : '❌ 不可访问');
+      console.log('   - 权限管理:', this.hasPermissionMenuAccess ? '✅ 可访问' : '❌ 不可访问');
+    },
+    
+    /**
      * 根据当前路由更新菜单激活状态
      */
     updateActiveMenu() {
@@ -568,6 +664,8 @@ export default {
   mounted() {
     // 添加点击外部关闭下拉菜单的事件监听器
     document.addEventListener('click', this.handleClickOutside);
+    // 加载用户菜单数据
+    this.loadUserMenu();
     // 检查初始路由，设置正确的激活状态
     this.updateActiveMenu();
   },

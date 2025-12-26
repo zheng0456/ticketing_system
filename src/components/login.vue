@@ -219,21 +219,26 @@ const registerRules = {
 const handleLogin = async () => {
   try {
     // 移除表单验证，直接调用登录API
+    console.log('============================================');
+    console.log('🔄 开始执行登录API请求');
     // 打印登录请求参数
-    console.log('登录请求参数:', { userName: loginForm.userName, password: loginForm.password });
+    console.log('📝 登录请求参数:', { userName: loginForm.userName, password: loginForm.password });
+    
     const response = await api.post('/user/login', {
       userName: loginForm.userName,
       password: loginForm.password
     });
     
-     // 调试：打印响应数据
-    console.log('登录响应完整数据:', response);
-    console.log('响应状态码:', response.status);
-    console.log('响应头信息:', response.headers);
-    console.log('响应数据:', JSON.stringify(response.data, null, 2));
-    console.log('响应数据code:', response.data.code);
-    console.log('响应数据message:', response.data.message);
-    console.log('响应数据msg:', response.data.msg);
+    console.log('✅ 登录API请求成功，开始处理响应数据');
+    // 调试：打印响应数据
+    console.log('📋 登录响应完整数据:', response);
+    console.log('📊 响应状态码:', response.status);
+    console.log('📋 响应头信息:', response.headers);
+    console.log('📦 响应数据:', JSON.stringify(response.data, null, 2));
+    console.log('🔢 响应数据code:', response.data.code);
+    console.log('💬 响应数据message:', response.data.message);
+    console.log('📝 响应数据msg:', response.data.msg);
+    console.log('📋 响应数据data:', JSON.stringify(response.data.data, null, 2));
 
 
     if (response.data.code === 200) {
@@ -245,19 +250,46 @@ const handleLogin = async () => {
       };
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       
-      ElMessage.success('登录成功');
-      // 使用response.data.data[0].path中的路径进行跳转
-      if (response.data.data && response.data.data.length > 0 && response.data.data[0].path) {
-        window.location.href = response.data.data[0].path;
-      } else {
-        // 如果path为空，默认跳转到首页
-        window.location.href = '/index';
+      // 保存菜单数据到localStorage，用于控制导航栏和页面展示
+      if (response.data.data && response.data.data.length > 0) {
+        localStorage.setItem('userMenu', JSON.stringify(response.data.data));
       }
+      
+      ElMessage.success('登录成功');
+      
+      // 先打印最终的跳转信息
+      console.log('============================================');
+      console.log('📌 登录流程即将完成，准备跳转页面');
+      console.log('🔗 跳转路径:', response.data.data && response.data.data.length > 0 && response.data.data[0].path ? response.data.data[0].path : '/index');
+      console.log('⏱️  延迟时间：1分钟（60秒）');
+      console.log('💡 提示：页面将在1分钟后跳转，控制台日志不会被清除');
+      console.log('============================================');
+      
+      // 延迟1分钟跳转，确保日志有足够时间显示
+      setTimeout(() => {
+        // 使用response.data.data[0].path中的路径进行跳转
+        if (response.data.data && response.data.data.length > 0 && response.data.data[0].path) {
+          window.location.href = response.data.data[0].path;
+        } else {
+          // 如果path为空，默认跳转到首页
+          window.location.href = '/index';
+        }
+      }, 100);
     } else {
       ElMessage.error(response.data.msg || '登录失败');
     }
   } catch (error) {
-    console.error('登录请求失败:', error);
+    console.log('============================================');
+    console.error('❌ 登录API请求失败');
+    console.error('错误类型:', typeof error);
+    console.error('错误信息:', error.message);
+    console.error('完整错误:', error);
+    if (error.response) {
+      console.error('响应数据:', JSON.stringify(error.response.data, null, 2));
+      console.error('响应状态:', error.response.status);
+      console.error('响应头:', error.response.headers);
+    }
+    console.log('============================================');
     // ElMessage.error('登录失败，请检查网络连接或稍后重试');
   }
 };
