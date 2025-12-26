@@ -219,17 +219,21 @@ const registerRules = {
 const handleLogin = async () => {
   try {
     // 移除表单验证，直接调用登录API
+    // 打印登录请求参数
+    console.log('登录请求参数:', { userName: loginForm.userName, password: loginForm.password });
     const response = await api.post('/user/login', {
       userName: loginForm.userName,
       password: loginForm.password
     });
     
      // 调试：打印响应数据
-    console.log('注册响应:', response);
-    console.log('响应状态:', response.status);
-    console.log('响应数据:', response.data);
+    console.log('登录响应完整数据:', response);
+    console.log('响应状态码:', response.status);
+    console.log('响应头信息:', response.headers);
+    console.log('响应数据:', JSON.stringify(response.data, null, 2));
     console.log('响应数据code:', response.data.code);
     console.log('响应数据message:', response.data.message);
+    console.log('响应数据msg:', response.data.msg);
 
 
     if (response.data.code === 200) {
@@ -242,12 +246,12 @@ const handleLogin = async () => {
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       
       ElMessage.success('登录成功');
-      // 使用response.data.msg中的路径进行跳转
-      if (response.data.msg) {
-        window.location.href = response.data.msg;
+      // 使用response.data.data[0].path中的路径进行跳转
+      if (response.data.data && response.data.data.length > 0 && response.data.data[0].path) {
+        window.location.href = response.data.data[0].path;
       } else {
-        // 如果msg为空，默认跳转到首页
-        ElMessage.success('请检查网络');
+        // 如果path为空，默认跳转到首页
+        window.location.href = '/index';
       }
     } else {
       ElMessage.error(response.data.msg || '登录失败');
