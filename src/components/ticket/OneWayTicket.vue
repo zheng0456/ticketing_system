@@ -293,7 +293,7 @@ const handleQuery = async () => {
     };
     
     // 发送请求到后端
-    const response = await api.post('/user/ticket', queryParams);
+    const response = await api.post('/product/tickets', queryParams);
     
     console.log('查询响应:', response);
     
@@ -341,7 +341,7 @@ const navigateToTicketMessages = () => {
 };
 
 // 组件挂载时生成日期列表和设置行程类型
-onMounted(() => {
+onMounted(async () => {
   generateDateList();
   
   // 根据URL参数设置行程类型和其他查询参数
@@ -389,8 +389,13 @@ onMounted(() => {
     selectedTrainTypes.value = ['gc', 'd'];
   }
   
-  // 组件加载时显示默认数据
-  trainList.value = defaultTrainList.value;
+  // 当从TicketForm跳转过来且参数完整时，自动调用查询方法
+  if (departure.value && destination.value && departDate.value) {
+    await handleQuery();
+  } else {
+    // 组件加载时显示默认数据
+    trainList.value = defaultTrainList.value;
+  }
 });
 </script>
 

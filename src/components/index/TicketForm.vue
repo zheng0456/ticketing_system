@@ -123,6 +123,17 @@ export default {
       this.startCarousel()
     },
     handleQuery() {
+      // 出发地和到达地验证
+      if (!this.departureCity.trim()) {
+        alert('请输入出发地')
+        return
+      }
+      
+      if (!this.arrivalCity.trim()) {
+        alert('请输入到达地')
+        return
+      }
+      
       // 日期验证
       if (this.departureDate < this.currentDate) {
         alert('出发日期不能小于今天')
