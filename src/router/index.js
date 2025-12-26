@@ -81,6 +81,11 @@ const routes = [
         component: AdminTrain
       },
       {
+        path: 'trains',
+        name: 'trains',
+        component: AdminTrain
+      },
+      {
         path: 'trainStation',
         name: 'trainStation',
         component: AdminTrainStation,

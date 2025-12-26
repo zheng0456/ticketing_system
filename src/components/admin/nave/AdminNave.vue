@@ -20,11 +20,13 @@
       </div>
 
       <!-- 列车管理中心 -->
-      <div class="menu-item" @click="toggleTrainMenu" :class="{active: isTrainMenuOpen}">
-        <el-icon><Guide /></el-icon>
-        <span>列车管理</span>
-        <el-icon v-if="!isTrainMenuOpen"><ArrowRight /></el-icon>
-        <el-icon v-else><ArrowDown /></el-icon>
+      <div class="menu-item" :class="{active: isTrainMenuOpen}" @click="handleTrainMenuClick">
+        <router-link to="/admin/trains" class="menu-link">
+          <el-icon><Guide /></el-icon>
+          <span>列车管理</span>
+        </router-link>
+        <el-icon v-if="!isTrainMenuOpen" @click.stop="toggleTrainMenu"><ArrowRight /></el-icon>
+        <el-icon v-else @click.stop="toggleTrainMenu"><ArrowDown /></el-icon>
       </div>
       <div v-if="isTrainMenuOpen" class="submenu">
         <!-- 车辆管理 -->
@@ -279,6 +281,12 @@ export default {
       this.isStatisticsActive = false;
        },
     /**
+     * 处理列车管理菜单点击事件
+     */
+    handleTrainMenuClick() {
+      this.toggleTrainMenu();
+    },
+    /**
      * 切换列车管理菜单显示状态
      */
     toggleTrainMenu() {
@@ -413,7 +421,7 @@ export default {
       // 根据当前路径设置对应的激活状态
       if (currentPath === '/admin') {
         this.isAdminPageActive = true;
-      } else if (currentPath === '/admin/train' || currentPath === '/admin/trainStation' || currentPath === '/admin/train-pass-station') {
+      } else if (currentPath === '/admin/train' || currentPath === '/admin/trains' || currentPath === '/admin/trainStation' || currentPath === '/admin/train-pass-station') {
         this.isTrainMenuOpen = true;
       } else if (currentPath === '/admin/train-tickets') {
         this.isTicketsMenuOpen = true;
@@ -520,8 +528,44 @@ export default {
   padding: 16px 20px;
   cursor: pointer;
   transition: background-color 0.3s;
+  color: white;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  flex: 1;
   text-decoration: none;
   color: white;
+}
+
+.submenu .menu-item {
+  text-decoration: none !important;
+}
+
+.submenu .menu-item.router-link-active {
+  text-decoration: none !important;
+}
+
+.submenu .menu-item.router-link-exact-active {
+  text-decoration: none !important;
+}
+
+/* 直接针对submenu中的router-link设置样式，确保去掉所有状态下的下划线 */
+.submenu router-link {
+  text-decoration: none !important;
+}
+
+.submenu router-link:hover {
+  text-decoration: none !important;
+}
+
+.submenu router-link.router-link-active {
+  text-decoration: none !important;
+}
+
+.submenu router-link.router-link-exact-active {
+  text-decoration: none !important;
 }
 
 .menu-item:hover {
