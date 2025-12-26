@@ -83,7 +83,12 @@ const routes = [
       {
         path: 'trains',
         name: 'trains',
-        component: AdminTrain
+        component: AdminIndex
+      },
+      {
+        path: 'tickets',
+        name: 'tickets',
+        component: AdminIndex
       },
       {
         path: 'trainStation',

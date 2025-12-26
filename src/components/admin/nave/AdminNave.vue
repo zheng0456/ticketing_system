@@ -20,13 +20,11 @@
       </div>
 
       <!-- 列车管理中心 -->
-      <div class="menu-item" :class="{active: isTrainMenuOpen}" @click="handleTrainMenuClick">
-        <router-link to="/admin/trains" class="menu-link">
-          <el-icon><Guide /></el-icon>
-          <span>列车管理</span>
-        </router-link>
-        <el-icon v-if="!isTrainMenuOpen" @click.stop="toggleTrainMenu"><ArrowRight /></el-icon>
-        <el-icon v-else @click.stop="toggleTrainMenu"><ArrowDown /></el-icon>
+      <div class="menu-item" :class="{active: isTrainMenuOpen}" @click="handleTrainMenuClick" data-path="/admin/trains">
+        <el-icon><Guide /></el-icon>
+        <span>列车管理</span>
+        <el-icon v-if="!isTrainMenuOpen"><ArrowRight /></el-icon>
+        <el-icon v-else><ArrowDown /></el-icon>
       </div>
       <div v-if="isTrainMenuOpen" class="submenu">
         <!-- 车辆管理 -->
@@ -44,7 +42,7 @@
       </div>
 
       <!-- 票务管理 -->
-      <div class="menu-item" @click="toggleTicketsMenu" :class="{active: isTicketsMenuOpen}">
+      <div class="menu-item" @click="handleTicketsMenuClick" :class="{active: isTicketsMenuOpen}" data-path="/admin/tickets">
         <el-icon><MapLocation /></el-icon>
         <span>票务管理</span>
         <el-icon v-if="!isTicketsMenuOpen"><ArrowRight /></el-icon>
@@ -263,6 +261,14 @@ export default {
         this.$router.push('/admin/refund-scenery');
       },
     /**
+     * 处理票务管理菜单点击事件
+     */
+    handleTicketsMenuClick() {
+      this.toggleTicketsMenu();
+      // 改变URL地址但不触发页面跳转
+      this.$router.replace('/admin/tickets');
+    },
+    /**
         * 切换票务管理菜单显示状态
         */
        toggleTicketsMenu() {
@@ -285,6 +291,8 @@ export default {
      */
     handleTrainMenuClick() {
       this.toggleTrainMenu();
+      // 改变URL地址但不触发页面跳转
+      this.$router.replace('/admin/trains');
     },
     /**
      * 切换列车管理菜单显示状态
@@ -423,6 +431,8 @@ export default {
         this.isAdminPageActive = true;
       } else if (currentPath === '/admin/train' || currentPath === '/admin/trains' || currentPath === '/admin/trainStation' || currentPath === '/admin/train-pass-station') {
         this.isTrainMenuOpen = true;
+      } else if (currentPath === '/admin/tickets') {
+        this.isTicketsMenuOpen = true;
       } else if (currentPath === '/admin/train-tickets') {
         this.isTicketsMenuOpen = true;
         this.isTrainTicketsActive = true;
