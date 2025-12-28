@@ -13,9 +13,9 @@
       </div>
       <div class="date">
         <label>出发日</label>
-        <input type="date" v-model="departDate" class="date-input" />
+        <input type="date" v-model="departDate" class="date-input" :min="minDate" />
         <label v-if="tripType === 'round'">返程日</label>
-        <input type="date" v-model="returnDate" class="date-input" v-if="tripType === 'round'" />
+        <input type="date" v-model="returnDate" class="date-input" v-if="tripType === 'round'" :min="departDate" />
       </div>
       <div class="right-section">
         <div class="passenger-type">
@@ -136,38 +136,38 @@
             </td>
             <td>{{ train.duration || '--' }}</td>
             <td>
-              <span :class="{ 'seat-available': train.businessSeat === '有', 'seat-unavailable': train.businessSeat === '无' }">
-                {{ train.businessSeat || '--' }}
+              <span :class="{ 'seat-available': train.businessSeat > 0, 'seat-unavailable': train.businessSeat <= 0 }">
+                {{ train.businessSeat === '--' ? '--' : (train.businessSeat <= 10 && train.businessSeat > 0 ? train.businessSeat : (train.businessSeat > 0 ? '有' : '无')) }}
               </span>
             </td>
             <td>
-              <span :class="{ 'seat-available': train.firstClass === '有', 'seat-unavailable': train.firstClass === '无' }">
-                {{ train.firstClass || '--' }}
+              <span :class="{ 'seat-available': train.firstClass > 0, 'seat-unavailable': train.firstClass <= 0 }">
+                {{ train.firstClass === '--' ? '--' : (train.firstClass <= 10 && train.firstClass > 0 ? train.firstClass : (train.firstClass > 0 ? '有' : '无')) }}
               </span>
             </td>
             <td>
-              <span :class="{ 'seat-available': train.secondClass === '有', 'seat-unavailable': train.secondClass === '无' }">
-                {{ train.secondClass || '--' }}
+              <span :class="{ 'seat-available': train.secondClass > 0, 'seat-unavailable': train.secondClass <= 0 }">
+                {{ train.secondClass === '--' ? '--' : (train.secondClass <= 10 && train.secondClass > 0 ? train.secondClass : (train.secondClass > 0 ? '有' : '无')) }}
               </span>
             </td>
             <td>
-              <span :class="{ 'seat-available': train.softSleeper === '有', 'seat-unavailable': train.softSleeper === '无' }">
-                {{ train.softSleeper || '--' }}
+              <span :class="{ 'seat-available': train.softSleeper > 0, 'seat-unavailable': train.softSleeper <= 0 }">
+                {{ train.softSleeper === '--' ? '--' : (train.softSleeper <= 10 && train.softSleeper > 0 ? train.softSleeper : (train.softSleeper > 0 ? '有' : '无')) }}
               </span>
             </td>
             <td>
-              <span :class="{ 'seat-available': train.hardSleeper === '有', 'seat-unavailable': train.hardSleeper === '无' }">
-                {{ train.hardSleeper || '--' }}
+              <span :class="{ 'seat-available': train.hardSleeper > 0, 'seat-unavailable': train.hardSleeper <= 0 }">
+                {{ train.hardSleeper === '--' ? '--' : (train.hardSleeper <= 10 && train.hardSleeper > 0 ? train.hardSleeper : (train.hardSleeper > 0 ? '有' : '无')) }}
               </span>
             </td>
             <td>
-              <span :class="{ 'seat-available': train.hardSeat === '有', 'seat-unavailable': train.hardSeat === '无' }">
-                {{ train.hardSeat || '--' }}
+              <span :class="{ 'seat-available': train.hardSeat > 0, 'seat-unavailable': train.hardSeat <= 0 }">
+                {{ train.hardSeat === '--' ? '--' : (train.hardSeat <= 10 && train.hardSeat > 0 ? train.hardSeat : (train.hardSeat > 0 ? '有' : '无')) }}
               </span>
             </td>
             <td>
-              <span :class="{ 'seat-available': train.noSeat === '有', 'seat-unavailable': train.noSeat === '无' }">
-                {{ train.noSeat || '--' }}
+              <span :class="{ 'seat-available': train.noSeat > 0, 'seat-unavailable': train.noSeat <= 0 }">
+                {{ train.noSeat === '--' ? '--' : (train.noSeat <= 10 && train.noSeat > 0 ? train.noSeat : (train.noSeat > 0 ? '有' : '无')) }}
               </span>
             </td>
             <td>
@@ -200,8 +200,10 @@ const router = useRouter();
 const departure = ref('');
 const destination = ref('');
 // 日期
-const departDate = ref(new Date().toISOString().split('T')[0]);
-const returnDate = ref(new Date().toISOString().split('T')[0]);
+const today = new Date().toISOString().split('T')[0];
+const departDate = ref(today);
+const returnDate = ref(today);
+const minDate = ref(today);
 // 乘客类型：普通/学生
 const passengerType = ref('normal');
 
@@ -223,13 +225,13 @@ const defaultTrainList = ref([
     // 确保不重复添加duration字段，保持原样显示
     businessSeat: '--',
     preferredFirstClass: '--',
-    firstClass: '有',
-    secondClass: '有',
+    firstClass: 8,
+    secondClass: 15,
     advancedSoftSleeper: '--',
     softSleeper: '--',
     hardSleeper: '--',
     softSeat: '--',
-    hardSeat: '有',
+    hardSeat: 3,
     noSeat: '--',
     other: '--',
     remark: '--'
@@ -302,6 +304,24 @@ const handleQuery = async () => {
     return;
   }
   
+  // 验证日期是否有效
+  if (departDate.value < today) {
+    ElMessage.warning('出发日期不能早于今天');
+    return;
+  }
+  
+  // 如果是往返，验证返程日期
+  if (tripType.value === 'round') {
+    if (!returnDate.value) {
+      ElMessage.warning('请选择返程日期');
+      return;
+    }
+    if (returnDate.value < departDate.value) {
+      ElMessage.warning('返程日期不能早于出发日期');
+      return;
+    }
+  }
+  
   try {
     loading.value = true;
     
@@ -368,9 +388,9 @@ const handleQuery = async () => {
         train.carriage.forEach(carriage => {
           const seatKey = seatMap[carriage.seat_type];
           if (seatKey) {
-            seatInfo[seatKey] = carriage.num > 0 ? '有' : '无';
+            seatInfo[seatKey] = carriage.num;
           } else {
-            seatInfo.other = carriage.num > 0 ? '有' : '无';
+            seatInfo.other = carriage.num;
           }
         });
         
@@ -455,7 +475,12 @@ onMounted(async () => {
   
   // 设置出发日期
   if (route.query.departureDate) {
-    departDate.value = route.query.departureDate;
+    let parsedDate = route.query.departureDate;
+    // 检查日期是否在今天之前，如果是则使用今天
+    if (parsedDate < today) {
+      parsedDate = today;
+    }
+    departDate.value = parsedDate;
     // 如果URL中有出发日期参数，更新日期列表中的激活状态
     const index = dateList.value.findIndex(date => date.fullDate === departDate.value);
     if (index !== -1) {
@@ -467,7 +492,12 @@ onMounted(async () => {
   
   // 如果是往返，设置返程日期
   if (tripType.value === 'round' && route.query.returnDate) {
-    returnDate.value = route.query.returnDate;
+    let parsedReturnDate = route.query.returnDate;
+    // 检查返程日期是否在出发日期之前，如果是则使用出发日期
+    if (parsedReturnDate < departDate.value) {
+      parsedReturnDate = departDate.value;
+    }
+    returnDate.value = parsedReturnDate;
   }
   
   // 设置学生票选项
