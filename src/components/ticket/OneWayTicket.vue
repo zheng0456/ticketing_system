@@ -330,8 +330,18 @@ const handleQuery = async () => {
     const parseTimeRange = (timeRangeStr, dateStr) => {
       const [startTime, endTime] = timeRangeStr.split('--');
       const startDateTime = `${dateStr} ${startTime}:00`;
-      const endDateTime = `${dateStr} ${endTime}:00`;
-      return { startDateTime, endDateTime };
+      
+      // 处理到达时间为24:00的情况，转换为日期加一，时间为00:00
+      if (endTime === '24:00') {
+        const date = new Date(dateStr);
+        date.setDate(date.getDate() + 1);
+        const nextDate = date.toISOString().split('T')[0];
+        const endDateTime = `${nextDate} 00:00:00`;
+        return { startDateTime, endDateTime };
+      } else {
+        const endDateTime = `${dateStr} ${endTime}:00`;
+        return { startDateTime, endDateTime };
+      }
     };
     
     const { startDateTime, endDateTime } = parseTimeRange(departureTimeRange.value, departDate.value);
