@@ -3,24 +3,24 @@
     <!-- 顶部查询栏 -->
     <div class="top-bar">
       <div class="trip-type">
-        <label><input type="radio" v-model="tripType" value="single"> 单程</label>
-        <label><input type="radio" v-model="tripType" value="round"> 往返</label>
+        <label><input type="radio" v-model="tripType" value="single" /> 单程</label>
+        <label><input type="radio" v-model="tripType" value="round" /> 往返</label>
       </div>
       <div class="location">
-        <input type="text" v-model="departure" placeholder="出发地" class="input">
+        <input type="text" v-model="departure" placeholder="出发地" class="input" />
         <el-button class="swap-btn" @click="swapLocation" :icon="Switch" circle></el-button>
-        <input type="text" v-model="destination" placeholder="目的地" class="input">
+        <input type="text" v-model="destination" placeholder="目的地" class="input" />
       </div>
       <div class="date">
         <label>出发日</label>
-        <input type="date" v-model="departDate" class="date-input">
+        <input type="date" v-model="departDate" class="date-input" />
         <label v-if="tripType === 'round'">返程日</label>
-        <input type="date" v-model="returnDate" class="date-input" v-if="tripType === 'round'">
+        <input type="date" v-model="returnDate" class="date-input" v-if="tripType === 'round'" />
       </div>
       <div class="right-section">
         <div class="passenger-type">
-          <label><input type="radio" v-model="passengerType" value="normal" checked> 普通</label>
-          <label><input type="radio" v-model="passengerType" value="student"> 学生</label>
+          <label><input type="radio" v-model="passengerType" value="normal" checked /> 普通</label>
+        <label><input type="radio" v-model="passengerType" value="student" /> 学生</label>
         </div>
         <button class="query-btn" @click="handleQuery">查询</button>
       </div>
@@ -44,14 +44,14 @@
       <div class="train-type">
         <label>车次类型：</label>
         <label><span class="tag" @click="clearTrainTypes">全部</span></label>
-        <label><input type="checkbox" value="gc" v-model="selectedTrainTypes" @change="onFilterChange"> GC-高铁/城际</label>
-        <label><input type="checkbox" value="d" v-model="selectedTrainTypes" @change="onFilterChange"> D-动车</label>
-        <label><input type="checkbox" value="z" v-model="selectedTrainTypes" @change="onFilterChange"> Z-直达</label>
-        <label><input type="checkbox" value="t" v-model="selectedTrainTypes" @change="onFilterChange"> T-特快</label>
-        <label><input type="checkbox" value="k" v-model="selectedTrainTypes" @change="onFilterChange"> K-快速</label>
-        <label><input type="checkbox" value="other" v-model="selectedTrainTypes" @change="onFilterChange"> 其他</label>
-        <label><input type="checkbox" value="fx" v-model="selectedTrainTypes" @change="onFilterChange"> 复兴号</label>
-        <label><input type="checkbox" value="zn" v-model="selectedTrainTypes" @change="onFilterChange"> 智能动车组</label>
+        <label><input type="checkbox" value="gc" v-model="selectedTrainTypes" @change="onFilterChange" /> GC-高铁/城际</label>
+        <label><input type="checkbox" value="d" v-model="selectedTrainTypes" @change="onFilterChange" /> D-动车</label>
+        <label><input type="checkbox" value="z" v-model="selectedTrainTypes" @change="onFilterChange" /> Z-直达</label>
+        <label><input type="checkbox" value="t" v-model="selectedTrainTypes" @change="onFilterChange" /> T-特快</label>
+        <label><input type="checkbox" value="k" v-model="selectedTrainTypes" @change="onFilterChange" /> K-快速</label>
+        <label><input type="checkbox" value="other" v-model="selectedTrainTypes" @change="onFilterChange" /> 其他</label>
+        <label><input type="checkbox" value="fx" v-model="selectedTrainTypes" @change="onFilterChange" /> 复兴号</label>
+        <label><input type="checkbox" value="zn" v-model="selectedTrainTypes" @change="onFilterChange" /> 智能动车组</label>
         <div class="departure-time">
           <label>发车时间：</label>
           <select v-model="departureTimeRange" @change="onFilterChange">
@@ -75,52 +75,51 @@
         <div class="station-row">
           <label>车次席别：</label>
           <span class="tag" @click="clearSeatTypes">全部</span>
-          <label><input type="checkbox" value="rw" v-model="selectedSeatTypes" @change="onFilterChange">软卧</label>
-          <label><input type="checkbox" value="nw" v-model="selectedSeatTypes" @change="onFilterChange">硬卧</label>
-          <label><input type="checkbox" value="nz" v-model="selectedSeatTypes" @change="onFilterChange">硬座</label>
+          <label><input type="checkbox" value="rw" v-model="selectedSeatTypes" @change="onFilterChange" />软卧</label>
+        <label><input type="checkbox" value="nw" v-model="selectedSeatTypes" @change="onFilterChange" />硬卧</label>
+        <label><input type="checkbox" value="nz" v-model="selectedSeatTypes" @change="onFilterChange" />硬座</label>
         </div>
       </div>
     </div>
 
     <!-- 车次表格 -->
-    <table class="train-table">
-      <thead>
-        <tr>
-          <th>车次</th>
-          <th>出发站<br>到达站</th>
-          <th>出发时间<br>到达时间 
-          </th>
-          <th>历时 
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="12" height="12" class="sort-icon">
-              <path d="M18 13L12 19L6 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </th>
-          <th>商务座<br>特等座</th>
-          <th>优选<br>一等座</th>
-          <th>一等座</th>
-          <th>二等座<br>二等包座</th>
-          <th>高级<br>软卧</th>
-          <th>软卧/动卧<br>一等卧</th>
-          <th>硬卧<br>二等卧</th>
-          <th>软座</th>
-          <th>硬座</th>
-          <th>无座</th>
-          <th>其他</th>
-          <th>备注</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="loading">
-          <td colspan="16" style="text-align: center; padding: 20px;">
-            正在查询中...
-          </td>
-        </tr>
-        <tr v-else-if="trainList.length === 0">
-          <td colspan="16" style="text-align: center; padding: 20px;">
-            暂无车次信息
-          </td>
-        </tr>
-        <tr v-else v-for="(train, index) in trainList" :key="index">
+    <div class="train-table-container">
+      <table class="train-table">
+        <thead>
+          <tr>
+            <th width="8%">车次</th>
+            <th width="12%">出发站<br>到达站</th>
+            <th width="12%">出发时间<br>到达时间</th>
+            <th width="10%">历时
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="12" height="12" class="sort-icon">
+                <path d="M18 13L12 19L6 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </th>
+            <th width="8%">商务座</th>
+            <th width="8%">一等座</th>
+            <th width="8%">二等座</th>
+            <th width="8%">软卧</th>
+            <th width="8%">硬卧</th>
+            <th width="8%">硬座</th>
+            <th width="8%">无座</th>
+            <th width="8%">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="loading">
+            <td colspan="12" style="text-align: center; padding: 30px; background-color: #f5f7fa;">
+              <div style="display: inline-flex; align-items: center; gap: 10px;">
+                <div class="loading-spinner"></div>
+                <span>正在查询中...</span>
+              </div>
+            </td>
+          </tr>
+          <tr v-else-if="trainList.length === 0">
+            <td colspan="12" style="text-align: center; padding: 30px; background-color: #f5f7fa;">
+              暂无车次信息
+            </td>
+          </tr>
+          <tr v-else v-for="(train, index) in trainList" :key="index">
             <td>
               <!-- 显示车次号，确保总是带下划线 -->
               <div style="border-bottom: 1px solid #333; padding-bottom: 2px; display: inline-block; text-align: center;">
@@ -133,30 +132,56 @@
             </td>
             <td>
               {{ train.departureTime || '--' }}<br>
+              {{ train.arrivalTime || '--' }}
             </td>
             <td>{{ train.duration || '--' }}</td>
-            <td>{{ train.businessSeat || '--' }}</td>
-            <td>{{ train.preferredFirstClass || '--' }}</td>
-            <td>{{ train.firstClass || '--' }}</td>
-            <td>{{ train.secondClass || '--' }}</td>
-            <td>{{ train.advancedSoftSleeper || '--' }}</td>
-            <td>{{ train.softSleeper || '--' }}</td>
-            <td>{{ train.hardSleeper || '--' }}</td>
-            <td>{{ train.softSeat || '--' }}</td>
-            <td>{{ train.hardSeat || '--' }}</td>
-            <td>{{ train.noSeat || '--' }}</td>
-            <td>{{ train.other || '--' }}</td>
+            <td>
+              <span :class="{ 'seat-available': train.businessSeat === '有', 'seat-unavailable': train.businessSeat === '无' }">
+                {{ train.businessSeat || '--' }}
+              </span>
+            </td>
+            <td>
+              <span :class="{ 'seat-available': train.firstClass === '有', 'seat-unavailable': train.firstClass === '无' }">
+                {{ train.firstClass || '--' }}
+              </span>
+            </td>
+            <td>
+              <span :class="{ 'seat-available': train.secondClass === '有', 'seat-unavailable': train.secondClass === '无' }">
+                {{ train.secondClass || '--' }}
+              </span>
+            </td>
+            <td>
+              <span :class="{ 'seat-available': train.softSleeper === '有', 'seat-unavailable': train.softSleeper === '无' }">
+                {{ train.softSleeper || '--' }}
+              </span>
+            </td>
+            <td>
+              <span :class="{ 'seat-available': train.hardSleeper === '有', 'seat-unavailable': train.hardSleeper === '无' }">
+                {{ train.hardSleeper || '--' }}
+              </span>
+            </td>
+            <td>
+              <span :class="{ 'seat-available': train.hardSeat === '有', 'seat-unavailable': train.hardSeat === '无' }">
+                {{ train.hardSeat || '--' }}
+              </span>
+            </td>
+            <td>
+              <span :class="{ 'seat-available': train.noSeat === '有', 'seat-unavailable': train.noSeat === '无' }">
+                {{ train.noSeat || '--' }}
+              </span>
+            </td>
             <td>
               <button 
-                style="background-color: #1890ff; color: white; border: none; padding: 4px 12px; cursor: pointer; border-radius: 4px;"
+                class="book-button"
                 @click="navigateToTicketMessages"
               >
                 预定
               </button>
             </td>
-        </tr>
+          </tr>
       </tbody>
     </table>
+  </div>
   </div>
 </template>
 
@@ -281,10 +306,14 @@ const handleQuery = async () => {
     loading.value = true;
     
     // 构建查询参数，包含所有筛选条件
+    const formatDate = (dateStr) => {
+      return `${dateStr} 00:00:00`;
+    };
+    
     const queryParams = {
       departure: departure.value,
       destination: destination.value,
-      departDate: departDate.value,
+      departDate: formatDate(departDate.value),
       tripType: tripType.value,
       passengerType: passengerType.value,
       trainTypes: selectedTrainTypes.value,
@@ -292,13 +321,77 @@ const handleQuery = async () => {
       departureTimeRange: departureTimeRange.value
     };
     
+    // 如果是往返，也格式化返程日期
+    if (tripType.value === 'round') {
+      queryParams.returnDate = formatDate(returnDate.value);
+    }
+    
     // 发送请求到后端
+    console.log('查询请求开始:', { url: '/product/tickets', params: queryParams });
     const response = await api.post('/product/tickets', queryParams);
     
-    console.log('查询响应:', response);
+    console.log('查询响应完整数据:', JSON.stringify(response, null, 2));
+    console.log('查询响应状态:', response.status);
+    console.log('查询响应数据:', JSON.stringify(response.data, null, 2));
     
     if (response.data.code === 200) {
-      trainList.value = response.data.data || [];
+      // 数据转换：将API返回的结构映射到模板所需的字段
+      const formattedTrainList = (response.data.data || []).map(train => {
+        // 座位类型映射
+        const seatMap = {
+          '商务座': 'businessSeat',
+          '一等座': 'firstClass',
+          '二等座': 'secondClass',
+          '高级软卧': 'advancedSoftSleeper',
+          '软卧': 'softSleeper',
+          '硬卧': 'hardSleeper',
+          '软座': 'softSeat',
+          '硬座': 'hardSeat',
+          '无座': 'noSeat'
+        };
+        
+        // 初始化座位信息
+        const seatInfo = {
+          businessSeat: '--',
+          firstClass: '--',
+          secondClass: '--',
+          advancedSoftSleeper: '--',
+          softSleeper: '--',
+          hardSleeper: '--',
+          softSeat: '--',
+          hardSeat: '--',
+          noSeat: '--',
+          other: '--'
+        };
+        
+        // 处理车厢座位信息
+        train.carriage.forEach(carriage => {
+          const seatKey = seatMap[carriage.seat_type];
+          if (seatKey) {
+            seatInfo[seatKey] = carriage.num > 0 ? '有' : '无';
+          } else {
+            seatInfo.other = carriage.num > 0 ? '有' : '无';
+          }
+        });
+        
+        // 格式化时间
+        const formatTime = (timeString) => {
+          return new Date(timeString).toTimeString().slice(0, 5);
+        };
+        
+        return {
+          ...seatInfo,
+          trainNumber: train.train_no,
+          departureStation: train.station_name,
+          arrivalStation: train.end_station_name,
+          departureTime: formatTime(train.start_time),
+          arrivalTime: formatTime(train.end_time),
+          duration: train.time,
+          id: train.id
+        };
+      });
+      
+      trainList.value = formattedTrainList;
       ElMessage.success('查询成功');
     } else {
       ElMessage.error(response.data.msg || '查询失败');
@@ -592,5 +685,60 @@ onMounted(async () => {
 .sort-icon {
   display: inline-block;
   margin-left: 5px;
+}
+
+/* 表格容器 */
+.train-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* 座位状态样式 */
+.seat-available {
+  color: #52c41a;
+  font-weight: bold;
+}
+
+.seat-unavailable {
+  color: #ff4d4f;
+}
+
+/* 预定按钮样式 */
+.book-button {
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.book-button:hover {
+  background-color: #40a9ff;
+}
+
+.book-button:active {
+  background-color: #096dd9;
+}
+
+/* 加载动画 */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 122, 204, 0.3);
+  border-radius: 50%;
+  border-top-color: #007acc;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
