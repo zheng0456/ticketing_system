@@ -326,24 +326,34 @@ const handleQuery = async () => {
     loading.value = true;
     
     // 构建查询参数，包含所有筛选条件
-    const formatDate = (dateStr) => {
-      return `${dateStr} 00:00:00`;
+    // 处理时间范围，拆分为出发时间和到站时间
+    const parseTimeRange = (timeRangeStr, dateStr) => {
+      const [startTime, endTime] = timeRangeStr.split('--');
+      const startDateTime = `${dateStr} ${startTime}:00`;
+      const endDateTime = `${dateStr} ${endTime}:00`;
+      return { startDateTime, endDateTime };
     };
+    
+    const { startDateTime, endDateTime } = parseTimeRange(departureTimeRange.value, departDate.value);
     
     const queryParams = {
       departure: departure.value,
       destination: destination.value,
-      departDate: formatDate(departDate.value),
+      // departDate现在使用时间范围--前面的时间，而不是固定的00:00:00
+      departDate: startDateTime,
       tripType: tripType.value,
       passengerType: passengerType.value,
       trainTypes: selectedTrainTypes.value,
       seatTypes: selectedSeatTypes.value,
-      departureTimeRange: departureTimeRange.value
+      // 替换departureTimeRange为具体的出发时间和到站时间
+      departureTime: startDateTime,
+      arrivalTime: endDateTime
     };
     
     // 如果是往返，也格式化返程日期
     if (tripType.value === 'round') {
-      queryParams.returnDate = formatDate(returnDate.value);
+      // 往返行程的返程日期使用固定的00:00:00时间
+      queryParams.returnDate = `${returnDate.value} 00:00:00`;
     }
     
     // 发送请求到后端
