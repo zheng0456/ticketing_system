@@ -84,8 +84,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import PassengerMessage from './PassengerMessage.vue';
+import api from '@/api/index.js';
+import { ElMessage } from 'element-plus';
 
 // 表格数据
 const tableData = ref([]);
@@ -130,58 +132,82 @@ const handleCancelAdd = () => {
 };
 
 // 保存乘客信息
-const handleSavePassenger = (formData) => {
-  console.log('保存乘客信息：', formData);
-  
-  // 组合完整的电话号码
-  const fullPhone = formData.countryCode + formData.phone;
-  
-  if (currentEditData.value && currentEditData.value.id) {
-    // 编辑模式：更新现有数据
-    const index = tableData.value.findIndex(item => item.id === currentEditData.value.id);
-    if (index !== -1) {
-      tableData.value[index] = {
-        ...tableData.value[index],
-        name: formData.name,
-        idType: formData.idType,
-        idNumber: formData.idNumber,
-        phone: fullPhone,
-        discountType: formData.discountType
-      };
+const handleSavePassenger = async (formData) => {
+  try {
+    // 组合完整的电话号码
+    const fullPhone = formData.countryCode + formData.phone;
+    
+    if (currentEditData.value && currentEditData.value.id) {
+      // 编辑模式：更新现有数据
+      const response = await api.post('/user/passenger/update', {
+        ...formData,
+        id: currentEditData.value.id
+      });
+      console.log('更新乘车人接口返回数据:', response.data);
+      // 检查后端返回的状态码
+      if (response.data.code !== 200) {
+        throw new Error(response.data.msg || '更新乘车人信息失败');
+      }
+      // 成功提示
+      ElMessage.success('乘车人信息更新成功');
+    } else {
+      // 添加模式：添加新数据
+      const response = await api.post('/user/passenger/add', {
+        ...formData
+      });
+      console.log('添加乘车人接口返回数据:', response.data);
+      // 检查后端返回的状态码
+      if (response.data.code !== 200) {
+        throw new Error(response.data.msg || '添加乘车人失败');
+      }
+      // 成功提示
+      ElMessage.success('乘车人添加成功');
     }
-  } else {
-    // 添加模式：添加新数据
-    const newPassenger = {
-      id: Date.now(), // 临时ID，实际应该由后端生成
-      name: formData.name,
-      idType: formData.idType,
-      idNumber: formData.idNumber,
-      phone: fullPhone,
-      discountType: formData.discountType,
-      checked: false
-    };
-    tableData.value.push(newPassenger);
+    
+    // 刷新列表
+    await getPassengerList();
+    
+    // 关闭表单
+    showAddForm.value = false;
+    currentEditData.value = null;
+  } catch (error) {
+    console.error('保存乘客信息失败:', error);
+    // 失败提示
+    ElMessage.error(error.response?.data?.msg || '保存乘客信息失败，请检查网络连接或稍后重试');
   }
-  
-  // 关闭表单
-  showAddForm.value = false;
-  currentEditData.value = null;
 };
 
 // 批量删除
-const handleBatchDelete = () => {
+const handleBatchDelete = async () => {
   const selectedIds = filteredData.value.filter(item => item.checked).map(item => item.id);
   if (selectedIds.length === 0) {
     alert('请选择要删除的乘客');
     return;
   }
-  tableData.value = tableData.value.filter(item => !selectedIds.includes(item.id));
+  
+  try {
+    await api.post('/user/passenger/batch-delete', {
+      ids: selectedIds
+    });
+    // 刷新列表
+    await getPassengerList();
+  } catch (error) {
+    console.error('批量删除乘客失败:', error);
+  }
 };
 
 // 单行删除
-const handleDelete = (id) => {
+const handleDelete = async (id) => {
   if (confirm('确定要删除该乘客吗？')) {
-    tableData.value = tableData.value.filter(item => item.id !== id);
+    try {
+      await api.post('/user/passenger/delete', {
+        id: id
+      });
+      // 刷新列表
+      await getPassengerList();
+    } catch (error) {
+      console.error('删除乘客失败:', error);
+    }
   }
 };
 
@@ -215,11 +241,26 @@ const handleEdit = (id) => {
   }
 };
 
+// 获取乘车人列表
+const getPassengerList = async () => {
+  try {
+    const response = await api.post('/user/passenger/list');
+    tableData.value = response.data || [];
+  } catch (error) {
+    console.error('获取乘车人列表失败:', error);
+  }
+};
+
 // 格式化证件号码（脱敏）
 const formatIdNumber = (idNumber) => {
   if (!idNumber) return '';
   return idNumber.replace(/(.{6})(.*)(.{3})/, '$1**********$3');
 };
+
+// 页面加载时获取乘车人列表
+onMounted(() => {
+  getPassengerList();
+});
 </script>
 
 <style scoped>

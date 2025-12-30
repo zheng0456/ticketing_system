@@ -111,8 +111,6 @@
 <script setup>
 /* eslint-disable no-undef */
 import { reactive, watch } from 'vue';
-import { ElMessage } from 'element-plus';
-import api from '@/api/index.js';
 
 // 定义 props
 const props = defineProps({
@@ -175,25 +173,13 @@ const validateForm = () => {
 };
 
 // 保存操作
-const handleSave = async () => {
+const handleSave = () => {
   if (!validateForm()) {
     return;
   }
   
-  try {
-    // 调用添加乘车人接口
-    await api.post('/user/passenger/add', { ...formData });
-    
-    // 保存成功提示
-    ElMessage.success('乘车人添加成功');
-    
-    // 保存成功后通知父组件
-    emit('save', { ...formData });
-  } catch (error) {
-    console.error('添加乘车人失败:', error);
-    // 失败提示
-    ElMessage.error(error.response?.data?.msg || '添加乘车人失败，请检查网络连接或稍后重试');
-  }
+  // 验证通过后直接通知父组件，由父组件处理 API 调用
+  emit('save', { ...formData });
 };
 </script>
 
