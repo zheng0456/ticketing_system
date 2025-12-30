@@ -173,6 +173,8 @@
 
 <script>
 import TicketSteateMessage from './TicketSteateMessage.vue'
+import api from '@/api/index.js'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'TicketMessages',
@@ -189,12 +191,11 @@ export default {
   data() {
     return {
       // 乘车人数据
-      passengers: [
-        { id: 1, name: '郑锦春', isStudent: false, isAssignee: true, idNumber: '110101199001011234' },
-        { id: 2, name: '郑锦春', isStudent: true, isAssignee: false, idNumber: '110101200001012345' },
-        { id: 3, name: '郑锦春', isStudent: false, isAssignee: true, idNumber: '110101199001011236' },
-        { id: 4, name: '郑锦春', isStudent: true, isAssignee: false, idNumber: '110101200001012347' }
-      ],
+      passengers: [],
+      // 加载状态
+      loading: false,
+      // 错误信息
+      error: '',
       
       // 已选乘车人
       selectedPassengers: [],
@@ -371,15 +372,30 @@ export default {
     // 关闭弹窗
     closeConfirmation() {
       this.showConfirmation = false;
+    },
+    // 获取乘车人信息
+    async getPassengers() {
+      this.loading = true;
+      this.error = '';
+      try {
+        const response = await api.post('/user/passenger');
+        this.passengers = response.data;
+      } catch (error) {
+        console.error('获取乘车人信息失败:', error);
+        this.error = '获取乘车人信息失败，请稍后重试';
+        ElMessage.error(error.response?.data?.msg || '获取乘车人信息失败，请稍后重试');
+      } finally {
+        this.loading = false;
+      }
     }
   },
   mounted() {
     // 获取火车信息文本
     this.trainInfoText = this.$el.querySelector('.train-info').textContent.trim();
+    // 获取乘车人信息
+    this.getPassengers();
   },
-  
   computed: {
-    
     // 受让人列表
     assignees() {
       return this.passengers.filter(passenger => passenger.isAssignee);

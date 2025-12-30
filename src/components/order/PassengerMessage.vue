@@ -68,9 +68,6 @@
           <div class="phone-input-wrapper">
             <select v-model="formData.countryCode" class="country-code-select">
               <option value="+86">+86</option>
-              <option value="+852">+852</option>
-              <option value="+853">+853</option>
-              <option value="+886">+886</option>
             </select>
             <input 
               type="tel" 
@@ -97,10 +94,42 @@
           </label>
           <select v-model="formData.discountType" class="form-select">
             <option value="成人">成人</option>
-            <option value="儿童">儿童</option>
             <option value="学生">学生</option>
-            <option value="残疾军人">残疾军人</option>
           </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 乘车人信息展示 -->
+    <div class="form-section">
+      <h3 class="section-title">乘车人列表</h3>
+      <div class="passenger-list">
+        <div v-if="loading" class="loading-state">
+          <span>加载中...</span>
+        </div>
+        <div v-else-if="error" class="error-state">
+          <span>{{ error }}</span>
+        </div>
+        <table v-else class="passenger-table">
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>证件类型</th>
+              <th>证件号码</th>
+              <th>优惠类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(passenger, index) in passengers" :key="index">
+              <td>{{ passenger.name }}</td>
+              <td>{{ passenger.idType }}</td>
+              <td>{{ passenger.idNumber }}</td>
+              <td>{{ passenger.discountType }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-if="!loading && !error && passengers.length === 0" class="empty-state">
+          <span>暂无乘车人信息</span>
         </div>
       </div>
     </div>
@@ -115,7 +144,9 @@
 
 <script setup>
 /* eslint-disable no-undef */
-import { reactive, watch } from 'vue';
+import { reactive, watch, onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
+import api from '@/api/index.js';
 
 // 定义 props
 const props = defineProps({
@@ -137,6 +168,16 @@ const formData = reactive({
   phone: '',
   discountType: '成人'
 });
+
+// 乘车人列表数据
+const passengerData = reactive({
+  passengers: [],
+  loading: false,
+  error: ''
+});
+
+// 解构乘车人数据
+const { passengers, loading, error } = passengerData;
 
 // 监听 editData 变化，填充表单（编辑模式）
 watch(() => props.editData, (newData) => {
@@ -177,14 +218,55 @@ const validateForm = () => {
   return true;
 };
 
+// 获取乘车人信息
+const getPassengers = async () => {
+  passengerData.loading = true;
+  passengerData.error = '';
+  
+  try {
+    // 调用获取乘车人接口
+    const response = await api.post('/user/passenger');
+    
+    // 保存乘车人列表数据
+    passengerData.passengers = response.data;
+  } catch (error) {
+    console.error('获取乘车人信息失败:', error);
+    passengerData.error = '获取乘车人信息失败，请稍后重试';
+    ElMessage.error(error.response?.data?.msg || '获取乘车人信息失败，请稍后重试');
+  } finally {
+    passengerData.loading = false;
+  }
+};
+
 // 保存操作
-const handleSave = () => {
+const handleSave = async () => {
   if (!validateForm()) {
     return;
   }
   
-  emit('save', { ...formData });
+  try {
+    // 调用添加乘车人接口
+    await api.post('/user/passenger/add', { ...formData });
+    
+    // 保存成功提示
+    ElMessage.success('乘车人添加成功');
+    
+    // 保存成功后刷新乘车人列表
+    await getPassengers();
+    
+    // 保存成功后通知父组件
+    emit('save', { ...formData });
+  } catch (error) {
+    console.error('添加乘车人失败:', error);
+    // 失败提示
+    ElMessage.error(error.response?.data?.msg || '添加乘车人失败，请检查网络连接或稍后重试');
+  }
 };
+
+// 组件挂载时获取乘车人信息
+onMounted(() => {
+  getPassengers();
+});
 </script>
 
 <style scoped>
@@ -353,6 +435,49 @@ const handleSave = () => {
   color: #909399;
   margin-top: 8px;
   line-height: 1.6;
+}
+
+/* 乘车人列表 */
+.passenger-list {
+  padding: 12px 0;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  color: #606266;
+  font-size: 14px;
+}
+
+.error-state {
+  color: #f56c6c;
+}
+
+.passenger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.passenger-table th,
+.passenger-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.passenger-table th {
+  font-weight: 600;
+  color: #303133;
+  background-color: #f5f7fa;
+}
+
+.passenger-table td {
+  color: #606266;
 }
 
 /* 操作按钮 */
