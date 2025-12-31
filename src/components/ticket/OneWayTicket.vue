@@ -281,11 +281,16 @@ const swapLocation = () => {
 };
 
 // 选择日期
-const selectDate = (index) => {
+const selectDate = async (index) => {
   dateList.value.forEach((date, i) => {
     date.isActive = i === index;
   });
   departDate.value = dateList.value[index].fullDate;
+  
+  // 如果已经有出发地和目的地，则自动查询车票
+  if (departure.value.trim() && destination.value.trim()) {
+    await handleQuery();
+  }
 };
 
 // 查询车票
