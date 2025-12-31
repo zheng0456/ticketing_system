@@ -7,7 +7,7 @@
     
     <!-- 列车详细信息 -->
     <div class="train-info">
-      2025-11-26（周三） K545次 北京站（12:50开）→成都西站（22:21到）
+      {{ trainInfo.date }}（{{ trainInfo.weekday }}）{{ trainInfo.trainNumber }}次 {{ trainInfo.departureStation }}（{{ trainInfo.departureTime }}开）→{{ trainInfo.arrivalStation }}（{{ trainInfo.arrivalTime }}到）
     </div>
     
     <!-- 票价信息 -->
@@ -230,7 +230,18 @@ export default {
       // 弹窗显示状态
       showConfirmation: false,
       // 火车信息文本
-      trainInfoText: ''
+      trainInfoText: '',
+      // 列车信息对象
+      trainInfo: {
+        trainNumber: '',
+        departureStation: '',
+        arrivalStation: '',
+        departureTime: '',
+        arrivalTime: '',
+        date: '',
+        weekday: '',
+        duration: ''
+      }
     }
   },
   methods: {
@@ -390,6 +401,20 @@ export default {
     }
   },
   mounted() {
+    // 从路由参数获取列车信息
+    const query = this.$route.query;
+    if (query.trainNumber) {
+      this.trainInfo = {
+        trainNumber: query.trainNumber || '',
+        departureStation: query.departureStation || '',
+        arrivalStation: query.arrivalStation || '',
+        departureTime: query.departureTime || '',
+        arrivalTime: query.arrivalTime || '',
+        date: query.date || '',
+        weekday: query.weekday || '',
+        duration: query.duration || ''
+      };
+    }
     // 获取火车信息文本
     this.trainInfoText = this.$el.querySelector('.train-info').textContent.trim();
     // 获取乘车人信息

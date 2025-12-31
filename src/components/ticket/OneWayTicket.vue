@@ -173,7 +173,7 @@
             <td>
               <button 
                 class="book-button"
-                @click="navigateToTicketMessages"
+                @click="navigateToTicketMessages(train)"
               >
                 预定
               </button>
@@ -474,8 +474,24 @@ const clearSeatTypes = () => {
 };
 
 // 跳转到列车信息详情页面
-const navigateToTicketMessages = () => {
-  router.push('/ticketmessages');
+const navigateToTicketMessages = (train) => {
+  const weekday = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  const dateObj = new Date(departDate.value);
+  const dayOfWeek = weekday[dateObj.getDay()];
+  
+  router.push({
+    path: '/ticketmessages',
+    query: {
+      trainNumber: train.trainNumber,
+      departureStation: train.departureStation,
+      arrivalStation: train.arrivalStation,
+      departureTime: train.departureTime,
+      arrivalTime: train.arrivalTime,
+      date: departDate.value,
+      weekday: dayOfWeek,
+      duration: train.duration
+    }
+  });
 };
 
 // 组件挂载时生成日期列表和设置行程类型
