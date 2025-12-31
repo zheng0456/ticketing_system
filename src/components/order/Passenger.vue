@@ -56,8 +56,8 @@
             <td><input type="checkbox" v-model="item.checked"></td>
             <td>{{ index + 1 }}</td>
             <td>{{ item.name }}</td>
-            <td>{{ item.idType }}</td>
-            <td>{{ formatIdNumber(item.idNumber) }}</td>
+            <td>{{ item.cardType }}</td>
+            <td>{{ formatIdNumber(item.cardId) }}</td>
             <td>{{ item.phone }}</td>
             <td>
               <svg class="verify-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -138,7 +138,7 @@ const handleSavePassenger = async (formData) => {
       const response = await api.post('/user/passenger/update', {
         id: currentEditData.value.id,
         name: formData.name,
-        phone: parseInt(formData.phone),
+        phone: formData.phone ? parseInt(formData.phone) : null,
         cardId: formData.idNumber,
         cardType: formData.idType,
         discountType: formData.discountType
@@ -152,7 +152,7 @@ const handleSavePassenger = async (formData) => {
       console.log('🚀 准备调用添加乘车人API，数据:', formData);
       const response = await api.post('/user/passenger/add', {
         name: formData.name,
-        phone: parseInt(formData.phone),
+        phone: formData.phone,
         cardId: formData.idNumber,
         cardType: formData.idType,
         discountType: formData.discountType
@@ -227,9 +227,9 @@ const handleEdit = (id) => {
     
     currentEditData.value = {
       id: passenger.id,
-      idType: passenger.idType,
+      idType: passenger.cardType,
       name: passenger.name,
-      idNumber: passenger.idNumber,
+      idNumber: passenger.cardId,
       countryCode: countryCode,
       phone: phone,
       discountType: passenger.discountType
@@ -242,7 +242,11 @@ const handleEdit = (id) => {
 const getPassengerList = async () => {
   try {
     const response = await api.post('/user/passenger/list');
-    tableData.value = response.data || [];
+    console.log('📋 获取乘车人列表接口返回数据:', response.data);
+    tableData.value = (response.data.data || []).map(item => ({
+      ...item,
+      checked: false
+    }));
   } catch (error) {
     console.error('获取乘车人列表失败:', error);
   }
