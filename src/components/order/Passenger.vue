@@ -138,7 +138,7 @@ const handleSavePassenger = async (formData) => {
       const response = await api.post('/user/passenger/update', {
         id: currentEditData.value.id,
         name: formData.name,
-        phone: formData.phone ? parseInt(formData.phone) : null,
+        phone: formData.phone,
         cardId: formData.idNumber,
         cardType: formData.idType,
         discountType: formData.discountType
