@@ -510,13 +510,18 @@ export default {
      */
     loadUserMenu() {
       try {
+        console.log('🔍 开始加载用户菜单数据...');
         const userMenuStr = localStorage.getItem('userMenu');
+        console.log('📦 localStorage 中的 userMenu 字符串:', userMenuStr);
+        
         if (userMenuStr) {
           this.userMenu = JSON.parse(userMenuStr);
           console.log('✅ 加载用户菜单数据成功:', this.userMenu);
+          console.log('📊 菜单数量:', this.userMenu.length);
           this.checkMenuPermissions();
         } else {
-          console.log('⚠️  未找到用户菜单数据');
+          console.log('⚠️  未找到用户菜单数据，localStorage 中没有 userMenu');
+          console.log('📋 localStorage 所有键值:', Object.keys(localStorage));
           this.userMenu = [];
         }
       } catch (error) {

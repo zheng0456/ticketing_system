@@ -253,31 +253,29 @@ const handleLogin = async () => {
       };
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       
-      // 保存菜单数据到localStorage，用于控制导航栏和页面展示
-      if (response.data.data && response.data.data.length > 0) {
-        localStorage.setItem('userMenu', JSON.stringify(response.data.data));
+      if (response.data.data?.menuList) {
+        console.log('💾 准备保存菜单数据到 localStorage');
+        console.log('📋 menuList 数据:', response.data.data.menuList);
+        console.log('📊 menuList 数量:', response.data.data.menuList.length);
+        localStorage.setItem('userMenu', JSON.stringify(response.data.data.menuList));
+        console.log('✅ 菜单数据已保存到 localStorage');
+        
+        // 验证保存是否成功
+        const savedMenu = localStorage.getItem('userMenu');
+        console.log('🔍 验证保存的菜单数据:', savedMenu);
+      } else {
+        console.log('⚠️  menuList 不存在或为空');
       }
       
       ElMessage.success('登录成功');
       
-      // 先打印最终的跳转信息
       console.log('============================================');
       console.log('📌 登录流程即将完成，准备跳转页面');
-      console.log('🔗 跳转路径:', response.data.data && response.data.data.length > 0 && response.data.data[0].path ? response.data.data[0].path : '/index');
-      console.log('⏱️  延迟时间：1分钟（60秒）');
-      console.log('💡 提示：页面将在1分钟后跳转，控制台日志不会被清除');
+      const redirectPath = response.data.data?.menuList?.[0]?.path || '/index';
+      console.log('� 跳转路径:', redirectPath);
       console.log('============================================');
       
-      // 延迟1分钟跳转，确保日志有足够时间显示
-      setTimeout(() => {
-        // 使用response.data.data[0].path中的路径进行跳转
-        if (response.data.data && response.data.data.length > 0 && response.data.data[0].path) {
-          window.location.href = response.data.data[0].path;
-        } else {
-          // 如果path为空，默认跳转到首页
-          window.location.href = '/index';
-        }
-      }, 100);
+      window.location.href = redirectPath;
     } else {
       ElMessage.error(response.data.msg || '登录失败');
     }
