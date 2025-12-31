@@ -183,9 +183,7 @@ const handleBatchDelete = async () => {
   }
   
   try {
-    await api.post('/user/passenger/delete', {
-      ids: selectedIds
-    });
+    await api.post('/user/passenger/delete', selectedIds);
     // 刷新列表
     await getPassengerList();
   } catch (error) {
@@ -197,9 +195,7 @@ const handleBatchDelete = async () => {
 const handleDelete = async (id) => {
   if (confirm('确定要删除该乘客吗？')) {
     try {
-      await api.post('/user/passenger/delete', {
-        ids: [id]
-      });
+      await api.post('/user/passenger/delete', [id]);
       // 刷新列表
       await getPassengerList();
     } catch (error) {
