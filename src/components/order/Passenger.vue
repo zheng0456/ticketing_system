@@ -134,46 +134,42 @@ const handleCancelAdd = () => {
 // 保存乘客信息
 const handleSavePassenger = async (formData) => {
   try {
-    // 组合完整的电话号码
-    const fullPhone = formData.countryCode + formData.phone;
-    
     if (currentEditData.value && currentEditData.value.id) {
-      // 编辑模式：更新现有数据
       const response = await api.post('/user/passenger/update', {
-        ...formData,
-        id: currentEditData.value.id
+        id: currentEditData.value.id,
+        name: formData.name,
+        phone: formData.phone,
+        cardId: formData.idNumber,
+        cardType: formData.idType,
+        discountType: formData.discountType
       });
       console.log('更新乘车人接口返回数据:', response.data);
-      // 检查后端返回的状态码
       if (response.data.code !== 200) {
         throw new Error(response.data.msg || '更新乘车人信息失败');
       }
-      // 成功提示
       ElMessage.success('乘车人信息更新成功');
     } else {
-      // 添加模式：添加新数据
       console.log('🚀 准备调用添加乘车人API，数据:', formData);
       const response = await api.post('/user/passenger/add', {
-        ...formData
+        name: formData.name,
+        phone: formData.phone,
+        cardId: formData.idNumber,
+        cardType: formData.idType,
+        discountType: formData.discountType
       });
       console.log('✅ 添加乘车人接口返回数据:', response.data);
-      // 检查后端返回的状态码
       if (response.data.code !== 200) {
         throw new Error(response.data.msg || '添加乘车人失败');
       }
-      // 成功提示
       ElMessage.success('乘车人添加成功');
     }
     
-    // 刷新列表
     await getPassengerList();
     
-    // 关闭表单
     showAddForm.value = false;
     currentEditData.value = null;
   } catch (error) {
     console.error('保存乘客信息失败:', error);
-    // 失败提示
     ElMessage.error(error.response?.data?.msg || '保存乘客信息失败，请检查网络连接或稍后重试');
   }
 };
