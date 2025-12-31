@@ -243,9 +243,12 @@ const handleLogin = async () => {
 
     if (response.data.code === 200) {
       // 保存用户信息到localStorage
+      // 从正确的位置获取token：response.data.data.token
+      const token = response.data.data?.token || response.data.token || 'mock_token';
+      console.log('🔐 获取到的token:', token);
       const userInfo = {
         userName: loginForm.userName,
-        token: response.data.token || 'mock_token', // 如果后端返回token则使用，否则使用模拟token
+        token: token,
         isLoggedIn: true
       };
       localStorage.setItem('userInfo', JSON.stringify(userInfo));

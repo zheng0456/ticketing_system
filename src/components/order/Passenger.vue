@@ -152,10 +152,11 @@ const handleSavePassenger = async (formData) => {
       ElMessage.success('乘车人信息更新成功');
     } else {
       // 添加模式：添加新数据
+      console.log('🚀 准备调用添加乘车人API，数据:', formData);
       const response = await api.post('/user/passenger/add', {
         ...formData
       });
-      console.log('添加乘车人接口返回数据:', response.data);
+      console.log('✅ 添加乘车人接口返回数据:', response.data);
       // 检查后端返回的状态码
       if (response.data.code !== 200) {
         throw new Error(response.data.msg || '添加乘车人失败');

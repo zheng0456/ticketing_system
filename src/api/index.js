@@ -22,4 +22,25 @@ const api = axios.create({
   }]
 });
 
+// 添加请求拦截器，自动在请求头中添加token
+api.interceptors.request.use(function (config) {
+  // 从localStorage中获取用户信息
+  const userInfoStr = localStorage.getItem('userInfo');
+  if (userInfoStr) {
+    try {
+      const userInfo = JSON.parse(userInfoStr);
+      if (userInfo.token) {
+        // 将token添加到请求头
+        config.headers['Authorization'] = `Bearer ${userInfo.token}`;
+      }
+    } catch (e) {
+      console.error('解析用户信息失败:', e);
+    }
+  }
+  return config;
+}, function (error) {
+  // 处理请求错误
+  return Promise.reject(error);
+});
+
 export default api;
