@@ -138,7 +138,7 @@ const handleSavePassenger = async (formData) => {
       const response = await api.post('/user/passenger/update', {
         id: currentEditData.value.id,
         name: formData.name,
-        phone: formData.phone,
+        phone: parseInt(formData.phone),
         cardId: formData.idNumber,
         cardType: formData.idType,
         discountType: formData.discountType
@@ -152,7 +152,7 @@ const handleSavePassenger = async (formData) => {
       console.log('🚀 准备调用添加乘车人API，数据:', formData);
       const response = await api.post('/user/passenger/add', {
         name: formData.name,
-        phone: formData.phone,
+        phone: parseInt(formData.phone),
         cardId: formData.idNumber,
         cardType: formData.idType,
         discountType: formData.discountType
