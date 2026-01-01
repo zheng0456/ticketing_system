@@ -17,7 +17,7 @@
         :key="index"
         class="price-item"
       >
-        {{ price.seat_type }} {{ price.seat_type }}（¥{{ price.price }}元）剩余{{ price.num }}
+        {{ price.seat_type }}（¥{{ price.price }}元）{{ price.num > 10 ? '有票' : '剩余' + price.num + '张' }}
       </span>
       <div style="text-align: left; margin-top: 10px; font-size: 12px; color: #ff6b6b;">
         *显示的价格均为实际活动折扣后票价，供您参考，查看公布票价。具体票价以您确认支付时实际购买的铺别票价为准。
