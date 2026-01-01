@@ -51,7 +51,7 @@
             >
             <label :for="`passenger-${passenger.id}`">
               {{ passenger.name }}
-              <span v-if="passenger.isStudent">(学生)</span>
+              <span v-if="passenger.discountType === '学生'">(学生)</span>
             </label>
           </div>
         </div>
@@ -246,7 +246,7 @@ export default {
         this.selectedPassengers.splice(index, 1);
         
         // 移除对应的票务信息
-        const ticketIndex = this.ticketList.findIndex(t => t.name === passenger.name && t.idNumber === passenger.idNumber);
+        const ticketIndex = this.ticketList.findIndex(t => t.name === passenger.name && t.idNumber === passenger.cardId);
         if (ticketIndex > -1) {
           this.ticketList.splice(ticketIndex, 1);
         }
@@ -260,11 +260,11 @@ export default {
         // 创建新的票务信息并填充乘客信息
         const newTicket = {
           id: Date.now(),
-          ticketType: passenger.isStudent ? '学生票' : '成人票',
+          ticketType: passenger.discountType === '学生' ? '学生票' : '成人票',
           seatType: this.seatTypes.length > 0 ? this.seatTypes[0] : '', // 默认选择第一个座位类型
           name: passenger.name,
-          idType: '居民身份证',
-          idNumber: passenger.idNumber
+          idType: passenger.cardType,
+          idNumber: passenger.cardId
         };
         
         // 如果是第一个选中的乘客，填充到序号1的行（即ticketList的第一个元素）
@@ -306,16 +306,16 @@ export default {
       this.selectedPassengers.forEach(passengerId => {
         const passenger = this.passengers.find(p => p.id === passengerId);
         if (passenger) {
-          const key = `${passenger.name}-${passenger.idNumber}`;
+          const key = `${passenger.name}-${passenger.cardId}`;
           const savedSettings = userModifiedSettings[key] || {};
           
           newTicketList.push({
             id: Date.now(),
-            ticketType: savedSettings.ticketType || (passenger.isStudent ? '学生票' : '成人票'),
+            ticketType: savedSettings.ticketType || (passenger.discountType === '学生' ? '学生票' : '成人票'),
             seatType: savedSettings.seatType || (this.seatTypes.length > 0 ? this.seatTypes[0] : ''),
             name: passenger.name,
-            idType: savedSettings.idType || '居民身份证',
-            idNumber: passenger.idNumber
+            idType: savedSettings.idType || passenger.cardType,
+            idNumber: passenger.cardId
           });
         }
       });
@@ -445,14 +445,9 @@ export default {
     this.getTicketPrices();
   },
   computed: {
-    // 受让人列表
-    assignees() {
-      return this.passengers.filter(passenger => passenger.isAssignee);
-    },
-    
-    // 乘车人列表（非受让人）
+    // 乘车人列表
     normalPassengers() {
-      return this.passengers.filter(passenger => !passenger.isAssignee);
+      return this.passengers;
     }
   }
 }
