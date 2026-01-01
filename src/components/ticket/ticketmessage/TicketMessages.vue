@@ -200,7 +200,7 @@ export default {
         {
           id: 1,
           ticketType: '成人票',
-          seatType: '硬卧（中铺¥441.0元 下铺¥456.0元 上铺¥426.0元）',
+          seatType: '',
           name: '',
           idType: '居民身份证',
           idNumber: ''
@@ -208,17 +208,10 @@ export default {
       ],
       
       // 票种选项
-      ticketTypes: ['成人票', '学生票', '儿童票'],
+      ticketTypes: ['成人票', '学生票'],
       
       // 席别选项
-      seatTypes: [
-        '硬卧（中铺¥441.0元 下铺¥456.0元 上铺¥426.0元）',
-        '软卧（上铺¥673.0元 下铺¥703.0元）',
-        '硬座（¥251.0元）',
-        '一等座（¥251.0元）',
-        '二等座（¥251.0元）',
-        '商务座（¥251.0元）'
-      ],
+      seatTypes: [],
       
       // 证件类型选项
       idTypes: ['居民身份证', '护照', '军官证'],
@@ -268,7 +261,7 @@ export default {
         const newTicket = {
           id: Date.now(),
           ticketType: passenger.isStudent ? '学生票' : '成人票',
-          seatType: this.seatTypes[0], // 默认选择第一个座位类型
+          seatType: this.seatTypes.length > 0 ? this.seatTypes[0] : '', // 默认选择第一个座位类型
           name: passenger.name,
           idType: '居民身份证',
           idNumber: passenger.idNumber
@@ -319,7 +312,7 @@ export default {
           newTicketList.push({
             id: Date.now(),
             ticketType: savedSettings.ticketType || (passenger.isStudent ? '学生票' : '成人票'),
-            seatType: savedSettings.seatType || this.seatTypes[0],
+            seatType: savedSettings.seatType || (this.seatTypes.length > 0 ? this.seatTypes[0] : ''),
             name: passenger.name,
             idType: savedSettings.idType || '居民身份证',
             idNumber: passenger.idNumber
@@ -332,7 +325,7 @@ export default {
         newTicketList.push({
           id: Date.now(),
           ticketType: '成人票',
-          seatType: this.seatTypes[0],
+          seatType: this.seatTypes.length > 0 ? this.seatTypes[0] : '',
           name: '',
           idType: '居民身份证',
           idNumber: ''
@@ -407,6 +400,19 @@ export default {
         console.log('票价信息响应:', response);
         console.log('票价信息数据:', response.data);
         this.ticketPrices = response.data.data || response.data || [];
+        this.seatTypes = this.ticketPrices.map(price => `${price.seat_type}（¥${price.price}元）`);
+        
+        // 找到第一个有票的座位类型作为默认值
+        const availableSeat = this.ticketPrices.find(price => price.num > 0);
+        if (availableSeat) {
+          const defaultSeatType = `${availableSeat.seat_type}（¥${availableSeat.price}元）`;
+          // 更新ticketList中所有空座位类型为默认值
+          this.ticketList.forEach(ticket => {
+            if (!ticket.seatType) {
+              ticket.seatType = defaultSeatType;
+            }
+          });
+        }
       } catch (error) {
         console.error('获取票价信息失败:', error);
         this.error = '获取票价信息失败，请稍后重试';
