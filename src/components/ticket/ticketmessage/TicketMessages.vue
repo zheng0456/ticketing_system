@@ -12,17 +12,12 @@
     
     <!-- 票价信息 -->
     <div class="ticket-prices">
-      <span class="price-item">
-        软卧（上铺¥673.0元 下铺¥703.0元）8张票
-      </span>
-      <span class="price-item">
-        硬座（¥251.0元）有票
-      </span>
-      <span class="price-item">
-        无座（¥251.0元）无票
-      </span>
-      <span class="price-item">
-        硬卧（中铺¥441.0元 下铺¥456.0元 上铺¥426.0元）有票
+      <span 
+        v-for="(price, index) in ticketPrices" 
+        :key="index"
+        class="price-item"
+      >
+        {{ price.seat_type }} {{ price.seat_type }}（¥{{ price.price }}元）剩余{{ price.num }}
       </span>
       <div style="text-align: left; margin-top: 10px; font-size: 12px; color: #ff6b6b;">
         *显示的价格均为实际活动折扣后票价，供您参考，查看公布票价。具体票价以您确认支付时实际购买的铺别票价为准。
@@ -241,7 +236,9 @@ export default {
         date: '',
         weekday: '',
         duration: ''
-      }
+      },
+      // 票价信息列表
+      ticketPrices: []
     }
   },
   methods: {
@@ -389,12 +386,31 @@ export default {
       this.loading = true;
       this.error = '';
       try {
-        const response = await api.post('/user/passenger');
-        this.passengers = response.data;
+        const response = await api.post('/user/passenger/list');
+        this.passengers = response.data.data || response.data || [];
       } catch (error) {
         console.error('获取乘车人信息失败:', error);
         this.error = '获取乘车人信息失败，请稍后重试';
         ElMessage.error(error.response?.data?.msg || '获取乘车人信息失败，请稍后重试');
+      } finally {
+        this.loading = false;
+      }
+    },
+    // 获取票价信息
+    async getTicketPrices() {
+      this.loading = true;
+      this.error = '';
+      try {
+        const response = await api.post('/product/ticketMessages', {
+          trainId: this.$route.query.id
+        });
+        console.log('票价信息响应:', response);
+        console.log('票价信息数据:', response.data);
+        this.ticketPrices = response.data.data || response.data || [];
+      } catch (error) {
+        console.error('获取票价信息失败:', error);
+        this.error = '获取票价信息失败，请稍后重试';
+        ElMessage.error(error.response?.data?.msg || '获取票价信息失败，请稍后重试');
       } finally {
         this.loading = false;
       }
@@ -419,6 +435,8 @@ export default {
     this.trainInfoText = this.$el.querySelector('.train-info').textContent.trim();
     // 获取乘车人信息
     this.getPassengers();
+    // 获取票价信息
+    this.getTicketPrices();
   },
   computed: {
     // 受让人列表

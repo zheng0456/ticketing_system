@@ -482,6 +482,7 @@ const navigateToTicketMessages = (train) => {
   router.push({
     path: '/ticketmessages',
     query: {
+      id: train.id,
       trainNumber: train.trainNumber,
       departureStation: train.departureStation,
       arrivalStation: train.arrivalStation,
