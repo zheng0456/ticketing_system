@@ -217,8 +217,6 @@ export default {
       idTypes: ['居民身份证', '护照', '军官证'],
       // 弹窗显示状态
       showConfirmation: false,
-      // 火车信息文本
-      trainInfoText: '',
       // 列车信息对象
       trainInfo: {
         trainNumber: '',
@@ -437,8 +435,6 @@ export default {
         duration: query.duration || ''
       };
     }
-    // 获取火车信息文本
-    this.trainInfoText = this.$el.querySelector('.train-info').textContent.trim();
     // 获取乘车人信息
     this.getPassengers();
     // 获取票价信息
@@ -448,6 +444,10 @@ export default {
     // 乘车人列表
     normalPassengers() {
       return this.passengers;
+    },
+    // 火车信息文本
+    trainInfoText() {
+      return `${this.trainInfo.date}（${this.trainInfo.weekday}）${this.trainInfo.trainNumber}次 ${this.trainInfo.departureStation}（${this.trainInfo.departureTime}开）→${this.trainInfo.arrivalStation}（${this.trainInfo.arrivalTime}到）`;
     }
   }
 }
