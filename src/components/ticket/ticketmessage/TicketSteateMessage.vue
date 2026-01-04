@@ -110,7 +110,7 @@
 
     <!-- 余票信息 -->
     <div class="remaining-tickets">
-      本次列车，硬卧余票81张。
+      本次列车，{{ currentSeatType }}余票{{ remainingTickets }}张。
     </div>
 
     <!-- 操作按钮 -->
@@ -141,6 +141,10 @@ export default {
         idType: '居民身份证',
         idNumber: '1526***********712'
       }]
+    },
+    remainingTickets: {
+      type: Number,
+      default: 81
     }
   },
   data() {
@@ -157,6 +161,12 @@ export default {
     },
     selectedSeat() {
       return this.selectedSeats.length > 0 ? this.selectedSeats[0] : null
+    },
+    currentSeatType() {
+      if (!this.ticketList || this.ticketList.length === 0) {
+        return '';
+      }
+      return this.ticketList[0].seatType || '';
     },
     showBerthSelection() {
       // 当ticketList中包含软卧或硬卧时显示铺位选择界面
