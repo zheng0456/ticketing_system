@@ -160,7 +160,7 @@
     <!-- 订单确认弹窗 -->
         <div v-if="showConfirmation" class="modal-overlay" @click.self="closeConfirmation">
           <div class="modal-content">
-            <TicketSteateMessage :trainInfo="trainInfoText" :ticketList="ticketList" @cancel="closeConfirmation" />
+            <TicketSteateMessage :trainInfo="trainInfoText" :ticketList="ticketList" :remainingTickets="remainingTickets" @cancel="closeConfirmation" />
           </div>
         </div>
   </div>
@@ -448,6 +448,16 @@ export default {
     // 火车信息文本
     trainInfoText() {
       return `${this.trainInfo.date}（${this.trainInfo.weekday}）${this.trainInfo.trainNumber}次 ${this.trainInfo.departureStation}（${this.trainInfo.departureTime}开）→${this.trainInfo.arrivalStation}（${this.trainInfo.arrivalTime}到）`;
+    },
+    // 余票信息对象
+    remainingTickets() {
+      const result = {};
+      console.log('ticketPrices:', this.ticketPrices);
+      this.ticketPrices.forEach(price => {
+        result[price.seat_type] = price.num;
+      });
+      console.log('remainingTickets result:', result);
+      return result;
     }
   }
 }

@@ -110,7 +110,7 @@
 
     <!-- 余票信息 -->
     <div class="remaining-tickets">
-      本次列车，{{ currentSeatType }}余票{{ remainingTickets }}张。
+      本次列车，{{ remainingTicketsInfo }}。
     </div>
 
     <!-- 操作按钮 -->
@@ -143,8 +143,10 @@ export default {
       }]
     },
     remainingTickets: {
-      type: Number,
-      default: 81
+      type: Object,
+      default: () => ({
+        '硬卧': 81
+      })
     }
   },
   data() {
@@ -167,6 +169,26 @@ export default {
         return '';
       }
       return this.ticketList[0].seatType || '';
+    },
+    uniqueSeatTypes() {
+      if (!this.ticketList || this.ticketList.length === 0) {
+        return [];
+      }
+      const seatTypes = this.ticketList.map(ticket => {
+        const seatType = ticket.seatType || '';
+        const match = seatType.match(/^(.+?)(?:（|$)/);
+        return match ? match[1] : seatType;
+      });
+      return [...new Set(seatTypes)];
+    },
+    remainingTicketsInfo() {
+      console.log('remainingTickets:', this.remainingTickets);
+      console.log('uniqueSeatTypes:', this.uniqueSeatTypes);
+      return this.uniqueSeatTypes.map(seatType => {
+        const count = this.remainingTickets[seatType] || 0;
+        console.log(`seatType: ${seatType}, count: ${count}`);
+        return `${seatType}余票${count}张`;
+      }).join('，');
     },
     showBerthSelection() {
       // 当ticketList中包含软卧或硬卧时显示铺位选择界面
