@@ -93,8 +93,10 @@
       <div class="seat-container">
         <div class="seat-row">
           <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('A') }" @click="selectSeat('A', '一等座')">A</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('B') }" @click="selectSeat('B', '一等座')">B</div>
           <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('C') }" @click="selectSeat('C', '一等座')">C</div>
           <div class="aisle">过道</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('D') }" @click="selectSeat('D', '一等座')">D</div>
           <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('F') }" @click="selectSeat('F', '一等座')">F</div>
         </div>
       </div>
