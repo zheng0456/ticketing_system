@@ -380,8 +380,16 @@ const handleQuery = async () => {
     console.log('查询响应数据:', JSON.stringify(response.data, null, 2));
     
     if (response.data.code === 200) {
+      console.log('API 返回的原始列车数据:', response.data.data);
+      console.log('第一条列车数据:', response.data.data[0]);
+      console.log('第一条列车的 start_station_id:', response.data.data[0]?.start_station_id);
+      console.log('第一条列车的 end_station_id:', response.data.data[0]?.end_station_id);
+      console.log('第一条列车的所有字段:', Object.keys(response.data.data[0] || {}));
+      
       // 数据转换：将API返回的结构映射到模板所需的字段
       const formattedTrainList = (response.data.data || []).map(train => {
+        console.log('处理列车:', train.train_no, 'start_station_id:', train.start_station_id, 'end_station_id:', train.end_station_id);
+        console.log('列车对象的所有字段:', Object.keys(train));
         // 座位类型映射
         const seatMap = {
           '商务座': 'businessSeat',
@@ -432,7 +440,9 @@ const handleQuery = async () => {
           departureTime: formatTime(train.start_time),
           arrivalTime: formatTime(train.end_time),
           duration: train.time,
-          id: train.id
+          id: train.id,
+          departureStationId: train.start_station_id,
+          arrivalStationId: train.end_station_id
         };
       });
       
@@ -479,6 +489,10 @@ const navigateToTicketMessages = (train) => {
   const dateObj = new Date(departDate.value);
   const dayOfWeek = weekday[dateObj.getDay()];
   
+  console.log('跳转到票务信息页面，列车数据:', train);
+  console.log('departureStationId:', train.departureStationId);
+  console.log('arrivalStationId:', train.arrivalStationId);
+  
   router.push({
     path: '/ticketmessages',
     query: {
@@ -486,6 +500,8 @@ const navigateToTicketMessages = (train) => {
       trainNumber: train.trainNumber,
       departureStation: train.departureStation,
       arrivalStation: train.arrivalStation,
+      departureStationId: train.departureStationId,
+      arrivalStationId: train.arrivalStationId,
       departureTime: train.departureTime,
       arrivalTime: train.arrivalTime,
       date: departDate.value,

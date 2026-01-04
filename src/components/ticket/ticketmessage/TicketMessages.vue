@@ -91,6 +91,7 @@
                 <select 
                   class="seat-type-select"
                   v-model="ticket.seatType"
+                  @change="handleSeatTypeChange(ticket)"
                 >
                   <option 
                     v-for="seat in seatTypes" 
@@ -201,9 +202,12 @@ export default {
           id: 1,
           ticketType: '成人票',
           seatType: '',
+          price: 0,
           name: '',
           idType: '居民身份证',
-          idNumber: ''
+          idNumber: '',
+          departureStationId: '',
+          arrivalStationId: ''
         }
       ],
       
@@ -222,6 +226,8 @@ export default {
         trainNumber: '',
         departureStation: '',
         arrivalStation: '',
+        departureStationId: '',
+        arrivalStationId: '',
         departureTime: '',
         arrivalTime: '',
         date: '',
@@ -255,15 +261,23 @@ export default {
         // 选中乘客，添加到已选列表
         this.selectedPassengers.push(passengerId);
         
-        // 创建新的票务信息并填充乘客信息
+        const defaultSeatType = this.seatTypes.length > 0 ? this.seatTypes[0] : '';
+        
         const newTicket = {
-          id: Date.now(),
+          id: passenger.id,
           ticketType: passenger.discountType === '学生' ? '学生票' : '成人票',
-          seatType: this.seatTypes.length > 0 ? this.seatTypes[0] : '', // 默认选择第一个座位类型
+          seatType: defaultSeatType,
+          price: this.extractPrice(defaultSeatType),
           name: passenger.name,
           idType: passenger.cardType,
-          idNumber: passenger.cardId
+          idNumber: passenger.cardId,
+          departureStationId: this.trainInfo.departureStationId,
+          arrivalStationId: this.trainInfo.arrivalStationId
         };
+        
+        console.log('创建新票务信息:', newTicket);
+        console.log('trainInfo.departureStationId:', this.trainInfo.departureStationId);
+        console.log('trainInfo.arrivalStationId:', this.trainInfo.arrivalStationId);
         
         // 如果是第一个选中的乘客，填充到序号1的行（即ticketList的第一个元素）
         if (this.selectedPassengers.length === 1) {
@@ -306,27 +320,35 @@ export default {
         if (passenger) {
           const key = `${passenger.name}-${passenger.cardId}`;
           const savedSettings = userModifiedSettings[key] || {};
+          const seatType = savedSettings.seatType || (this.seatTypes.length > 0 ? this.seatTypes[0] : '');
           
           newTicketList.push({
             id: Date.now(),
             ticketType: savedSettings.ticketType || (passenger.discountType === '学生' ? '学生票' : '成人票'),
-            seatType: savedSettings.seatType || (this.seatTypes.length > 0 ? this.seatTypes[0] : ''),
+            seatType: seatType,
+            price: this.extractPrice(seatType),
             name: passenger.name,
             idType: savedSettings.idType || passenger.cardType,
-            idNumber: passenger.cardId
+            idNumber: passenger.cardId,
+            departureStationId: this.trainInfo.departureStationId,
+            arrivalStationId: this.trainInfo.arrivalStationId
           });
         }
       });
       
       // 添加空行，确保表格至少有一行
       if (newTicketList.length === 0) {
+        const seatType = this.seatTypes.length > 0 ? this.seatTypes[0] : '';
         newTicketList.push({
           id: Date.now(),
           ticketType: '成人票',
-          seatType: this.seatTypes.length > 0 ? this.seatTypes[0] : '',
+          seatType: seatType,
+          price: this.extractPrice(seatType),
           name: '',
           idType: '居民身份证',
-          idNumber: ''
+          idNumber: '',
+          departureStationId: this.trainInfo.departureStationId,
+          arrivalStationId: this.trainInfo.arrivalStationId
         });
       }
       
@@ -408,6 +430,9 @@ export default {
           this.ticketList.forEach(ticket => {
             if (!ticket.seatType) {
               ticket.seatType = defaultSeatType;
+              ticket.price = this.extractPrice(defaultSeatType);
+              ticket.departureStationId = this.trainInfo.departureStationId;
+              ticket.arrivalStationId = this.trainInfo.arrivalStationId;
             }
           });
         }
@@ -418,22 +443,38 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    
+    // 从座位类型字符串中提取价格
+    extractPrice(seatType) {
+      if (!seatType) return 0;
+      const match = seatType.match(/¥([\d.]+)元/);
+      return match ? parseFloat(match[1]) : 0;
+    },
+    
+    // 处理座位类型变化
+    handleSeatTypeChange(ticket) {
+      ticket.price = this.extractPrice(ticket.seatType);
     }
   },
   mounted() {
     // 从路由参数获取列车信息
     const query = this.$route.query;
+    console.log('路由参数:', query);
     if (query.trainNumber) {
       this.trainInfo = {
         trainNumber: query.trainNumber || '',
         departureStation: query.departureStation || '',
         arrivalStation: query.arrivalStation || '',
+        departureStationId: query.departureStationId || '',
+        arrivalStationId: query.arrivalStationId || '',
         departureTime: query.departureTime || '',
         arrivalTime: query.arrivalTime || '',
         date: query.date || '',
         weekday: query.weekday || '',
         duration: query.duration || ''
       };
+      console.log('trainInfo 已设置:', this.trainInfo);
     }
     // 获取乘车人信息
     this.getPassengers();

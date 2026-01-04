@@ -307,13 +307,6 @@ export default {
     
     // 处理确认
     handleConfirm() {
-      const selectedBerths = [];
-      if (this.lowerBerth > 0) selectedBerths.push(`下铺${this.lowerBerth}个`);
-      if (this.middleBerth > 0) selectedBerths.push(`中铺${this.middleBerth}个`);
-      if (this.upperBerth > 0) selectedBerths.push(`上铺${this.upperBerth}个`);
-      
-      const berthInfo = selectedBerths.join('、') || '无';
-      
       const allSelectedSeats = [];
       Object.keys(this.seatSelections).forEach(seatType => {
         const seats = this.seatSelections[seatType];
@@ -323,11 +316,20 @@ export default {
       });
       
       const requestData = {
-        ticketList: this.ticketList,
-        berthInfo,
+        ticketList: this.ticketList.map(ticket => ({
+          id: ticket.id,
+          departureStationId: ticket.departureStationId,
+          arrivalStationId: ticket.arrivalStationId,
+          ticketType: ticket.ticketType,
+          price: ticket.price
+        })),
         selectedSeats: allSelectedSeats.length > 0 ? allSelectedSeats.join(' | ') : '未选座',
         trainId: this.trainId
       };
+
+      console.log('ticketList 数据:', this.ticketList);
+      console.log('ticketList 第一项:', this.ticketList[0]);
+      console.log('发送到后端的请求数据:', requestData);
 
       api.post('/order/createOrder', requestData)
         .then(response => {
