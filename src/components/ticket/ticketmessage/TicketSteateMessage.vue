@@ -165,6 +165,10 @@ export default {
       default: () => ({
         '硬卧': 81
       })
+    },
+    trainId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -319,7 +323,8 @@ export default {
       const requestData = {
         ticketList: this.ticketList,
         berthInfo,
-        selectedSeats: allSelectedSeats.length > 0 ? allSelectedSeats.join(' | ') : '未选座'
+        selectedSeats: allSelectedSeats.length > 0 ? allSelectedSeats.join(' | ') : '未选座',
+        trainId: this.trainId
       };
 
       api.post('/order/createOrder', requestData)
