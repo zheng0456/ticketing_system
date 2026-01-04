@@ -21,7 +21,7 @@
         <tbody>
           <tr v-for="(ticket, index) in ticketList" :key="ticket.id || index">
             <td>{{ index + 1 }}</td>
-            <td>{{ticket.seatType }}</td>
+            <td>{{ getDiscountedSeatLabel(ticket.seatType, ticket.ticketType) }}</td>
             <td>{{ ticket.ticketType }}</td>
             <td>{{ ticket.name }}</td>
             <td>{{ ticket.idType }}</td>
@@ -260,6 +260,33 @@ export default {
     }
   },
   methods: {
+    // 从座位类型字符串中提取价格
+    extractPrice(seatType) {
+      if (!seatType) return 0;
+      const match = seatType.match(/¥([\d.]+)元/);
+      return match ? parseFloat(match[1]) : 0;
+    },
+
+    // 计算折扣价格
+    calculateDiscountPrice(seatType, ticketType) {
+      const basePrice = this.extractPrice(seatType);
+      if (ticketType === '学生票') {
+        return basePrice * 0.75;
+      } else if (ticketType === '儿童票') {
+        return basePrice * 0.5;
+      }
+      return basePrice;
+    },
+
+    // 获取带折扣价格的席别显示文本
+    getDiscountedSeatLabel(seatType, ticketType) {
+      if (ticketType === '成人票') {
+        return seatType;
+      }
+      const discountedPrice = this.calculateDiscountPrice(seatType, ticketType);
+      return seatType.replace(/¥[\d.]+元/, `¥${discountedPrice.toFixed(2)}元`);
+    },
+
     // 获取指定席别的票数
     getTicketCountForSeatType(seatType) {
       return this.ticketList.filter(ticket => {
