@@ -341,14 +341,21 @@ export default {
       const index = seats.indexOf(seat);
       
       if (index > -1) {
+        // 如果座位已经被选中，取消选择
         seats.splice(index, 1);
       } else {
+        // 如果座位没有被选中，添加到选座列表
         const ticketsForType = this.ticketList.filter(ticket => {
           const type = ticket.seatType || '';
           return type.includes(seatType);
         });
         
         if (seats.length < ticketsForType.length) {
+          // 如果还没选满，直接添加
+          seats.push(seat);
+        } else {
+          // 如果已经选满了，替换掉最早选中的座位
+          seats.shift();
           seats.push(seat);
         }
       }
