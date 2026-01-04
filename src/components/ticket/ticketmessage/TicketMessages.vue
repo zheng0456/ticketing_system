@@ -77,6 +77,7 @@
                 <select 
                   class="ticket-type-select"
                   v-model="ticket.ticketType"
+                  @change="handleTicketTypeChange(ticket)"
                 >
                   <option 
                     v-for="type in ticketTypes" 
@@ -94,11 +95,11 @@
                   @change="handleSeatTypeChange(ticket)"
                 >
                   <option 
-                    v-for="seat in seatTypes" 
-                    :key="seat"
-                    :value="seat"
+                    v-for="seat in getDiscountedSeatTypes(ticket)" 
+                    :key="seat.value"
+                    :value="seat.value"
                   >
-                    {{ seat }}
+                    {{ seat.label }}
                   </option>
                 </select>
               </td>
@@ -212,7 +213,7 @@ export default {
       ],
       
       // 票种选项
-      ticketTypes: ['成人票', '学生票'],
+      ticketTypes: ['成人票', '学生票', '儿童票'],
       
       // 席别选项
       seatTypes: [],
@@ -267,7 +268,7 @@ export default {
           id: passenger.id,
           ticketType: passenger.discountType === '学生' ? '学生票' : '成人票',
           seatType: defaultSeatType,
-          price: this.extractPrice(defaultSeatType),
+          price: this.calculateDiscountPrice(defaultSeatType, passenger.discountType === '学生' ? '学生票' : '成人票'),
           name: passenger.name,
           idType: passenger.cardType,
           idNumber: passenger.cardId,
@@ -326,7 +327,7 @@ export default {
             id: Date.now(),
             ticketType: savedSettings.ticketType || (passenger.discountType === '学生' ? '学生票' : '成人票'),
             seatType: seatType,
-            price: this.extractPrice(seatType),
+            price: this.calculateDiscountPrice(seatType, savedSettings.ticketType || (passenger.discountType === '学生' ? '学生票' : '成人票')),
             name: passenger.name,
             idType: savedSettings.idType || passenger.cardType,
             idNumber: passenger.cardId,
@@ -343,7 +344,7 @@ export default {
           id: Date.now(),
           ticketType: '成人票',
           seatType: seatType,
-          price: this.extractPrice(seatType),
+          price: this.calculateDiscountPrice(seatType, '成人票'),
           name: '',
           idType: '居民身份证',
           idNumber: '',
@@ -430,7 +431,7 @@ export default {
           this.ticketList.forEach(ticket => {
             if (!ticket.seatType) {
               ticket.seatType = defaultSeatType;
-              ticket.price = this.extractPrice(defaultSeatType);
+              ticket.price = this.calculateDiscountPrice(defaultSeatType, ticket.ticketType);
               ticket.departureStationId = this.trainInfo.departureStationId;
               ticket.arrivalStationId = this.trainInfo.arrivalStationId;
             }
@@ -451,10 +452,44 @@ export default {
       const match = seatType.match(/¥([\d.]+)元/);
       return match ? parseFloat(match[1]) : 0;
     },
+
+    // 计算折扣价格
+    calculateDiscountPrice(seatType, ticketType) {
+      const basePrice = this.extractPrice(seatType);
+      if (ticketType === '学生票') {
+        return basePrice * 0.75;
+      } else if (ticketType === '儿童票') {
+        return basePrice * 0.5;
+      }
+      return basePrice;
+    },
+
+    // 获取带折扣价格的席别选项
+    getDiscountedSeatTypes(ticket) {
+      return this.seatTypes.map(seat => {
+        const discountedPrice = this.calculateDiscountPrice(seat, ticket.ticketType);
+        if (ticket.ticketType === '成人票') {
+          return {
+            value: seat,
+            label: seat
+          };
+        } else {
+          return {
+            value: seat,
+            label: seat.replace(/¥[\d.]+元/, `¥${discountedPrice.toFixed(1)}元`)
+          };
+        }
+      });
+    },
     
     // 处理座位类型变化
     handleSeatTypeChange(ticket) {
-      ticket.price = this.extractPrice(ticket.seatType);
+      ticket.price = this.calculateDiscountPrice(ticket.seatType, ticket.ticketType);
+    },
+
+    // 处理票种变化
+    handleTicketTypeChange(ticket) {
+      ticket.price = this.calculateDiscountPrice(ticket.seatType, ticket.ticketType);
     }
   },
   mounted() {
