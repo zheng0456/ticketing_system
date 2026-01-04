@@ -65,41 +65,59 @@
         已选铺{{ totalSelectedBerths }}/{{ ticketList.length }}
       </div>
     </div>
-    <!-- 座位选择界面 -->
-    <div class="seat-selection" v-if="showSeatSelection">
+    <!-- 座位选择界面（二等座） -->
+    <div class="seat-selection" v-if="showSecondClassSeatSelection">
       <div class="seat-selection-header">
-        <span class="seat-title">选座啦</span>
+        <span class="seat-title">选座啦（二等座）</span>
       </div>
       <div class="seat-container">
         <div class="seat-row">
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('A') }" @click="selectSeat('A')">A</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('B') }" @click="selectSeat('B')">B</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('C') }" @click="selectSeat('C')">C</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['二等座'].includes('A') }" @click="selectSeat('A', '二等座')">A</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['二等座'].includes('B') }" @click="selectSeat('B', '二等座')">B</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['二等座'].includes('C') }" @click="selectSeat('C', '二等座')">C</div>
           <div class="aisle">过道</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('D') }" @click="selectSeat('D')">D</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('F') }" @click="selectSeat('F')">F</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['二等座'].includes('D') }" @click="selectSeat('D', '二等座')">D</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['二等座'].includes('F') }" @click="selectSeat('F', '二等座')">F</div>
         </div>
       </div>
       <div class="selected-seat-info">
-        已选座{{ selectedSeats.length }}/{{ ticketList.length }}
+        已选座{{ seatSelections['二等座'].length }}/{{ getTicketCountForSeatType('二等座') }}
       </div>
     </div>
 
-    <!-- 座位选择界面 -->
-    <div class="seat-selection" v-if="showSeatSelections">
+    <!-- 座位选择界面（一等座） -->
+    <div class="seat-selection" v-if="showFirstClassSeatSelection">
       <div class="seat-selection-header">
-        <span class="seat-title">选座啦</span>
+        <span class="seat-title">选座啦（一等座）</span>
       </div>
       <div class="seat-container">
         <div class="seat-row">
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('A') }" @click="selectSeat('A')">A</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('C') }" @click="selectSeat('C')">C</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('A') }" @click="selectSeat('A', '一等座')">A</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('C') }" @click="selectSeat('C', '一等座')">C</div>
           <div class="aisle">过道</div>
-          <div class="seat seat-available" :class="{ selected: selectedSeats.includes('F') }" @click="selectSeat('F')">F</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['一等座'].includes('F') }" @click="selectSeat('F', '一等座')">F</div>
         </div>
       </div>
       <div class="selected-seat-info">
-        已选座{{ selectedSeats.length }}/{{ ticketList.length }}
+        已选座{{ seatSelections['一等座'].length }}/{{ getTicketCountForSeatType('一等座') }}
+      </div>
+    </div>
+
+    <!-- 座位选择界面（商务座） -->
+    <div class="seat-selection" v-if="showBusinessClassSeatSelection">
+      <div class="seat-selection-header">
+        <span class="seat-title">选座啦（商务座）</span>
+      </div>
+      <div class="seat-container">
+        <div class="seat-row">
+          <div class="seat seat-available" :class="{ selected: seatSelections['商务座'].includes('A') }" @click="selectSeat('A', '商务座')">A</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['商务座'].includes('C') }" @click="selectSeat('C', '商务座')">C</div>
+          <div class="aisle">过道</div>
+          <div class="seat seat-available" :class="{ selected: seatSelections['商务座'].includes('F') }" @click="selectSeat('F', '商务座')">F</div>
+        </div>
+      </div>
+      <div class="selected-seat-info">
+        已选座{{ seatSelections['商务座'].length }}/{{ getTicketCountForSeatType('商务座') }}
       </div>
     </div>
 
@@ -154,7 +172,11 @@ export default {
       lowerBerth: 0,
       middleBerth: 0,
       upperBerth: 0,
-      selectedSeats: []
+      seatSelections: {
+        '二等座': [],
+        '一等座': [],
+        '商务座': []
+      }
     }
   },
   computed: {
@@ -162,7 +184,7 @@ export default {
       return this.lowerBerth + this.middleBerth + this.upperBerth
     },
     selectedSeat() {
-      return this.selectedSeats.length > 0 ? this.selectedSeats[0] : null
+      return this.seatSelections['二等座'].length > 0 ? this.seatSelections['二等座'][0] : null
     },
     currentSeatType() {
       if (!this.ticketList || this.ticketList.length === 0) {
@@ -201,22 +223,44 @@ export default {
         return seatType.includes('软卧') || seatType.includes('硬卧');
       });
     },
-    showSeatSelection() {
-      // 当ticketList中包含二等座或一等座时显示座位选择界面
+    showSecondClassSeatSelection() {
+      // 当ticketList中包含二等座时显示座位选择界面
       return this.ticketList.some(ticket => {
         const seatType = ticket.seatType || '';
-        return seatType.includes('二等座') || seatType.includes('一等座');
+        return seatType.includes('二等座');
       });
     },
-    showSeatSelections() {
-      // 当ticketList中包含二等座或一等座时显示座位选择界面
+    showFirstClassSeatSelection() {
+      // 当ticketList中包含一等座时显示座位选择界面
+      return this.ticketList.some(ticket => {
+        const seatType = ticket.seatType || '';
+        return seatType.includes('一等座');
+      });
+    },
+    showBusinessClassSeatSelection() {
+      // 当ticketList中包含商务座时显示座位选择界面
       return this.ticketList.some(ticket => {
         const seatType = ticket.seatType || '';
         return seatType.includes('商务');
       });
+    },
+    showSeatSelection() {
+      // 保留原有的计算属性以兼容现有代码
+      return this.showSecondClassSeatSelection || this.showFirstClassSeatSelection;
+    },
+    showSeatSelections() {
+      // 保留原有的计算属性以兼容现有代码
+      return this.showBusinessClassSeatSelection;
     }
   },
   methods: {
+    // 获取指定席别的票数
+    getTicketCountForSeatType(seatType) {
+      return this.ticketList.filter(ticket => {
+        const type = ticket.seatType || '';
+        return type.includes(seatType);
+      }).length;
+    },
     // 增加铺位数量
     incrementBerth(type) {
       if (this.totalSelectedBerths < this.ticketList.length) {
@@ -264,10 +308,18 @@ export default {
       
       const berthInfo = selectedBerths.join('、') || '无';
       
+      const allSelectedSeats = [];
+      Object.keys(this.seatSelections).forEach(seatType => {
+        const seats = this.seatSelections[seatType];
+        if (seats.length > 0) {
+          allSelectedSeats.push(`${seatType}:${seats.join('、')}`);
+        }
+      });
+      
       const requestData = {
         ticketList: this.ticketList,
         berthInfo,
-        selectedSeats: this.selectedSeats.length > 0 ? this.selectedSeats.join('、') : '未选座'
+        selectedSeats: allSelectedSeats.length > 0 ? allSelectedSeats.join(' | ') : '未选座'
       };
 
       api.post('/order/createOrder', requestData)
@@ -283,16 +335,21 @@ export default {
         });
     },
     
-    // 处理座位选择的方法
-    selectSeat(seat) {
-      // 如果点击已选中的座位，则取消选择
-      const index = this.selectedSeats.indexOf(seat);
+    // 处理座位选择的方法（支持多席别独立选座）
+    selectSeat(seat, seatType) {
+      const seats = this.seatSelections[seatType] || [];
+      const index = seats.indexOf(seat);
+      
       if (index > -1) {
-        this.selectedSeats.splice(index, 1);
+        seats.splice(index, 1);
       } else {
-        // 如果未达到最大选择数量，则添加新座位
-        if (this.selectedSeats.length < this.ticketList.length) {
-          this.selectedSeats.push(seat);
+        const ticketsForType = this.ticketList.filter(ticket => {
+          const type = ticket.seatType || '';
+          return type.includes(seatType);
+        });
+        
+        if (seats.length < ticketsForType.length) {
+          seats.push(seat);
         }
       }
     }
