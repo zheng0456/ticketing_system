@@ -123,6 +123,8 @@
 </template>
 
 <script>
+import api from '@/api/index.js';
+
 export default {
   name: 'TicketSteateMessage',
   props: {
@@ -223,7 +225,6 @@ export default {
     
     // 处理确认
     handleConfirm() {
-      // 构建选择的铺位信息
       const selectedBerths = [];
       if (this.lowerBerth > 0) selectedBerths.push(`下铺${this.lowerBerth}个`);
       if (this.middleBerth > 0) selectedBerths.push(`中铺${this.middleBerth}个`);
@@ -231,12 +232,23 @@ export default {
       
       const berthInfo = selectedBerths.join('、') || '无';
       
-      // 调用父组件传递的方法
-      this.$emit('confirm', {
+      const requestData = {
         ticketList: this.ticketList,
         berthInfo,
         selectedSeats: this.selectedSeats.length > 0 ? this.selectedSeats.join('、') : '未选座'
-      });
+      };
+
+      api.post('/order/createOrder', requestData)
+        .then(response => {
+          this.$emit('confirm', response.data);
+        })
+        .catch(error => {
+          console.error('创建订单失败:', error);
+          this.$emit('confirm', {
+            ...requestData,
+            error: error.message
+          });
+        });
     },
     
     // 处理座位选择的方法
