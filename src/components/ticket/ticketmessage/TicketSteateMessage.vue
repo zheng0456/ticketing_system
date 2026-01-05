@@ -334,33 +334,47 @@ export default {
     
     // 处理确认
     handleConfirm() {
-      const allSelectedSeats = [];
+      const seatAssignments = {};
       Object.keys(this.seatSelections).forEach(seatType => {
         const seats = this.seatSelections[seatType];
         if (seats.length > 0) {
-          allSelectedSeats.push(`${seatType}:${seats.join('、')}`);
+          seatAssignments[seatType] = [...seats];
         }
       });
-      
+
       const requestData = {
-        ticketList: this.ticketList.map(ticket => ({
-          id: ticket.id,
-          departureStationId: ticket.departureStationId,
-          arrivalStationId: ticket.arrivalStationId,
-          ticketType: ticket.ticketType,
-          price: ticket.price,
-          idType: ticket.idType,
-          idNumber: ticket.idNumber
-        })),
-        selectedSeats: allSelectedSeats.length > 0 ? allSelectedSeats.join(' | ') : '未选座',
-        trainId: this.trainId
-      };
+          ticketList: this.ticketList.map((ticket) => {
+            const seatType = ticket.seatType || '';
+            let assignedSeat = null;
+            let assignedSeatType = null;
+            
+            Object.keys(seatAssignments).forEach(type => {
+              if (seatType.includes(type) && seatAssignments[type].length > 0) {
+                assignedSeat = seatAssignments[type].shift();
+                assignedSeatType = type;
+              }
+            });
+            
+            return {
+              id: ticket.id,
+              departureStationId: ticket.departureStationId,
+              arrivalStationId: ticket.arrivalStationId,
+              ticketType: ticket.ticketType,
+              price: ticket.price,
+              idType: ticket.idType,
+              idNumber: ticket.idNumber,
+              seat: assignedSeat,
+              seatType: assignedSeatType
+            };
+          }),
+          trainId: this.trainId
+        };
 
       console.log('ticketList 数据:', this.ticketList);
       console.log('ticketList 第一项:', this.ticketList[0]);
       console.log('发送到后端的请求数据:', requestData);
 
-      api.post('/order/createOrder', requestData)
+      api.post('/order/train/createOrder', requestData)
         .then(response => {
           this.$emit('confirm', response.data);
         })
