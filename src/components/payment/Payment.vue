@@ -1,16 +1,22 @@
 <template>
-  <div class="payment-container">
-    <!-- 顶部标题 -->
-    <div class="payment-header">
-      <h2 class="payment-title">订单支付</h2>
-      <div class="countdown" v-if="countdown > 0">
-        <span class="countdown-label">支付剩余时间：</span>
-        <span class="countdown-time">{{ formatCountdown }}</span>
+  <div class="payment-modal-overlay" @click.self="handleOverlayClick">
+    <div class="payment-modal-container">
+      <div class="payment-modal-header">
+        <h2 class="payment-title">订单支付</h2>
+        <button class="close-btn" @click="handleClose">×</button>
       </div>
-      <div class="countdown expired" v-else>
-        <span class="countdown-label">订单已超时</span>
-      </div>
-    </div>
+      <div class="payment-modal-body">
+        <div class="payment-container">
+          <!-- 顶部标题 -->
+          <div class="payment-header">
+            <div class="countdown" v-if="countdown > 0">
+              <span class="countdown-label">支付剩余时间：</span>
+              <span class="countdown-time">{{ formatCountdown }}</span>
+            </div>
+            <div class="countdown expired" v-else>
+              <span class="countdown-label">订单已超时</span>
+            </div>
+          </div>
 
     <!-- 订单信息 -->
     <div class="order-info-section">
@@ -63,31 +69,15 @@
       <div class="payment-methods">
         <div 
           class="payment-method-item" 
-          :class="{ active: selectedPaymentMethod === 'wechat' }"
-          @click="selectPaymentMethod('wechat')"
-        >
-          <div class="payment-method-icon wechat-icon">
-            <svg viewBox="0 0 24 24" fill="#07C160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.5 14.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5-2.5 5.5-5.5 5.5-5.5-2.5-5.5-5.5zm-2 0c0 4.1 3.4 7.5 7.5 7.5s7.5-3.4 7.5-7.5-3.4-7.5-7.5-7.5-7.5 3.4-7.5 7.5z"/>
-            </svg>
-          </div>
-          <div class="payment-method-info">
-            <div class="payment-method-name">微信支付</div>
-            <div class="payment-method-desc">推荐使用微信支付</div>
-          </div>
-          <div class="payment-method-check">
-            <div class="check-icon" v-if="selectedPaymentMethod === 'wechat'">✓</div>
-          </div>
-        </div>
-
-        <div 
-          class="payment-method-item" 
           :class="{ active: selectedPaymentMethod === 'alipay' }"
           @click="selectPaymentMethod('alipay')"
         >
           <div class="payment-method-icon alipay-icon">
-            <svg viewBox="0 0 24 24" fill="#1677FF" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#1677FF" d="M512 0C229.2 0 0 229.2 0 512s229.2 512 512 512 512-229.2 512-512S794.8 0 512 0z"/>
+              <path fill="#FFFFFF" d="M736 416H288c-17.7 0-32 14.3-32 32v128c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32V448c0-17.7-14.3-32-32-32z"/>
+              <path fill="#FFFFFF" d="M352 320h320c17.7 0 32-14.3 32-32s-14.3-32-32-32H352c-17.7 0-32 14.3-32 32s14.3 32 32 32z"/>
+              <path fill="#FFFFFF" d="M352 704h320c17.7 0 32-14.3 32-32s-14.3-32-32-32H352c-17.7 0-32 14.3-32 32s14.3 32 32 32z"/>
             </svg>
           </div>
           <div class="payment-method-info">
@@ -96,25 +86,6 @@
           </div>
           <div class="payment-method-check">
             <div class="check-icon" v-if="selectedPaymentMethod === 'alipay'">✓</div>
-          </div>
-        </div>
-
-        <div 
-          class="payment-method-item" 
-          :class="{ active: selectedPaymentMethod === 'card' }"
-          @click="selectPaymentMethod('card')"
-        >
-          <div class="payment-method-icon card-icon">
-            <svg viewBox="0 0 24 24" fill="#FF9500" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
-            </svg>
-          </div>
-          <div class="payment-method-info">
-            <div class="payment-method-name">银行卡支付</div>
-            <div class="payment-method-desc">支持各大银行卡</div>
-          </div>
-          <div class="payment-method-check">
-            <div class="check-icon" v-if="selectedPaymentMethod === 'card'">✓</div>
           </div>
         </div>
       </div>
@@ -135,6 +106,9 @@
       <div class="success-desc">订单已生成，请前往"我的订单"查看</div>
       <button class="view-order-btn" @click="handleViewOrder">查看订单</button>
     </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -151,7 +125,7 @@ export default {
   },
   data() {
     return {
-      selectedPaymentMethod: 'wechat',
+      selectedPaymentMethod: 'alipay',
       countdown: 1800,
       countdownTimer: null,
       paymentSuccess: false,
@@ -182,13 +156,23 @@ export default {
   methods: {
     initOrderInfo() {
       if (this.orderData && Object.keys(this.orderData).length > 0) {
+        const ticketList = this.orderData.ticketList || [];
+        const passengers = ticketList.map(ticket => ({
+          name: ticket.name,
+          seatType: ticket.seatType,
+          seat: ticket.seat,
+          price: ticket.price
+        }));
+        
+        const totalAmount = ticketList.reduce((sum, ticket) => sum + (ticket.price || 0), 0);
+        
         this.orderInfo = {
           orderId: this.orderData.orderId || '',
           trainInfo: this.orderData.trainInfo || '',
-          passengerCount: this.orderData.passengerCount || 0,
-          departureTime: this.orderData.departureTime || '',
-          passengers: this.orderData.passengers || [],
-          totalAmount: this.orderData.totalAmount || 0
+          passengerCount: ticketList.length,
+          departureTime: '',
+          passengers: passengers,
+          totalAmount: totalAmount
         };
       }
     },
@@ -214,6 +198,12 @@ export default {
       if (confirm('确定要取消订单吗？')) {
         this.$emit('cancel');
       }
+    },
+    handleClose() {
+      this.$emit('close');
+    },
+    handleOverlayClick() {
+      this.$emit('close');
     },
     handlePay() {
       if (!this.selectedPaymentMethod) {
@@ -246,10 +236,85 @@ export default {
 </script>
 
 <style scoped>
-.payment-container {
-  max-width: 800px;
-  margin: 0 auto;
+/* 弹窗遮罩层 */
+.payment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
   padding: 20px;
+}
+
+/* 弹窗容器 */
+.payment-modal-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 弹窗头部 */
+.payment-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #ebeef5;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.payment-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: transparent;
+  font-size: 28px;
+  color: #909399;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.3s;
+  line-height: 1;
+  padding: 0;
+}
+
+.close-btn:hover {
+  background-color: #f5f7fa;
+  color: #303133;
+}
+
+/* 弹窗主体 */
+.payment-modal-body {
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.payment-container {
+  padding: 24px;
   background-color: #fff;
   font-family: "Microsoft YaHei", sans-serif;
 }
@@ -257,18 +322,11 @@ export default {
 /* 顶部标题 */
 .payment-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 2px solid #FF9500;
-}
-
-.payment-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
 }
 
 .countdown {
@@ -431,16 +489,8 @@ export default {
   height: 32px;
 }
 
-.wechat-icon {
-  background-color: #e8f5e9;
-}
-
 .alipay-icon {
   background-color: #e6f7ff;
-}
-
-.card-icon {
-  background-color: #fff7e6;
 }
 
 .payment-method-info {

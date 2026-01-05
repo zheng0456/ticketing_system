@@ -162,21 +162,34 @@
     <!-- 订单确认弹窗 -->
         <div v-if="showConfirmation" class="modal-overlay" @click.self="closeConfirmation">
           <div class="modal-content">
-            <TicketSteateMessage :trainInfo="trainInfoText" :ticketList="ticketList" :remainingTickets="remainingTickets" :trainId="$route.query.id" @cancel="closeConfirmation" />
+            <TicketSteateMessage :trainInfo="trainInfoText" :ticketList="ticketList" :remainingTickets="remainingTickets" :trainId="$route.query.id" @cancel="closeConfirmation" @payment-success="showPaymentModal" />
           </div>
         </div>
+
+    <!-- 支付弹窗 -->
+    <div v-if="showPayment" class="payment-modal-wrapper">
+      <Payment 
+        :orderData="paymentOrderData"
+        @cancel="handlePaymentCancel"
+        @success="handlePaymentSuccess"
+        @viewOrder="handleViewOrder"
+        @close="closePaymentModal"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import TicketSteateMessage from './TicketSteateMessage.vue'
+import Payment from '@/components/payment/Payment.vue'
 import api from '@/api/index.js'
 import { ElMessage } from 'element-plus'
 
 export default {
   name: 'TicketMessages',
   components: {
-    TicketSteateMessage
+    TicketSteateMessage,
+    Payment
   },
   props: {
     // 如果需要动态传递列车信息，可以在这里定义props
@@ -222,6 +235,10 @@ export default {
       idTypes: ['居民身份证', '护照', '军官证'],
       // 弹窗显示状态
       showConfirmation: false,
+      // 支付弹窗显示状态
+      showPayment: false,
+      // 支付订单数据
+      paymentOrderData: {},
       // 列车信息对象
       trainInfo: {
         trainNumber: '',
@@ -394,6 +411,32 @@ export default {
     // 关闭弹窗
     closeConfirmation() {
       this.showConfirmation = false;
+    },
+    // 显示支付弹窗
+    showPaymentModal(orderData) {
+      this.paymentOrderData = orderData;
+      this.showPayment = true;
+      this.showConfirmation = false;
+    },
+    // 关闭支付弹窗
+    closePaymentModal() {
+      this.showPayment = false;
+    },
+    // 处理支付取消
+    handlePaymentCancel() {
+      this.closePaymentModal();
+    },
+    // 处理支付成功
+    handlePaymentSuccess(data) {
+      console.log('支付成功:', data);
+      this.closePaymentModal();
+      ElMessage.success('支付成功！');
+      this.$router.push('/order');
+    },
+    // 查看订单
+    handleViewOrder() {
+      this.closePaymentModal();
+      this.$router.push('/order');
     },
     // 获取乘车人信息
     async getPassengers() {
@@ -821,5 +864,15 @@ export default {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* 支付弹窗包装器 */
+.payment-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
 }
 </style>

@@ -144,14 +144,9 @@
 
 <script>
 import api from '@/api/index.js';
-import { useRouter } from 'vue-router';
 
 export default {
   name: 'TicketSteateMessage',
-  setup() {
-    const router = useRouter();
-    return { router };
-  },
   props: {
     trainInfo: {
       type: String,
@@ -388,12 +383,7 @@ export default {
               orderId: response.data.data,
               trainInfo: this.trainInfo
             };
-            this.router.push({
-              path: '/payment',
-              query: {
-                orderData: JSON.stringify(orderData)
-              }
-            });
+            this.$emit('payment-success', orderData);
           }
         })
         .catch(error => {
