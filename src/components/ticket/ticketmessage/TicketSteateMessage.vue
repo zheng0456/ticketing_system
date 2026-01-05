@@ -374,7 +374,7 @@ export default {
       console.log('ticketList 第一项:', this.ticketList[0]);
       console.log('发送到后端的请求数据:', requestData);
 
-      api.post('/order/train/createOrder', requestData)
+      api.post('/order/trainOrder/createOrder', requestData)
         .then(response => {
           this.$emit('confirm', response.data);
         })
