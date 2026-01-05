@@ -6,6 +6,7 @@ import TicketView from '../views/TicketView.vue'
 import SceneryView from '../views/SceneryView.vue'
 import SceneryMessageView from '../views/SceneryMessageView.vue'
 import TicketMessagesView from '../views/TicketMessagesView.vue'
+import PaymentView from '../views/PaymentView.vue'
 import AdminView from '../views/AdminView.vue'
 import AdminIndex from '../components/admin/index/AdminIndex.vue'
 import AdminScenery from '../components/admin/ticket/AdminScenery.vue'
@@ -56,6 +57,11 @@ const routes = [
     path: '/ticketmessages',
     name: 'ticketMessages',
     component: TicketMessagesView
+  },
+  {
+    path: '/payment',
+    name: 'payment',
+    component: PaymentView
   },
   // 添加重定向，使根路径跳转到 /login
   {

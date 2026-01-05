@@ -144,9 +144,14 @@
 
 <script>
 import api from '@/api/index.js';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'TicketSteateMessage',
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
   props: {
     trainInfo: {
       type: String,
@@ -377,6 +382,19 @@ export default {
       api.post('/order/trainOrder/createOrder', requestData)
         .then(response => {
           this.$emit('confirm', response.data);
+          if (response.data && response.data.code === 200) {
+            const orderData = {
+              ...requestData,
+              orderId: response.data.data,
+              trainInfo: this.trainInfo
+            };
+            this.router.push({
+              path: '/payment',
+              query: {
+                orderData: JSON.stringify(orderData)
+              }
+            });
+          }
         })
         .catch(error => {
           console.error('创建订单失败:', error);
