@@ -147,21 +147,11 @@ export default {
   mounted() {
     this.initOrderInfo();
     this.startCountdown();
-    this.fetchOrderList();
   },
   beforeUnmount() {
     this.stopCountdown();
   },
   methods: {
-    fetchOrderList() {
-      api.post('/order/trainOrder/list', {})
-        .then(response => {
-          console.log('订单列表获取成功:', response.data);
-        })
-        .catch(error => {
-          console.error('获取订单列表失败:', error);
-        });
-    },
     initOrderInfo() {
       if (this.orderData && Object.keys(this.orderData).length > 0) {
         const ticketList = this.orderData.ticketList || [];
