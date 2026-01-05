@@ -3,7 +3,7 @@
     <div class="payment-modal-container">
       <div class="payment-modal-header">
         <h2 class="payment-title">订单支付</h2>
-        <button class="close-btn" @click="handleClose">×</button>
+        <button class="close-btn" @click.stop="handleClose" aria-label="关闭">×</button>
       </div>
       <div class="payment-modal-body">
         <div class="payment-container">
@@ -149,11 +149,21 @@ export default {
   mounted() {
     this.initOrderInfo();
     this.startCountdown();
+    this.fetchOrderList();
   },
   beforeUnmount() {
     this.stopCountdown();
   },
   methods: {
+    fetchOrderList() {
+      api.post('/order/trainOrder/list', {})
+        .then(response => {
+          console.log('订单列表获取成功:', response.data);
+        })
+        .catch(error => {
+          console.error('获取订单列表失败:', error);
+        });
+    },
     initOrderInfo() {
       if (this.orderData && Object.keys(this.orderData).length > 0) {
         const ticketList = this.orderData.ticketList || [];
@@ -299,6 +309,8 @@ export default {
   transition: all 0.3s;
   line-height: 1;
   padding: 0;
+  position: relative;
+  z-index: 100;
 }
 
 .close-btn:hover {

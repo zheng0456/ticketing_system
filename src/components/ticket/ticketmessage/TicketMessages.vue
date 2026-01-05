@@ -425,6 +425,7 @@ export default {
     // 处理支付取消
     handlePaymentCancel() {
       this.closePaymentModal();
+      this.$router.push('/index');
     },
     // 处理支付成功
     handlePaymentSuccess(data) {
