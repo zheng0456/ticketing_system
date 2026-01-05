@@ -348,7 +348,9 @@ export default {
           departureStationId: ticket.departureStationId,
           arrivalStationId: ticket.arrivalStationId,
           ticketType: ticket.ticketType,
-          price: ticket.price
+          price: ticket.price,
+          idType: ticket.idType,
+          idNumber: ticket.idNumber
         })),
         selectedSeats: allSelectedSeats.length > 0 ? allSelectedSeats.join(' | ') : '未选座',
         trainId: this.trainId
