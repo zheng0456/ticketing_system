@@ -364,7 +364,8 @@ export default {
               idType: ticket.idType,
               idNumber: ticket.idNumber,
               seat: assignedSeat,
-              seatType: assignedSeatType
+              seatType: assignedSeatType,
+              name: ticket.name
             };
           }),
           trainId: this.trainId

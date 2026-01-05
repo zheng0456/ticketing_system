@@ -34,10 +34,6 @@
           <span class="info-label">乘车人数：</span>
           <span class="info-value">{{ orderInfo.passengerCount }}人</span>
         </div>
-        <div class="order-info-row">
-          <span class="info-label">出发时间：</span>
-          <span class="info-value">{{ orderInfo.departureTime }}</span>
-        </div>
       </div>
     </div>
 
@@ -48,6 +44,8 @@
         <div class="passenger-item" v-for="(passenger, index) in orderInfo.passengers" :key="index">
           <div class="passenger-name">{{ passenger.name }}</div>
           <div class="passenger-details">
+            <span class="passenger-id">{{ maskIdNumber(passenger.idNumber) }}</span>
+            <span class="passenger-ticket-type">{{ passenger.ticketType }}</span>
             <span class="passenger-seat">{{ passenger.seatType }} {{ passenger.seat }}</span>
             <span class="passenger-price">¥{{ passenger.price }}</span>
           </div>
@@ -171,6 +169,9 @@ export default {
           name: ticket.name,
           seatType: ticket.seatType,
           seat: ticket.seat,
+          ticketType: ticket.ticketType,
+          idType: ticket.idType,
+          idNumber: ticket.idNumber,
           price: ticket.price
         }));
         
@@ -214,6 +215,12 @@ export default {
     },
     handleOverlayClick() {
       this.$emit('close');
+    },
+    maskIdNumber(idNumber) {
+      if (!idNumber) return '';
+      const len = idNumber.length;
+      if (len <= 8) return idNumber;
+      return idNumber.substring(0, 4) + '*'.repeat(len - 8) + idNumber.substring(len - 4);
     },
     handlePay() {
       if (!this.selectedPaymentMethod) {
@@ -406,7 +413,6 @@ export default {
 
 .passenger-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 12px;
   background-color: #f5f7fa;
@@ -418,21 +424,36 @@ export default {
   font-size: 14px;
   font-weight: 500;
   color: #303133;
+  min-width: 80px;
 }
 
 .passenger-details {
   display: flex;
-  gap: 20px;
+  gap: 30px;
   font-size: 14px;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.passenger-id {
+  color: #909399;
+  min-width: 140px;
+}
+
+.passenger-ticket-type {
+  color: #606266;
+  min-width: 60px;
 }
 
 .passenger-seat {
   color: #606266;
+  min-width: 100px;
 }
 
 .passenger-price {
   color: #FF9500;
   font-weight: 600;
+  min-width: 80px;
 }
 
 /* 金额 */
