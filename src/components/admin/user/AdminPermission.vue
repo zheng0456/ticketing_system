@@ -33,9 +33,12 @@
           clearable
           class="search-select"
         >
-          <el-option label="普通用户" value="user"></el-option>
-          <el-option label="管理员" value="admin"></el-option>
-          <el-option label="超级管理员" value="super-admin"></el-option>
+          <el-option label="普通用户" value="1"></el-option>
+          <el-option label="车票管理员" value="2"></el-option>
+          <el-option label="超级管理员" value="3"></el-option>
+          <el-option label="途径站点管理员" value="4"></el-option>
+          <el-option label="列车管理员" value="5"></el-option>
+          <el-option label="站点管理员" value="6"></el-option>
         </el-select>
         <el-button type="primary" @click="handleSearch">搜索</el-button>
         <el-button @click="resetSearch">重置</el-button>
@@ -56,13 +59,7 @@
         <el-table-column prop="role" label="角色" width="120">
           <template #default="scope">
             <el-tag
-              :type="
-                scope.row.role === 'super-admin'
-                  ? 'success'
-                  : scope.row.role === 'admin'
-                  ? 'primary'
-                  : 'info'
-              "
+              :type="getRoleType(scope.row.role)"
             >
               {{ getRoleLabel(scope.row.role) }}
             </el-tag>
@@ -155,9 +152,12 @@
         </el-form-item>
         <el-form-item label="角色" prop="role">
           <el-select v-model="userForm.role" placeholder="请选择角色">
-            <el-option label="普通用户" value="user"></el-option>
-            <el-option label="管理员" value="admin"></el-option>
-            <el-option label="超级管理员" value="super-admin"></el-option>
+            <el-option label="普通用户" value="1"></el-option>
+            <el-option label="车票管理员" value="2"></el-option>
+            <el-option label="超级管理员" value="3"></el-option>
+            <el-option label="途径站点管理员" value="4"></el-option>
+            <el-option label="列车管理员" value="5"></el-option>
+            <el-option label="站点管理员" value="6"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -346,21 +346,21 @@ export default {
           nickname: '超级管理员',
           email: 'admin@example.com',
           phone: '13800138000',
-          role: 'super-admin',
+          role: '3',
           status: '1',
           createTime: new Date('2023-01-01'),
           permissions: ['user:read', 'user:create', 'user:update', 'user:delete', 'train:read', 'train:create', 'train:update', 'train:delete', 'order:read', 'order:update', 'system:config']
         },
         {
           id: 2,
-          username: 'manager',
-          nickname: '管理员',
-          email: 'manager@example.com',
+          username: 'ticket_manager',
+          nickname: '车票管理员',
+          email: 'ticket_manager@example.com',
           phone: '13800138001',
-          role: 'admin',
+          role: '2',
           status: '1',
           createTime: new Date('2023-01-02'),
-          permissions: ['user:read', 'user:update', 'train:read', 'train:create', 'train:update', 'order:read', 'order:update']
+          permissions: ['user:read', 'order:read', 'order:update']
         },
         {
           id: 3,
@@ -368,10 +368,43 @@ export default {
           nickname: '普通用户',
           email: 'user1@example.com',
           phone: '13800138002',
-          role: 'user',
+          role: '1',
           status: '1',
           createTime: new Date('2023-01-03'),
           permissions: ['user:read', 'train:read', 'order:read']
+        },
+        {
+          id: 4,
+          username: 'route_manager',
+          nickname: '途径站点管理员',
+          email: 'route_manager@example.com',
+          phone: '13800138003',
+          role: '4',
+          status: '1',
+          createTime: new Date('2023-01-04'),
+          permissions: ['user:read', 'train:read', 'train:update']
+        },
+        {
+          id: 5,
+          username: 'train_manager',
+          nickname: '列车管理员',
+          email: 'train_manager@example.com',
+          phone: '13800138004',
+          role: '5',
+          status: '1',
+          createTime: new Date('2023-01-05'),
+          permissions: ['user:read', 'train:read', 'train:create', 'train:update']
+        },
+        {
+          id: 6,
+          username: 'station_manager',
+          nickname: '站点管理员',
+          email: 'station_manager@example.com',
+          phone: '13800138005',
+          role: '6',
+          status: '1',
+          createTime: new Date('2023-01-06'),
+          permissions: ['user:read', 'train:read']
         }
       ];
       
@@ -478,7 +511,7 @@ export default {
         password: '',
         email: '',
         phone: '',
-        role: 'user',
+        role: '1',
         permissions: []
       };
       if (this.$refs.userFormRef) {
@@ -577,18 +610,24 @@ export default {
     // 获取角色标签
     getRoleLabel(role) {
       const roleMap = {
-        'user': '普通用户',
-        'admin': '管理员',
-        'super-admin': '超级管理员'
+        '1': '普通用户',
+        '2': '车票管理员',
+        '3': '超级管理员',
+        '4': '途径站点管理员',
+        '5': '列车管理员',
+        '6': '站点管理员'
       };
       return roleMap[role] || role;
     },
     // 获取角色类型
     getRoleType(role) {
       const typeMap = {
-        'user': 'info',
-        'admin': 'primary',
-        'super-admin': 'success'
+        '1': 'info',      // 普通用户 - 蓝色
+        '2': 'primary',   // 车票管理员 - 紫色
+        '3': 'success',   // 超级管理员 - 绿色
+        '4': 'warning',   // 途径站点管理员 - 橙色
+        '5': 'danger',    // 列车管理员 - 红色
+        '6': 'info'       // 站点管理员 - 蓝色
       };
       return typeMap[role] || 'info';
     },
