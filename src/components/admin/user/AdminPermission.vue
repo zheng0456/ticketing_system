@@ -151,7 +151,7 @@
           <el-input v-model="userForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="role">
-          <el-select v-model="userForm.role" placeholder="请选择角色">
+          <el-select v-model="userForm.role" placeholder="请选择角色" multiple>
             <el-option label="普通用户" value="1"></el-option>
             <el-option label="车票管理员" value="2"></el-option>
             <el-option label="超级管理员" value="3"></el-option>
@@ -285,7 +285,7 @@ export default {
         password: '',
         email: '',
         phone: '',
-        role: 'user',
+        role: ['1'],
         permissions: []
       },
       selectedUser: {},
@@ -314,7 +314,8 @@ export default {
           { message: '请输入有效的手机号', trigger: 'blur', pattern: /^1[3-9]\d{9}$/ }
         ],
         role: [
-          { required: true, message: '请选择角色', trigger: 'change' }
+          { required: true, message: '请选择角色', trigger: 'change' },
+          { validator: this.validateRoles, trigger: 'change' }
         ]
       }
     };
@@ -511,7 +512,7 @@ export default {
         password: '',
         email: '',
         phone: '',
-        role: '1',
+        role: ['1'],
         permissions: []
       };
       if (this.$refs.userFormRef) {
@@ -635,6 +636,35 @@ export default {
     isCurrentUser(user) {
       // 这里假设当前登录用户是admin
       return user.username === 'admin';
+    },
+    // 角色选择验证
+    validateRoles(rule, value, callback) {
+      if (!value || value.length === 0) {
+        callback(new Error('请选择角色'));
+        return;
+      }
+
+      // 判断是否选择了普通用户
+      const hasUser = value.includes('1');
+      // 判断是否选择了超级管理员
+      const hasSuperAdmin = value.includes('3');
+      // 判断是否选择了其他管理员角色
+      const adminRoles = ['2', '4', '5', '6'];
+      const hasOtherAdmin = adminRoles.some(role => value.includes(role));
+
+      // 规则1：选择普通用户不能选择任何管理员角色
+      if (hasUser && hasOtherAdmin) {
+        callback(new Error('普通用户不能同时拥有管理员角色'));
+        return;
+      }
+
+      // 规则2：选择超级管理员不能选择其他管理员角色
+      if (hasSuperAdmin && hasOtherAdmin) {
+        callback(new Error('超级管理员不能同时拥有其他管理员角色'));
+        return;
+      }
+
+      callback();
     }
   }
 };
