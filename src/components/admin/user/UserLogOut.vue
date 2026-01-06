@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import api from '@/api'
+
 export default {
   name: 'UserLogOut',
   data() {
@@ -46,24 +48,33 @@ export default {
   methods: {
     handleLogout() {
       this.loading = true
-      // 这里可以添加实际的注销API调用
-      // 模拟注销过程
-      setTimeout(() => {
-        // 清除本地存储的登录信息
-        localStorage.removeItem('token')
-        localStorage.removeItem('userInfo')
-        
-        // 显示成功提示
-        this.$message({
-          type: 'success',
-          message: '账号已成功注销'
+      // 发送注销请求到后端
+      api.post('/user/userLogOut')
+        .then(() => {
+          // 清除本地存储的登录信息
+          localStorage.removeItem('token')
+          localStorage.removeItem('userInfo')
+          
+          // 显示成功提示
+          this.$message({
+            type: 'success',
+            message: '账号已成功注销'
+          })
+          
+          // 跳转到登录页面
+          this.$router.push('/login')
         })
-        
-        // 跳转到登录页面
-        this.$router.push('/login')
-        
-        this.loading = false
-      }, 800)
+        .catch(error => {
+          // 处理请求错误
+          console.error('注销失败:', error)
+          this.$message({
+            type: 'error',
+            message: error.response?.data?.message || '注销失败，请稍后重试'
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     
     handleCancel() {
