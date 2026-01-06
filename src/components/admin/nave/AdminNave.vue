@@ -59,7 +59,7 @@
         </div>
         <!-- 退票管理 -->
         <div v-if="hasRefundTicketsAccess" class="menu-item" @click="navigateToRefundTickets" :class="{active: isRefundTicketsActive}">
-          <span>退票管理</span>
+          <span>车票退票管理</span>
         </div>
         <!-- 景点退票管理 -->
         <div v-if="hasRefundSceneryAccess" class="menu-item" @click="navigateToRefundScenery" :class="{active: isRefundSceneryActive}">
