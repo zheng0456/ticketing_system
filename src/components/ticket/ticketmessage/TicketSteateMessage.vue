@@ -379,11 +379,17 @@ export default {
         .then(response => {
           this.$emit('confirm', response.data);
           if (response.data && response.data.code === 200) {
+            console.log('创建订单成功，response.data:', response.data);
+            console.log('response.data.data:', response.data.data);
+            console.log('response.data.data.orderNo:', response.data.data.orderNo);
+            console.log('orderNo 类型:', typeof response.data.data.orderNo);
+            
             const orderData = {
               ...requestData,
-              orderId: response.data.data,
+              orderId: response.data.data.orderNo || response.data.data,
               trainInfo: this.trainInfo
             };
+            console.log('传递给 Payment 的 orderData.orderId:', orderData.orderId);
             this.$emit('payment-success', orderData);
           }
         })

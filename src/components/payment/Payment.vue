@@ -154,6 +154,10 @@ export default {
   methods: {
     initOrderInfo() {
       if (this.orderData && Object.keys(this.orderData).length > 0) {
+        console.log('Payment.vue 接收到的 orderData:', this.orderData);
+        console.log('Payment.vue 接收到的 orderId:', this.orderData.orderId);
+        console.log('Payment.vue orderId 类型:', typeof this.orderData.orderId);
+        
         const ticketList = this.orderData.ticketList || [];
         const passengers = ticketList.map(ticket => ({
           name: ticket.name,
@@ -175,6 +179,8 @@ export default {
           passengers: passengers,
           totalAmount: totalAmount
         };
+        
+        console.log('Payment.vue 设置后的 orderInfo.orderId:', this.orderInfo.orderId);
       }
     },
     startCountdown() {
