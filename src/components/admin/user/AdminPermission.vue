@@ -53,7 +53,6 @@
       >
         <el-table-column prop="id" label="用户ID" width="80"></el-table-column>
         <el-table-column prop="username" label="用户名" width="180"></el-table-column>
-        <el-table-column prop="nickname" label="昵称" width="180"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column prop="role" label="角色" width="120">
@@ -130,9 +129,7 @@
             placeholder="请输入用户名"
           ></el-input>
         </el-form-item>
-        <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="userForm.nickname" placeholder="请输入昵称"></el-input>
-        </el-form-item>
+        
         <el-form-item
           v-if="dialogType === 'add'"
           label="密码" 
@@ -212,6 +209,7 @@
 
 <script>
 import { Search } from '@element-plus/icons-vue';
+import api from '@/api';
 
 export default {
   name: 'AdminPermission',
@@ -279,40 +277,20 @@ export default {
       permissionDialogVisible: false,
       dialogType: 'add',
       userForm: {
-        id: '',
-        username: '',
-        nickname: '',
-        password: '',
-        email: '',
-        phone: '',
-        role: ['1'],
-        permissions: []
-      },
+          id: '',
+          username: '',
+          password: '',
+          email: '',
+          phone: '',
+          role: ['1'],
+          permissions: []
+        },
       selectedUser: {},
       // 用于防抖动的定时器引用
       dialogTimer: null,
       loadingTimer: null,
       debounceTimer: null,
       rules: {
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ],
-        nickname: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, message: '密码长度至少为 6 个字符', trigger: 'blur' }
-        ],
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入有效的邮箱地址', trigger: 'blur' }
-        ],
-        phone: [
-          { message: '请输入有效的手机号', trigger: 'blur', pattern: /^1[3-9]\d{9}$/ }
-        ],
         role: [
           { required: true, message: '请选择角色', trigger: 'change' },
           { validator: this.validateRoles, trigger: 'change' }
@@ -418,8 +396,7 @@ export default {
             let filteredData = mockData.filter(item => {
               // 用户名筛选
               const usernameMatch = !this.searchForm.username || 
-                                   item.username.toLowerCase().includes(this.searchForm.username.toLowerCase()) ||
-                                   item.nickname.toLowerCase().includes(this.searchForm.username.toLowerCase());
+                                   item.username.toLowerCase().includes(this.searchForm.username.toLowerCase());
               // 角色筛选
               const roleMatch = !this.searchForm.role || item.role === this.searchForm.role;
               
@@ -508,7 +485,6 @@ export default {
       this.userForm = {
         id: '',
         username: '',
-        nickname: '',
         password: '',
         email: '',
         phone: '',
@@ -525,46 +501,45 @@ export default {
       if (valid) {
         this.loading = true;
         
-        // 使用requestAnimationFrame和setTimeout结合避免ResizeObserver循环
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            let updateData = null;
-            
-            if (this.dialogType === 'add') {
-              updateData = {
-                ...this.userForm,
-                id: Date.now(),
-                status: '1',
-                createTime: new Date()
-              };
-            }
-            
-            // 使用nextTick确保DOM稳定后再更新数据和关闭对话框
-            this.$nextTick(() => {
-              if (this.dialogType === 'add') {
-                this.userList.push(updateData);
-              } else {
+        if (this.dialogType === 'add') {
+          // 添加用户时发送真实API请求
+          api.post('/user/permission/add', this.userForm)
+            .then(() => {
+              this.loading = false;
+              this.dialogVisible = false;
+              this.$message.success('添加成功');
+              // 重新加载用户列表
+              this.loadUserList();
+            })
+            .catch(error => {
+              this.loading = false;
+              this.$message.error(error.response?.data?.message || '添加失败，请稍后重试');
+            });
+        } else {
+          // 编辑用户时使用模拟数据更新
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              // 使用nextTick确保DOM稳定后再更新数据和关闭对话框
+              this.$nextTick(() => {
                 const index = this.userList.findIndex(item => item.id === this.userForm.id);
                 if (index !== -1) {
                   // 使用对象展开而不是直接替换，避免触发深层次的DOM更新
                   Object.assign(this.userList[index], this.userForm);
                 }
-              }
-              
-              this.pagination.total = this.userList.length;
-              
-              // 再次使用nextTick确保数据更新完成
-              this.$nextTick(() => {
-                this.loading = false;
-                // 延迟关闭对话框，避免快速连续的DOM变化
-                setTimeout(() => {
-                  this.dialogVisible = false;
-                  this.$message.success(this.dialogType === 'add' ? '添加成功' : '编辑成功');
-                }, 50);
+                
+                // 再次使用nextTick确保数据更新完成
+                this.$nextTick(() => {
+                  this.loading = false;
+                  // 延迟关闭对话框，避免快速连续的DOM变化
+                  setTimeout(() => {
+                    this.dialogVisible = false;
+                    this.$message.success('编辑成功');
+                  }, 50);
+                });
               });
-            });
-          }, 200);
-        });
+            }, 200);
+          });
+        }
       }
     });
   },
