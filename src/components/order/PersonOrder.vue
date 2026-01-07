@@ -77,7 +77,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import api from '@/api';
 
 // 基本信息数据
 const basicInfo = ref({
@@ -99,6 +100,30 @@ const contact = ref({
 // 附加信息数据
 const extraInfo = ref({
   discountType: '学生'
+});
+
+// 页面加载时发送请求获取用户个人信息
+onMounted(async () => {
+  try {
+    const response = await api.post('/user/personMessages/list');
+    const data = response.data;
+    
+    // 根据API返回的数据结构更新组件数据
+    if (data.code === 200) {
+      // 假设API返回的数据结构与组件的数据结构匹配
+      if (data.data.basicInfo) {
+        basicInfo.value = data.data.basicInfo;
+      }
+      if (data.data.contact) {
+        contact.value = data.data.contact;
+      }
+      if (data.data.extraInfo) {
+        extraInfo.value = data.data.extraInfo;
+      }
+    }
+  } catch (error) {
+    console.error('获取用户个人信息失败:', error);
+  }
 });
 </script>
 
