@@ -495,28 +495,21 @@ export default {
               this.$message.error(error.response?.data?.message || '添加失败，请稍后重试');
             });
         } else {
-          // 编辑用户时使用模拟数据更新
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              // 使用nextTick确保DOM稳定后再更新数据和关闭对话框
-              this.$nextTick(() => {
-                const index = this.userList.findIndex(item => item.userName === this.userForm.userName);
-                if (index !== -1) {
-                  // 使用对象展开而不是直接替换，避免触发深层次的DOM更新
-                  Object.assign(this.userList[index], this.userForm);
-                }
-                
-                // 再次使用nextTick确保数据更新完成
-                this.$nextTick(() => {
-                  this.loading = false;
-                  // 延迟关闭对话框，避免快速连续的DOM变化
-                  setTimeout(() => {
-                    this.dialogVisible = false;
-                    this.$message.success('编辑成功');
-                  }, 50);
-                });
-              });
-            }, 200);
+          // 编辑用户时发送真实API请求
+          api.post('/user/permission/update', {
+            user_id: this.userForm.user_id,
+            phone: this.userForm.phone,
+            role: this.userForm.role,
+            permissions: this.userForm.permissions
+          }).then(() => {
+            this.loading = false;
+            this.dialogVisible = false;
+            this.$message.success('编辑成功');
+            // 重新加载用户列表以确保数据一致性
+            this.loadUserList();
+          }).catch(error => {
+            this.loading = false;
+            this.$message.error(error.response?.data?.message || '编辑失败，请稍后重试');
           });
         }
       }
@@ -549,8 +542,22 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 模拟状态更新
-        this.$message.success('状态更新成功');
+        this.loading = true;
+        // 发送真实API请求更新用户状态
+        api.post('/user/permission/update', {
+          user_id: user.user_id,
+          status: user.status
+        }).then(() => {
+          this.loading = false;
+          this.$message.success('状态更新成功');
+          // 重新加载用户列表以确保数据一致性
+          this.loadUserList();
+        }).catch(error => {
+          this.loading = false;
+          this.$message.error(error.response?.data?.message || '状态更新失败，请稍后重试');
+          // 恢复原来的状态
+          user.status = user.status === '1' ? '0' : '1';
+        });
       }).catch(() => {
         // 恢复原来的状态
         user.status = user.status === '1' ? '0' : '1';
