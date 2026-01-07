@@ -335,26 +335,45 @@ export default {
                   filteredData = filteredData.data || [];
                 }
                 
+                // 合并相同user_id的数据
+                const mergedUsers = {};
+                filteredData.forEach(item => {
+                  const userId = item.user_id;
+                  if (mergedUsers[userId]) {
+                    // 如果用户已存在，合并角色（假设role_id是可以多选的）
+                    if (item.role_id) {
+                      if (!Array.isArray(mergedUsers[userId].role)) {
+                        mergedUsers[userId].role = [mergedUsers[userId].role];
+                      }
+                      if (!mergedUsers[userId].role.includes(item.role_id)) {
+                        mergedUsers[userId].role.push(item.role_id);
+                      }
+                    }
+                  } else {
+                    // 如果用户不存在，创建新用户对象
+                    mergedUsers[userId] = {
+                      // 基本信息
+                      id: item.id,
+                      user_id: item.user_id,
+                      // 映射字段
+                      userName: item.user_name,  // 后端user_name → 前端userName
+                      phone: item.phone || '',  // 确保phone有默认值
+                      role: item.role_id,       // 后端role_id → 前端role
+                      createTime: item.register_time,  // 后端register_time → 前端createTime
+                      // 状态处理：确保与表格的switch组件兼容
+                      status: item.status ? '1' : '0',  // 布尔值转换为字符串'1'/'0'
+                      // 保留其他字段
+                      password: item.password
+                    };
+                  }
+                });
+                
                 // 避免直接替换数组，使用push/pop等方法可能更安全
                 this.userList.splice(0, this.userList.length);
-                filteredData.forEach(item => {
-                  // 映射后端字段到前端需要的格式
-                  this.userList.push({
-                    // 基本信息
-                    id: item.id,
-                    user_id: item.user_id,
-                    // 映射字段
-                    userName: item.user_name,  // 后端user_name → 前端userName
-                    phone: item.phone || '',  // 确保phone有默认值
-                    role: item.role_id,       // 后端role_id → 前端role
-                    createTime: item.register_time,  // 后端register_time → 前端createTime
-                    // 状态处理：确保与表格的switch组件兼容
-                    status: item.status ? '1' : '0',  // 布尔值转换为字符串'1'/'0'
-                    // 保留其他字段
-                    password: item.password
-                  });
+                Object.values(mergedUsers).forEach(user => {
+                  this.userList.push(user);
                 });
-                this.pagination.total = filteredData.length;
+                this.pagination.total = Object.values(mergedUsers).length;
                 
                 // 再次使用nextTick确保数据更新完成后再关闭loading
                 this.$nextTick(() => {
@@ -553,6 +572,12 @@ export default {
         '5': '列车管理员',
         '6': '站点管理员'
       };
+      
+      if (Array.isArray(role)) {
+        // 如果是数组，返回所有角色标签的拼接
+        return role.map(r => roleMap[r] || r).join(', ');
+      }
+      
       return roleMap[role] || role;
     },
     // 获取角色类型
@@ -565,6 +590,12 @@ export default {
         '5': 'danger',    // 列车管理员 - 红色
         '6': 'info'       // 站点管理员 - 蓝色
       };
+      
+      if (Array.isArray(role)) {
+        // 如果是数组，返回第一个角色的类型
+        return typeMap[role[0]] || 'info';
+      }
+      
       return typeMap[role] || 'info';
     },
     // 判断是否是当前登录用户
