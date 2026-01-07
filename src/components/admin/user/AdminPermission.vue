@@ -342,11 +342,13 @@ export default {
                   if (mergedUsers[userId]) {
                     // 如果用户已存在，合并角色（假设role_id是可以多选的）
                     if (item.role_id) {
+                      // 确保role_id是字符串类型
+                      const roleId = String(item.role_id);
                       if (!Array.isArray(mergedUsers[userId].role)) {
-                        mergedUsers[userId].role = [mergedUsers[userId].role];
+                        mergedUsers[userId].role = [String(mergedUsers[userId].role)];
                       }
-                      if (!mergedUsers[userId].role.includes(item.role_id)) {
-                        mergedUsers[userId].role.push(item.role_id);
+                      if (!mergedUsers[userId].role.includes(roleId)) {
+                        mergedUsers[userId].role.push(roleId);
                       }
                     }
                   } else {
@@ -358,7 +360,7 @@ export default {
                       // 映射字段
                       userName: item.user_name,  // 后端user_name → 前端userName
                       phone: item.phone || '',  // 确保phone有默认值
-                      role: item.role_id,       // 后端role_id → 前端role
+                      role: item.role_id ? [String(item.role_id)] : [],       // 确保role始终是字符串数组
                       createTime: item.register_time,  // 后端register_time → 前端createTime
                       // 状态处理：确保与表格的switch组件兼容
                       status: item.status ? '1' : '0',  // 布尔值转换为字符串'1'/'0'
@@ -614,18 +616,20 @@ export default {
     },
     // 角色选择验证
     validateRoles(rule, value, callback) {
-      if (!value || value.length === 0) {
+      // 确保value是数组
+      const roles = Array.isArray(value) ? value : value ? [value] : [];
+      if (roles.length === 0) {
         callback(new Error('请选择角色'));
         return;
       }
 
       // 判断是否选择了普通用户
-      const hasUser = value.includes('1');
+      const hasUser = roles.includes('1');
       // 判断是否选择了超级管理员
-      const hasSuperAdmin = value.includes('3');
+      const hasSuperAdmin = roles.includes('3');
       // 判断是否选择了其他管理员角色
       const adminRoles = ['2', '4', '5', '6'];
-      const hasOtherAdmin = adminRoles.some(role => value.includes(role));
+      const hasOtherAdmin = adminRoles.some(role => roles.includes(role));
 
       // 规则1：选择普通用户不能选择任何管理员角色
       if (hasUser && hasOtherAdmin) {
