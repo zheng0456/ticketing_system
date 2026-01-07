@@ -523,16 +523,18 @@ export default {
         type: 'warning'
       }).then(() => {
         this.loading = true;
-        // 模拟删除
-        setTimeout(() => {
-          const index = this.userList.findIndex(item => item.userName === user.userName);
-          if (index !== -1) {
-            this.userList.splice(index, 1);
-          }
-          this.pagination.total = this.userList.length;
+        // 发送真实API请求删除用户
+        api.post('/user/permission/delete', {
+          user_id: user.user_id
+        }).then(() => {
           this.loading = false;
           this.$message.success('删除成功');
-        }, 500);
+          // 重新加载用户列表以确保数据一致性
+          this.loadUserList();
+        }).catch(error => {
+          this.loading = false;
+          this.$message.error(error.response?.data?.message || '删除失败，请稍后重试');
+        });
       }).catch(() => {});
     },
     // 状态变化
