@@ -18,7 +18,7 @@
       <!-- 搜索区域 -->
       <div class="search-section">
         <el-input
-          v-model="searchForm.username"
+          v-model="searchForm.userName"
           placeholder="请输入用户名"
           clearable
           class="search-input"
@@ -52,7 +52,7 @@
         border
       >
 
-        <el-table-column prop="username" label="用户名" width="180"></el-table-column>
+        <el-table-column prop="userName" label="用户名" width="180"></el-table-column>
 
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column prop="role" label="角色" width="120">
@@ -122,9 +122,9 @@
         :rules="rules"
         label-width="80px"
       >
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="用户名" prop="userName">
           <el-input
-            v-model="userForm.username"
+            v-model="userForm.userName"
             :disabled="dialogType === 'edit'"
             placeholder="请输入用户名"
           ></el-input>
@@ -172,7 +172,7 @@
     >
       <el-form ref="permissionFormRef" label-width="80px">
         <el-form-item label="用户名">
-          <el-input v-model="selectedUser.username" disabled></el-input>
+          <el-input v-model="selectedUser.userName" disabled></el-input>
         </el-form-item>
         <el-form-item label="当前角色">
           <el-tag :type="getRoleType(selectedUser.role)">
@@ -261,7 +261,7 @@ export default {
     return {
       loading: false,
       searchForm: {
-        username: '',
+        userName: '',
         role: ''
       },
       userList: [],
@@ -275,10 +275,10 @@ export default {
       permissionDialogVisible: false,
       dialogType: 'add',
       userForm: {
-          username: '',
+          userName: '',
           password: '',
           phone: '',
-          role: ['1'],
+          role: [''],
           permissions: []
         },
       selectedUser: {},
@@ -325,6 +325,12 @@ export default {
                 // 处理返回的数据，应用筛选逻辑
                 let filteredData = response.data;
                 
+                // 确保filteredData是一个数组
+                if (!Array.isArray(filteredData)) {
+                  // 如果API返回的是包含数组的对象，尝试获取正确的属性
+                  filteredData = filteredData.data || [];
+                }
+                
                 // 避免直接替换数组，使用push/pop等方法可能更安全
                 this.userList.splice(0, this.userList.length);
                 filteredData.forEach(item => this.userList.push({...item}));
@@ -356,7 +362,7 @@ export default {
     // 重置搜索
     resetSearch() {
       this.searchForm = {
-        username: '',
+        userName: '',
         role: ''
       };
       this.pagination.currentPage = 1;
@@ -414,7 +420,7 @@ export default {
     // 重置表单
     resetForm() {
       this.userForm = {
-        username: '',
+        userName: '',
         password: '',
         phone: '',
         role: ['1'],
@@ -450,7 +456,7 @@ export default {
             setTimeout(() => {
               // 使用nextTick确保DOM稳定后再更新数据和关闭对话框
               this.$nextTick(() => {
-                const index = this.userList.findIndex(item => item.username === this.userForm.username);
+                const index = this.userList.findIndex(item => item.userName === this.userForm.userName);
                 if (index !== -1) {
                   // 使用对象展开而不是直接替换，避免触发深层次的DOM更新
                   Object.assign(this.userList[index], this.userForm);
@@ -482,7 +488,7 @@ export default {
         this.loading = true;
         // 模拟删除
         setTimeout(() => {
-          const index = this.userList.findIndex(item => item.username === user.username);
+          const index = this.userList.findIndex(item => item.userName === user.userName);
           if (index !== -1) {
             this.userList.splice(index, 1);
           }
@@ -539,7 +545,7 @@ export default {
     // 判断是否是当前登录用户
     isCurrentUser(user) {
       // 这里假设当前登录用户是admin
-      return user.username === 'admin';
+      return user.userName === 'admin';
     },
     // 角色选择验证
     validateRoles(rule, value, callback) {
