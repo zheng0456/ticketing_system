@@ -18,20 +18,22 @@
       <!-- 搜索区域 -->
       <div class="search-section">
         <el-input
-          v-model="searchForm.userName"
+          v-model="searchForm.user_name"
           placeholder="请输入用户名"
           clearable
           class="search-input"
+          @input="handleSearchInput"
         >
           <template #prefix>
             <el-icon><Search /></el-icon>
           </template>
         </el-input>
         <el-select
-          v-model="searchForm.role"
+          v-model="searchForm.role_id"
           placeholder="选择角色"
           clearable
           class="search-select"
+          @change="handleSearchInput"
         >
           <el-option label="普通用户" value="1"></el-option>
           <el-option label="车票管理员" value="2"></el-option>
@@ -261,8 +263,8 @@ export default {
     return {
       loading: false,
       searchForm: {
-        userName: '',
-        role: ''
+        user_name: '',
+        role_id: ''
       },
       userList: [],
       pagination: {
@@ -317,6 +319,8 @@ export default {
       // 发送真实API请求获取用户列表
       api.post('/user/permission/list', this.searchForm)
         .then(response => {
+          // 打印后端返回的数据结构
+          console.log('Backend response data:', response.data);
           // 使用setTimeout和requestAnimationFrame双重保障避免ResizeObserver循环
           setTimeout(() => {
             requestAnimationFrame(() => {
@@ -333,7 +337,23 @@ export default {
                 
                 // 避免直接替换数组，使用push/pop等方法可能更安全
                 this.userList.splice(0, this.userList.length);
-                filteredData.forEach(item => this.userList.push({...item}));
+                filteredData.forEach(item => {
+                  // 映射后端字段到前端需要的格式
+                  this.userList.push({
+                    // 基本信息
+                    id: item.id,
+                    user_id: item.user_id,
+                    // 映射字段
+                    userName: item.user_name,  // 后端user_name → 前端userName
+                    phone: item.phone || '',  // 确保phone有默认值
+                    role: item.role_id,       // 后端role_id → 前端role
+                    createTime: item.register_time,  // 后端register_time → 前端createTime
+                    // 状态处理：确保与表格的switch组件兼容
+                    status: item.status ? '1' : '0',  // 布尔值转换为字符串'1'/'0'
+                    // 保留其他字段
+                    password: item.password
+                  });
+                });
                 this.pagination.total = filteredData.length;
                 
                 // 再次使用nextTick确保数据更新完成后再关闭loading
@@ -359,11 +379,16 @@ export default {
       this.pagination.currentPage = 1;
       this.loadUserList();
     },
+    // 输入变化时的搜索处理（带防抖）
+    handleSearchInput() {
+      this.pagination.currentPage = 1;
+      this.loadUserList();
+    },
     // 重置搜索
     resetSearch() {
       this.searchForm = {
-        userName: '',
-        role: ''
+        user_name: '',
+        role_id: ''
       };
       this.pagination.currentPage = 1;
       this.loadUserList();
