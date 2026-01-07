@@ -313,86 +313,39 @@ export default {
     
     this.debounceTimer = setTimeout(() => {
       this.loading = true;
-      // 创建模拟数据
-      const mockData = [
-        {
-          username: 'admin',
-          phone: '13800138000',
-          role: '3',
-          status: '1',
-          createTime: new Date('2023-01-01'),
-          permissions: ['user:read', 'user:create', 'user:update', 'user:delete', 'train:read', 'train:create', 'train:update', 'train:delete', 'order:read', 'order:update', 'system:config']
-        },
-        {
-          username: 'ticket_manager',
-          phone: '13800138001',
-          role: '2',
-          status: '1',
-          createTime: new Date('2023-01-02'),
-          permissions: ['user:read', 'order:read', 'order:update']
-        },
-        {
-          username: 'user1',
-          phone: '13800138002',
-          role: '1',
-          status: '1',
-          createTime: new Date('2023-01-03'),
-          permissions: ['user:read', 'train:read', 'order:read']
-        },
-        {
-          username: 'route_manager',
-          phone: '13800138003',
-          role: '4',
-          status: '1',
-          createTime: new Date('2023-01-04'),
-          permissions: ['user:read', 'train:read', 'train:update']
-        },
-        {
-          username: 'train_manager',
-          phone: '13800138004',
-          role: '5',
-          status: '1',
-          createTime: new Date('2023-01-05'),
-          permissions: ['user:read', 'train:read', 'train:create', 'train:update']
-        },
-        {
-          username: 'station_manager',
-          phone: '13800138005',
-          role: '6',
-          status: '1',
-          createTime: new Date('2023-01-06'),
-          permissions: ['user:read', 'train:read']
-        }
-      ];
       
-      // 使用setTimeout和requestAnimationFrame双重保障避免ResizeObserver循环
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          // 使用nextTick确保DOM完全更新后再设置数据
-          this.$nextTick(() => {
-            // 根据搜索条件过滤数据
-            let filteredData = mockData.filter(item => {
-              // 用户名筛选
-              const usernameMatch = !this.searchForm.username || 
-                                   item.username.toLowerCase().includes(this.searchForm.username.toLowerCase());
-              // 角色筛选
-              const roleMatch = !this.searchForm.role || item.role === this.searchForm.role;
-              
-              return usernameMatch && roleMatch;
+      // 发送真实API请求获取用户列表
+      api.post('/user/permission/list', this.searchForm)
+        .then(response => {
+          // 使用setTimeout和requestAnimationFrame双重保障避免ResizeObserver循环
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              // 使用nextTick确保DOM完全更新后再设置数据
+              this.$nextTick(() => {
+                // 处理返回的数据，应用筛选逻辑
+                let filteredData = response.data;
+                
+                // 避免直接替换数组，使用push/pop等方法可能更安全
+                this.userList.splice(0, this.userList.length);
+                filteredData.forEach(item => this.userList.push({...item}));
+                this.pagination.total = filteredData.length;
+                
+                // 再次使用nextTick确保数据更新完成后再关闭loading
+                this.$nextTick(() => {
+                  this.loading = false;
+                });
+              });
             });
-            
-            // 避免直接替换数组，使用push/pop等方法可能更安全
-            this.userList.splice(0, this.userList.length);
-            filteredData.forEach(item => this.userList.push({...item}));
-            this.pagination.total = filteredData.length;
-            
-            // 再次使用nextTick确保数据更新完成后再关闭loading
-            this.$nextTick(() => {
-              this.loading = false;
-            });
-          });
+          }, 50);
+        })
+        .catch(error => {
+          // 错误处理
+          console.error('获取用户列表失败:', error);
+          this.$message.error(error.response?.data?.message || '获取用户列表失败，请稍后重试');
+          
+          // 关闭loading状态
+          this.loading = false;
         });
-      }, 50);
     }, 50);
   },
     // 搜索用户
