@@ -33,7 +33,7 @@
     <section class="info-section">
       <div class="section-header">
         <h3 class="section-title">联系方式</h3>
-        <button class="edit-btn">编辑</button>
+        <button class="edit-btn" @click="openContactModal">编辑</button>
       </div>
       <div class="info-grid">
         <div class="info-row">
@@ -49,7 +49,7 @@
     <section class="info-section">
       <div class="section-header">
         <h3 class="section-title">附加信息</h3>
-        <button class="edit-btn">编辑</button>
+        <button class="edit-btn" @click="openExtraModal">编辑</button>
       </div>
       <div class="info-grid">
         <div class="info-row">
@@ -92,9 +92,6 @@
             <select class="form-select" v-model="editForm.idType" required>
               <option value="">请选择证件类型</option>
               <option value="居民身份证">居民身份证</option>
-              <option value="临时身份证">临时身份证</option>
-              <option value="护照">护照</option>
-              <option value="港澳台通行证">港澳台通行证</option>
             </select>
           </div>
           <div class="form-group">
@@ -106,6 +103,55 @@
       <div class="modal-footer">
         <button class="cancel-btn" @click="closeModal">取消</button>
         <button class="save-btn" @click="saveChanges">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 联系人信息编辑弹窗 -->
+  <div v-if="showContactModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">编辑联系人信息</h3>
+        <button class="modal-close" @click="closeContactModal">&times;</button>
+      </div>
+      <div class="modal-content">
+        <form @submit.prevent="saveContactChanges">
+          <div class="form-group">
+            <label class="form-label">手机号 <span class="required">*</span></label>
+            <input type="tel" class="form-input" v-model="contactEditForm.phone" required placeholder="请输入手机号码">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" @click="closeContactModal">取消</button>
+        <button class="save-btn" @click="saveContactChanges">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 附加信息编辑弹窗 -->
+  <div v-if="showExtraModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">编辑附加信息</h3>
+        <button class="modal-close" @click="closeExtraModal">&times;</button>
+      </div>
+      <div class="modal-content">
+        <form @submit.prevent="saveExtraChanges">
+          <div class="form-group">
+            <label class="form-label">优惠类型 <span class="required">*</span></label>
+            <select class="form-select" v-model="extraEditForm.discountType" required>
+              <option value="">请选择优惠类型</option>
+              <option value="学生">学生</option>
+              <option value="成人">成人</option>
+              <option value="儿童">儿童</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" @click="closeExtraModal">取消</button>
+        <button class="save-btn" @click="saveExtraChanges">保存</button>
       </div>
     </div>
   </div>
@@ -146,6 +192,18 @@ const editForm = ref({
   idNumber: ''
 });
 
+// 联系人信息弹窗控制数据
+const showContactModal = ref(false);
+const contactEditForm = ref({
+  phone: ''
+});
+
+// 附加信息弹窗控制数据
+const showExtraModal = ref(false);
+const extraEditForm = ref({
+  discountType: ''
+});
+
 // 打开弹窗函数
 const openModal = () => {
   // 将当前数据复制到编辑表单
@@ -176,6 +234,80 @@ const saveChanges = () => {
     })
     .catch(error => {
       console.error('保存失败:', error);
+      alert('保存失败，请重试');
+    });
+};
+
+// 打开联系人信息弹窗函数
+const openContactModal = () => {
+  // 将当前数据复制到编辑表单
+  contactEditForm.value = {
+    ...contact.value
+  };
+  showContactModal.value = true;
+};
+
+// 关闭联系人信息弹窗函数
+const closeContactModal = () => {
+  showContactModal.value = false;
+};
+
+// 保存联系人信息更改函数
+const saveContactChanges = () => {
+  // 更新联系人信息数据
+  contact.value = {
+    ...contact.value,
+    ...contactEditForm.value
+  };
+  
+  // 发送API请求保存数据
+  api.post('/user/personMessages/update', {
+    ...basicInfo.value,
+    ...contactEditForm.value
+  })
+    .then(response => {
+      console.log('联系人信息保存成功:', response.data);
+      closeContactModal();
+    })
+    .catch(error => {
+      console.error('联系人信息保存失败:', error);
+      alert('保存失败，请重试');
+    });
+};
+
+// 打开附加信息弹窗函数
+const openExtraModal = () => {
+  // 将当前数据复制到编辑表单
+  extraEditForm.value = {
+    ...extraInfo.value
+  };
+  showExtraModal.value = true;
+};
+
+// 关闭附加信息弹窗函数
+const closeExtraModal = () => {
+  showExtraModal.value = false;
+};
+
+// 保存附加信息更改函数
+const saveExtraChanges = () => {
+  // 更新附加信息数据
+  extraInfo.value = {
+    ...extraInfo.value,
+    ...extraEditForm.value
+  };
+  
+  // 发送API请求保存数据
+  api.post('/user/personMessages/update', {
+    ...basicInfo.value,
+    ...extraEditForm.value
+  })
+    .then(response => {
+      console.log('附加信息保存成功:', response.data);
+      closeExtraModal();
+    })
+    .catch(error => {
+      console.error('附加信息保存失败:', error);
       alert('保存失败，请重试');
     });
 };
