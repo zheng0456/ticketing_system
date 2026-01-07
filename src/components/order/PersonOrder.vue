@@ -2,7 +2,10 @@
   <div class="info-container">
     <!-- 基本信息区域 -->
     <section class="info-section">
-      <h3 class="section-title">基本信息</h3>
+      <div class="section-header">
+        <h3 class="section-title">基本信息</h3>
+        <button class="edit-btn" @click="openModal">编辑</button>
+      </div>
       <div class="info-grid">
         <div class="info-row">
           <span class="label">用户名：</span>
@@ -12,22 +15,17 @@
           <span class="label">姓名：</span>
           <span class="value">{{ basicInfo.name }}</span>
         </div>
-        <div class="info-row">
-          <span class="label">国家/地区：</span>
-          <span class="value">{{ basicInfo.country }}</span>
-        </div>
+        
         <div class="info-row">
           <span class="label">证件类型：</span>
-          <span class="value">{{ basicInfo.idType }}</span>
+          <span v-if="!basicInfo.idType" class="value warning">请用户完成实名认证</span>
+          <span v-else class="value">{{ basicInfo.idType }}</span>
         </div>
         <div class="info-row">
           <span class="label">证件号码：</span>
           <span class="value">{{ basicInfo.idNumber }}</span>
         </div>
-        <div class="info-row">
-          <span class="label">核验状态：</span>
-          <span class="value verified">{{ basicInfo.verifyStatus }}</span>
-        </div>
+        
       </div>
     </section>
 
@@ -43,10 +41,7 @@
           <span class="value">{{ contact.phone }}</span>
           <span class="verified">{{ contact.phoneVerify }}</span>
         </div>
-        <div class="info-row">
-          <span class="label">邮箱：</span>
-          <span class="value">{{ contact.email }}</span>
-        </div>
+        
       </div>
     </section>
 
@@ -73,6 +68,46 @@
         <button class="query-btn">查询</button>
       </div>
     </section>
+  </div>
+
+  <!-- 编辑弹窗 -->
+  <div v-if="showModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">编辑基本信息</h3>
+        <button class="modal-close" @click="closeModal">&times;</button>
+      </div>
+      <div class="modal-content">
+        <form @submit.prevent="saveChanges">
+          <div class="form-group">
+            <label class="form-label">用户名</label>
+            <input type="text" class="form-input" v-model="editForm.username" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">姓名 <span class="required">*</span></label>
+            <input type="text" class="form-input" v-model="editForm.name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">证件类型 <span class="required">*</span></label>
+            <select class="form-select" v-model="editForm.idType" required>
+              <option value="">请选择证件类型</option>
+              <option value="居民身份证">居民身份证</option>
+              <option value="临时身份证">临时身份证</option>
+              <option value="护照">护照</option>
+              <option value="港澳台通行证">港澳台通行证</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">证件号码 <span class="required">*</span></label>
+            <input type="text" class="form-input" v-model="editForm.idNumber" required placeholder="请输入证件号码">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" @click="closeModal">取消</button>
+        <button class="save-btn" @click="saveChanges">保存</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -102,24 +137,78 @@ const extraInfo = ref({
   discountType: '学生'
 });
 
+// 弹窗控制数据
+const showModal = ref(false);
+const editForm = ref({
+  username: '',
+  name: '',
+  idType: '',
+  idNumber: ''
+});
+
+// 打开弹窗函数
+const openModal = () => {
+  // 将当前数据复制到编辑表单
+  editForm.value = {
+    ...basicInfo.value
+  };
+  showModal.value = true;
+};
+
+// 关闭弹窗函数
+const closeModal = () => {
+  showModal.value = false;
+};
+
+// 保存更改函数
+const saveChanges = () => {
+  // 更新基本信息数据
+  basicInfo.value = {
+    ...basicInfo.value,
+    ...editForm.value
+  };
+  
+  // 发送API请求保存数据
+  api.post('/user/personMessages/update', editForm.value)
+    .then(response => {
+      console.log('保存成功:', response.data);
+      closeModal();
+    })
+    .catch(error => {
+      console.error('保存失败:', error);
+      alert('保存失败，请重试');
+    });
+};
+
 // 页面加载时发送请求获取用户个人信息
 onMounted(async () => {
   try {
     const response = await api.post('/user/personMessages/list');
+    console.log('API返回值:', response.data);
     const data = response.data;
     
     // 根据API返回的数据结构更新组件数据
     if (data.code === 200) {
-      // 假设API返回的数据结构与组件的数据结构匹配
-      if (data.data.basicInfo) {
-        basicInfo.value = data.data.basicInfo;
-      }
-      if (data.data.contact) {
-        contact.value = data.data.contact;
-      }
-      if (data.data.extraInfo) {
-        extraInfo.value = data.data.extraInfo;
-      }
+      const apiData = data.data;
+      
+      // 映射基本信息
+      basicInfo.value = {
+        username: apiData.userName || '',
+        name: apiData.realName || '',
+        idType: apiData.cardType || '',
+        idNumber: apiData.idCard || ''
+      };
+      
+      // 映射联系方式
+      contact.value = {
+        phone: apiData.phone || '',
+        phoneVerify: apiData.phone ? '已通过核验' : ''
+      };
+      
+      // 映射附加信息
+      extraInfo.value = {
+        discountType: apiData.discountType || ''
+      };
     }
   } catch (error) {
     console.error('获取用户个人信息失败:', error);
@@ -187,6 +276,11 @@ onMounted(async () => {
 
 .verified {
   color: #ff7d00;
+  font-weight: 500;
+}
+
+.warning {
+  color: #ff4d4f;
   font-weight: 500;
 }
 
@@ -262,6 +356,161 @@ onMounted(async () => {
   
   .edit-btn {
     align-self: flex-end;
+  }
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.modal-close {
+  font-size: 24px;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #666;
+  font-size: 14px;
+  text-align: left;
+}
+
+.required {
+  color: #ff4d4f;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.form-input:read-only {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.cancel-btn, .save-btn {
+  padding: 6px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background-color: #fff;
+  color: #666;
+}
+
+.cancel-btn:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.save-btn {
+  background-color: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
+}
+
+.save-btn:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* 响应式弹窗 */
+@media (max-width: 600px) {
+  .modal-container {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .modal-header,
+  .modal-content,
+  .modal-footer {
+    padding: 12px 16px;
   }
 }
 </style>
