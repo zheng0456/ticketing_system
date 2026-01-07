@@ -148,13 +148,13 @@
           <el-input v-model="userForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="role">
-          <el-select v-model="userForm.role" placeholder="请选择角色" multiple>
-            <el-option label="普通用户" value="1"></el-option>
-            <el-option label="车票管理员" value="2"></el-option>
-            <el-option label="超级管理员" value="3"></el-option>
-            <el-option label="途径站点管理员" value="4"></el-option>
-            <el-option label="列车管理员" value="5"></el-option>
-            <el-option label="站点管理员" value="6"></el-option>
+          <el-select v-model="userForm.role" placeholder="请选择角色" multiple @change="handleRoleChange">
+            <el-option label="普通用户" value="1" :disabled="isRoleDisabled('1')"></el-option>
+            <el-option label="车票管理员" value="2" :disabled="isRoleDisabled('2')"></el-option>
+            <el-option label="超级管理员" value="3" :disabled="isRoleDisabled('3')"></el-option>
+            <el-option label="途径站点管理员" value="4" :disabled="isRoleDisabled('4')"></el-option>
+            <el-option label="列车管理员" value="5" :disabled="isRoleDisabled('5')"></el-option>
+            <el-option label="站点管理员" value="6" :disabled="isRoleDisabled('6')"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -644,6 +644,63 @@ export default {
       }
 
       callback();
+    },
+    // 角色选择变化时的处理函数
+    handleRoleChange() {
+      // 确保userForm.role始终是数组
+      if (!Array.isArray(this.userForm.role)) {
+        this.userForm.role = this.userForm.role ? [this.userForm.role] : [];
+      }
+      // 这里可以添加额外的逻辑，比如处理极端情况
+      // 例如：如果同时选择了普通用户和管理员角色，自动移除管理员角色
+      const hasUser = this.userForm.role.includes('1');
+      const adminRoles = ['2', '4', '5', '6'];
+      const hasOtherAdmin = adminRoles.some(role => this.userForm.role.includes(role));
+      
+      if (hasUser && hasOtherAdmin) {
+        // 自动移除管理员角色
+        this.userForm.role = this.userForm.role.filter(role => !adminRoles.includes(role));
+        this.$message.warning('普通用户不能同时拥有管理员角色，已自动移除管理员角色');
+      }
+      
+      const hasSuperAdmin = this.userForm.role.includes('3');
+      if (hasSuperAdmin && hasOtherAdmin) {
+        // 自动移除其他管理员角色
+        this.userForm.role = this.userForm.role.filter(role => role === '3' || !adminRoles.includes(role));
+        this.$message.warning('超级管理员不能同时拥有其他管理员角色，已自动移除其他管理员角色');
+      }
+    },
+    // 判断角色是否应该被禁用
+    isRoleDisabled(roleValue) {
+      // 确保userForm.role始终是数组
+      const currentRoles = Array.isArray(this.userForm.role) ? this.userForm.role : this.userForm.role ? [this.userForm.role] : [];
+      
+      // 规则1：如果已选择普通用户，禁用所有管理员角色
+      if (currentRoles.includes('1')) {
+        const adminRoles = ['2', '3', '4', '5', '6'];
+        if (adminRoles.includes(roleValue)) {
+          return true;
+        }
+      }
+      
+      // 规则2：如果已选择超级管理员，禁用其他管理员角色
+      if (currentRoles.includes('3')) {
+        const otherAdminRoles = ['2', '4', '5', '6'];
+        if (otherAdminRoles.includes(roleValue)) {
+          return true;
+        }
+      }
+      
+      // 规则3：如果已选择其他管理员角色，禁用普通用户和超级管理员
+      const adminRoles = ['2', '4', '5', '6'];
+      const hasOtherAdmin = adminRoles.some(role => currentRoles.includes(role));
+      if (hasOtherAdmin) {
+        if (roleValue === '1' || roleValue === '3') {
+          return true;
+        }
+      }
+      
+      return false;
     }
   }
 };
