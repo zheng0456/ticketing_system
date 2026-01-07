@@ -51,9 +51,9 @@
         style="width: 100%"
         border
       >
-        <el-table-column prop="id" label="用户ID" width="80"></el-table-column>
+
         <el-table-column prop="username" label="用户名" width="180"></el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
+
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column prop="role" label="角色" width="120">
           <template #default="scope">
@@ -141,9 +141,7 @@
             placeholder="请输入密码"
           ></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="userForm.email" placeholder="请输入邮箱"></el-input>
-        </el-form-item>
+        
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="userForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
@@ -277,10 +275,8 @@ export default {
       permissionDialogVisible: false,
       dialogType: 'add',
       userForm: {
-          id: '',
           username: '',
           password: '',
-          email: '',
           phone: '',
           role: ['1'],
           permissions: []
@@ -320,10 +316,7 @@ export default {
       // 创建模拟数据
       const mockData = [
         {
-          id: 1,
           username: 'admin',
-          nickname: '超级管理员',
-          email: 'admin@example.com',
           phone: '13800138000',
           role: '3',
           status: '1',
@@ -331,10 +324,7 @@ export default {
           permissions: ['user:read', 'user:create', 'user:update', 'user:delete', 'train:read', 'train:create', 'train:update', 'train:delete', 'order:read', 'order:update', 'system:config']
         },
         {
-          id: 2,
           username: 'ticket_manager',
-          nickname: '车票管理员',
-          email: 'ticket_manager@example.com',
           phone: '13800138001',
           role: '2',
           status: '1',
@@ -342,10 +332,7 @@ export default {
           permissions: ['user:read', 'order:read', 'order:update']
         },
         {
-          id: 3,
           username: 'user1',
-          nickname: '普通用户',
-          email: 'user1@example.com',
           phone: '13800138002',
           role: '1',
           status: '1',
@@ -353,10 +340,7 @@ export default {
           permissions: ['user:read', 'train:read', 'order:read']
         },
         {
-          id: 4,
           username: 'route_manager',
-          nickname: '途径站点管理员',
-          email: 'route_manager@example.com',
           phone: '13800138003',
           role: '4',
           status: '1',
@@ -364,10 +348,7 @@ export default {
           permissions: ['user:read', 'train:read', 'train:update']
         },
         {
-          id: 5,
           username: 'train_manager',
-          nickname: '列车管理员',
-          email: 'train_manager@example.com',
           phone: '13800138004',
           role: '5',
           status: '1',
@@ -375,10 +356,7 @@ export default {
           permissions: ['user:read', 'train:read', 'train:create', 'train:update']
         },
         {
-          id: 6,
           username: 'station_manager',
-          nickname: '站点管理员',
-          email: 'station_manager@example.com',
           phone: '13800138005',
           role: '6',
           status: '1',
@@ -483,10 +461,8 @@ export default {
     // 重置表单
     resetForm() {
       this.userForm = {
-        id: '',
         username: '',
         password: '',
-        email: '',
         phone: '',
         role: ['1'],
         permissions: []
@@ -521,7 +497,7 @@ export default {
             setTimeout(() => {
               // 使用nextTick确保DOM稳定后再更新数据和关闭对话框
               this.$nextTick(() => {
-                const index = this.userList.findIndex(item => item.id === this.userForm.id);
+                const index = this.userList.findIndex(item => item.username === this.userForm.username);
                 if (index !== -1) {
                   // 使用对象展开而不是直接替换，避免触发深层次的DOM更新
                   Object.assign(this.userList[index], this.userForm);
@@ -553,7 +529,7 @@ export default {
         this.loading = true;
         // 模拟删除
         setTimeout(() => {
-          const index = this.userList.findIndex(item => item.id === user.id);
+          const index = this.userList.findIndex(item => item.username === user.username);
           if (index !== -1) {
             this.userList.splice(index, 1);
           }
