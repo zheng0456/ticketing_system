@@ -406,8 +406,9 @@ onMounted(async () => {
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 2000;
+  align-items: flex-start;
+  padding-top: 200px;
+  z-index: 9999;
 }
 
 .modal-container {
